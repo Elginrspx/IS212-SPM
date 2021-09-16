@@ -99,7 +99,18 @@ a.current {
 /*#region xxx */
 /*#endregion */
 
-/*#region xxx */
+/*#region Course Status */
+/* Class for Course Completed */
+.courseStatus1 {
+  color: green;
+}
+
+/* Class for Pre-requisite Not Met*/
+.courseStatus2 {
+  color: red;
+  text-decoration: underline;
+}
+
 /*#endregion */
 
 /*#region Timeline */
@@ -165,22 +176,7 @@ a.current {
   border-color: #d15641;
 }
 
-/* Class for Pre-requisite Met */
-.courseStatus1 {
-  color: #a0a0a0;
-  text-decoration: underline;
-}
 
-/* Class for Course Completed */
-.courseStatus2 {
-  color: green;
-}
-
-/* Class for Pre-requisite Not Met*/
-.courseStatus3 {
-  color: red;
-  text-decoration: underline;
-}
 
 .card {
   border-radius: 10px;

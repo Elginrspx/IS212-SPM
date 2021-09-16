@@ -67,9 +67,15 @@
                     <img class="card-img-top" src="images/sample.png">
                     <div class="card-body">
                         <h5 class="card-title color-orange">{{ course.title }}</h5>
+                        <div v-if="course.status == 'Course Completed'">
+                            <p class="card-text courseStatus1">Course Completed</p>
+                        </div>
+                        <div v-else-if="course.status == 'Pre-requisites NOT met'">
+                            <p class="card-text courseStatus2 mb-0">Pre-requisites NOT met:</p>
+                            <p v-for="prereqCourse in course.prerequisites" class="card-text courseStatus2 m-0">{{ prereqCourse }}</p>
+                        </div>
                     </div>
                     <div class="card-footer">
-                        <p class="card-text" v-bind:class="statusClass(course.status)">{{ course.status }}</p>
                         <a href="#" class="btn btn-default btn-md active" role="button" aria-pressed="true">View Course</a>
                     </div>
                 </div>
@@ -77,12 +83,10 @@
             `,
             methods: {
                 statusClass: function(status) {
-                    if (status == "Pre-requisites Met") {
+                    if (status == "Course Completed") {
                         return "courseStatus1"
-                    } else if (status == "Course Completed") {
-                        return "courseStatus2"
                     } else {
-                        return "courseStatus3"
+                        return "courseStatus2"
                     }
                 }
             }
@@ -94,17 +98,26 @@
                 courses: [{
                         id: 0,
                         title: '3D Printing and Additive Manufacturing',
-                        status: 'Pre-requisites Met'
+                        status: 'Pre-requisites Met',
+                        prerequisites: ["Intro to 3D Printing", "Intro to 3D Printing 2"]
                     },
                     {
                         id: 1,
                         title: '3D Printing Hardware',
-                        status: 'Course Completed'
+                        status: 'Course Completed',
+                        prerequisites: ["Intro to 3D Printing", "Intro to 3D Printing 2"]
                     },
                     {
                         id: 2,
                         title: '3D Printing Software',
-                        status: 'Pre-requisites NOT met'
+                        status: 'Pre-requisites NOT met',
+                        prerequisites: ["Intro to 3D Printing", "Intro to 3D Printing 2"]
+                    },
+                    {
+                        id: 2,
+                        title: '3D Engineering Solution',
+                        status: 'Pre-requisites Met',
+                        prerequisites: []
                     }
                 ]
             }
