@@ -72,9 +72,31 @@ COMMIT;
 DROP TABLE IF EXISTS `students`;
 CREATE TABLE IF NOT EXISTS `students` (
   `studentID` INT NOT NULL,
+  `studentName` TEXT NOT NULL,
   `sPosition` varchar(30) NOT NULL,
   PRIMARY KEY (`studentID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Insert data into `students` table
+--
+insert into students (studentID, studentName, sPosition) values (001, 'Lim Ah Hock', 'Repair Engineer (Senior)');
+insert into students (studentID, studentName, sPosition) values (002, 'David Balakrishnan', 'Repair Engineer (Senior)');
+insert into students (studentID, studentName, sPosition) values (003, 'Chew Pek Ham', 'Repair Engineer (Senior)');
+insert into students (studentID, studentName, sPosition) values (004, 'Muhammad Zulaiddin', 'Roving Service Engineer (Senior)');
+insert into students (studentID, studentName, sPosition) values (005, 'Muhammad Danial Hakim', 'Roving Service Engineer (Senior)');
+insert into students (studentID, studentName, sPosition) values (006, 'Fong Heng Heng', 'Roving Service Engineer (Senior)');
+insert into students (studentID, studentName, sPosition) values (007, 'Andrew Chong', 'Roving Service Engineer (Senior)');
+insert into students (studentID, studentName, sPosition) values (008, 'Tan Lim Kiu', 'Roving Service Engineer (Senior)');
+insert into students (studentID, studentName, sPosition) values (009, 'Joshua Wyman', 'Roving Service Engineer (Junior)');
+insert into students (studentID, studentName, sPosition) values (010, 'Jack Tan Jun Jie', 'Roving Service Engineer (Junior)');
+insert into students (studentID, studentName, sPosition) values (011, 'Sevi Bala', 'Roving Service Engineer (Junior)');
+insert into students (studentID, studentName, sPosition) values (012, 'Sridhar Tulawa', 'Roving Service Engineer (Junior)');
+insert into students (studentID, studentName, sPosition) values (013, 'Anthony Wilson', 'Roving Service Engineer (Junior)');
+insert into students (studentID, studentName, sPosition) values (014, 'Richard Goh', 'Roving Service Engineer (Junior)');
+insert into students (studentID, studentName, sPosition) values (015, 'Muhammad Shahrudin', 'Roving Service Engineer (Junior)');
+COMMIT;
+
 
 --
 -- Table structure for table `studentBadges`
@@ -140,9 +162,15 @@ CREATE TABLE IF NOT EXISTS `prerequisites` (
     `reqCourseID` varchar(30) NOT NULL,
     `reqBadgeID` varchar(30) NOT NULL,  
     PRIMARY KEY (`reqCourseID`, `reqBadgeID`),
-    CONSTRAINT FK_COURSEE FOREIGN KEY (`reqCourseID`)
+    CONSTRAINT FK_COURSE FOREIGN KEY (`reqCourseID`)
     REFERENCES courses(`courseID`) 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Insert data into `prerequisites` table
+--
+
+
 
 
 --
