@@ -137,13 +137,29 @@ CREATE TABLE IF NOT EXISTS `classlists` (
 --
 DROP TABLE IF EXISTS `prerequisites`;
 CREATE TABLE IF NOT EXISTS `prerequisites` (
-    `reqCourseID` varchar(30) NOT NULL,
-    `reqBadgeID` varchar(30) NOT NULL,  
+    `prereqCourseID` varchar(30) NOT NULL,
+    `prereqName` varchar(30) NOT NULL,  
     PRIMARY KEY (`reqCourseID`, `reqBadgeID`),
     CONSTRAINT FK_COURSEE FOREIGN KEY (`reqCourseID`)
     REFERENCES courses(`courseID`) 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+<<<<<<< Updated upstream
+=======
+--
+-- Insert data into `prerequisites` table
+--
+insert into prerequisites (prereqCourseID, prereqName) values (4, '3D Printing Software v1.0');
+insert into prerequisites (prereqCourseID, prereqName) values (8, 'Xerox Printer Setup v1.0');
+insert into prerequisites (prereqCourseID, prereqName) values (11, 'HP Printer Setup v1.0');
+insert into prerequisites (prereqCourseID, prereqName) values (14, 'Canon Printer Setup v1.0');
+insert into prerequisites (prereqCourseID, prereqName) values (3, '3D Printing Software v1.0');
+insert into prerequisites (prereqCourseID, prereqName) values (3, '3D Printing Hardware v1.0');
+insert into prerequisites (prereqCourseID, prereqName) values (18, 'Xerox Printer Navigation v1.0');
+insert into prerequisites (prereqCourseID, prereqName) values (19, 'HP Printer Navigation v1.0');
+insert into prerequisites (prereqCourseID, prereqName) values (20, 'Canon Printer Navigation v1.0');
+insert into prerequisites (prereqCourseID, prereqName) values (5, 'Commercial Printer Maintenance v1.0');
+>>>>>>> Stashed changes
 
 --
 -- Table structure for table `registration`
