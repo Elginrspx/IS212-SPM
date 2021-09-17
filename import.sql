@@ -140,7 +140,7 @@ CREATE TABLE IF NOT EXISTS `prerequisites` (
     `prereqCourseID` varchar(30) NOT NULL,
     `prereqName` varchar(30) NOT NULL,  
     PRIMARY KEY (`reqCourseID`, `reqBadgeID`),
-    CONSTRAINT FK_COURSEE FOREIGN KEY (`reqCourseID`)
+    CONSTRAINT FK_COURSEE FOREIGN KEY (`prereqCourseID`)
     REFERENCES courses(`courseID`) 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -159,6 +159,7 @@ insert into prerequisites (prereqCourseID, prereqName) values (18, 'Xerox Printe
 insert into prerequisites (prereqCourseID, prereqName) values (19, 'HP Printer Navigation v1.0');
 insert into prerequisites (prereqCourseID, prereqName) values (20, 'Canon Printer Navigation v1.0');
 insert into prerequisites (prereqCourseID, prereqName) values (5, 'Commercial Printer Maintenance v1.0');
+COMMIT;
 >>>>>>> Stashed changes
 
 --
