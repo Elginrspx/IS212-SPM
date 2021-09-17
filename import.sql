@@ -139,7 +139,7 @@ DROP TABLE IF EXISTS `prerequisites`;
 CREATE TABLE IF NOT EXISTS `prerequisites` (
     `prereqCourseID` varchar(30) NOT NULL,
     `prereqName` varchar(30) NOT NULL,  
-    PRIMARY KEY (`reqCourseID`, `reqBadgeID`),
+    PRIMARY KEY (`prereqCourseID`, `prereqName`),
     CONSTRAINT FK_COURSEE FOREIGN KEY (`prereqCourseID`)
     REFERENCES courses(`courseID`) 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
