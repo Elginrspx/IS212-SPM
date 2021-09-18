@@ -37,6 +37,7 @@ CREATE TABLE IF NOT EXISTS `courses` (
   `courseName` varchar(30) NOT NULL, 
   `cDescription` TEXT NOT NULL,
   `cOutline` TEXT NOT NULL,
+  `have` boolean NOT NULL,
   PRIMARY KEY (`courseID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -44,26 +45,26 @@ CREATE TABLE IF NOT EXISTS `courses` (
 -- Insert data into `courses` table
 --
 
-insert into courses (courseID, courseName, cDescription, cOutline) values (1, '3D Printing Software v1.0', 'A course on 3D printing software', '3D Printing Basics, 3D Printer Software Installation');
-insert into courses (courseID, courseName, cDescription, cOutline) values (2, '3D Printing Hardware v1.0', 'A course on 3D printing hardware', '3D Printer Setup');
-insert into courses (courseID, courseName, cDescription, cOutline) values (3, '3D Printing and Additve Manufacturing v1.0', 'This is a course on 3D printing and additive manufacturing', 'Intermediate 3D Printing, CAD Modeling');
-insert into courses (courseID, courseName, cDescription, cOutline) values (4, '3D Printing Software v1.2', 'A more advanced course on 3D printing software', '3D Printer Advanced Software Installation, Basic Post-Installation Test Check');
-insert into courses (courseID, courseName, cDescription, cOutline) values (5, 'Commerical Printer Repair v1.0', 'A course on repairing commercial printers', 'Basic Commercial Printer Repair');
-insert into courses (courseID, courseName, cDescription, cOutline) values (6, '3D Printer Hardware v1.2', 'A more advanced course on 3D printing hardware', '3D Printer Components, Testing 3D Printer');
-insert into courses (courseID, courseName, cDescription, cOutline) values (7, 'Xerox Printer Setup v1.0', 'A course on setting up Xerox printers', 'Introduction to Xerox Printer Models, Basic Xerox Printer Setup');
-insert into courses (courseID, courseName, cDescription, cOutline) values (8, 'Xerox Printer Navigation v1.0', 'A course on navigating Xerox printers post-setup', 'Xerox Printer Navigation');
-insert into courses (courseID, courseName, cDescription, cOutline) values (9, 'Xerox Printer Repair v1.0', 'A course on repairing Xerox printers', 'Xerox Printer Repair, Post-Repair Testing, Generating Test Reports');
-insert into courses (courseID, courseName, cDescription, cOutline) values (10, 'HP Printer Setup v1.0', 'A course on setting up HP printers', 'Introduction to HP Printer Models, Basic HP Printer Setup');
-insert into courses (courseID, courseName, cDescription, cOutline) values (11, 'HP Printer Navigation v1.0', 'A course on navigating HP printers post-setup', 'HP Printer Navigation');
-insert into courses (courseID, courseName, cDescription, cOutline) values (12, 'HP Printer Repair v1.0', 'A course on repairing HP printers', 'HP Printer Repair, Post-Repair Testing, Generating Test Reports');
-insert into courses (courseID, courseName, cDescription, cOutline) values (13, 'Canon Printer Setup v1.0', 'A course on setting up Canon printers', 'Introduction to Canon Printer Models, Basic Canon Printer Setup');
-insert into courses (courseID, courseName, cDescription, cOutline) values (14, 'Canon Printer Navigation v1.0', 'A course on navigating Canon printers post-setup', 'Canon Printer Navigation');
-insert into courses (courseID, courseName, cDescription, cOutline) values (15, 'Canon Printer Repair v1.0', 'A course on repairing Canon printers', 'Canon Printer Repair, Post-Repair Testing, Generating Test Reports');
-insert into courses (courseID, courseName, cDescription, cOutline) values (16, 'Commercial Printer Maintenance v1.0', 'A course on Commerical Printer Basic Maintenance', 'Commercial Printer Cleaning, Commercial Printer Deep Cleaning, Commercial Printer Nozzle Check, Commercial Printer Roller Cleaning, Commercial Printer Bottom Plate Cleaning');
-insert into courses (courseID, courseName, cDescription, cOutline) values (17, '3D Printer Maintenance v1.0', 'A course on 3D Printer Basic Maintenance', '3D Printer Cleaning, 3D Printer Deep Cleaning, 3D Printer Nozzle Check, 3D Printer Roller Cleaning, 3D Printer Bottom Plate Cleaning');
-insert into courses (courseID, courseName, cDescription, cOutline) values (18, 'Xerox Printer Maintenance v1.0', 'A course on Xerox Printer Basic Maintenance', 'Xerox Printer Cleaning, Xerox Printer Deep Cleaning, Xerox Printer Nozzle Check, Xerox Printer Roller Cleaning, Xerox Printer Bottom Plate Cleaning');
-insert into courses (courseID, courseName, cDescription, cOutline) values (19, 'HP Printer Maintenance v1.0', 'A course on HP Printer Basic Maintenance', 'HP Printer Cleaning, HP Printer Deep Cleaning, HP Printer Nozzle Check, HP Printer Roller Cleaning, HP Printer Bottom Plate Cleaning');
-insert into courses (courseID, courseName, cDescription, cOutline) values (20, 'Canon Printer Maintenance v1.0', 'A course on Canon Printer Basic Maintenance', 'Canon Printer Cleaning, Canon Printer Deep Cleaning, Canon Printer Nozzle Check, Canon Printer Roller Cleaning, Canon Printer Bottom Plate Cleaning');
+insert into courses (courseID, courseName, cDescription, cOutline, have) values (1, '3D Printing Software v1.0', 'A course on 3D printing software', '3D Printing Basics, 3D Printer Software Installation', False);
+insert into courses (courseID, courseName, cDescription, cOutline, have) values (2, '3D Printing Hardware v1.0', 'A course on 3D printing hardware', '3D Printer Setup',False);
+insert into courses (courseID, courseName, cDescription, cOutline, have) values (3, '3D Printing and Additve Manufacturing v1.0', 'This is a course on 3D printing and additive manufacturing', 'Intermediate 3D Printing, CAD Modeling', True);
+insert into courses (courseID, courseName, cDescription, cOutline, have) values (4, '3D Printing Software v1.2', 'A more advanced course on 3D printing software', '3D Printer Advanced Software Installation, Basic Post-Installation Test Check', True);
+insert into courses (courseID, courseName, cDescription, cOutline, have) values (5, 'Commerical Printer Repair v1.0', 'A course on repairing commercial printers', 'Basic Commercial Printer Repair',True);
+insert into courses (courseID, courseName, cDescription, cOutline, have) values (6, '3D Printer Hardware v1.2', 'A more advanced course on 3D printing hardware', '3D Printer Components, Testing 3D Printer',False);
+insert into courses (courseID, courseName, cDescription, cOutline, have) values (7, 'Xerox Printer Setup v1.0', 'A course on setting up Xerox printers', 'Introduction to Xerox Printer Models, Basic Xerox Printer Setup',False);
+insert into courses (courseID, courseName, cDescription, cOutline, have) values (8, 'Xerox Printer Navigation v1.0', 'A course on navigating Xerox printers post-setup', 'Xerox Printer Navigation',True);
+insert into courses (courseID, courseName, cDescription, cOutline, have) values (9, 'Xerox Printer Repair v1.0', 'A course on repairing Xerox printers', 'Xerox Printer Repair, Post-Repair Testing, Generating Test Reports',False);
+insert into courses (courseID, courseName, cDescription, cOutline, have) values (10, 'HP Printer Setup v1.0', 'A course on setting up HP printers', 'Introduction to HP Printer Models, Basic HP Printer Setup',False);
+insert into courses (courseID, courseName, cDescription, cOutline, have) values (11, 'HP Printer Navigation v1.0', 'A course on navigating HP printers post-setup', 'HP Printer Navigation',True);
+insert into courses (courseID, courseName, cDescription, cOutline, have) values (12, 'HP Printer Repair v1.0', 'A course on repairing HP printers', 'HP Printer Repair, Post-Repair Testing, Generating Test Reports',False);
+insert into courses (courseID, courseName, cDescription, cOutline, have) values (13, 'Canon Printer Setup v1.0', 'A course on setting up Canon printers', 'Introduction to Canon Printer Models, Basic Canon Printer Setup',False);
+insert into courses (courseID, courseName, cDescription, cOutline, have) values (14, 'Canon Printer Navigation v1.0', 'A course on navigating Canon printers post-setup', 'Canon Printer Navigation',True);
+insert into courses (courseID, courseName, cDescription, cOutline, have) values (15, 'Canon Printer Repair v1.0', 'A course on repairing Canon printers', 'Canon Printer Repair, Post-Repair Testing, Generating Test Reports', False);
+insert into courses (courseID, courseName, cDescription, cOutline, have) values (16, 'Commercial Printer Maintenance v1.0', 'A course on Commerical Printer Basic Maintenance', 'Commercial Printer Cleaning, Commercial Printer Deep Cleaning, Commercial Printer Nozzle Check, Commercial Printer Roller Cleaning, Commercial Printer Bottom Plate Cleaning',False);
+insert into courses (courseID, courseName, cDescription, cOutline, have) values (17, '3D Printer Maintenance v1.0', 'A course on 3D Printer Basic Maintenance', '3D Printer Cleaning, 3D Printer Deep Cleaning, 3D Printer Nozzle Check, 3D Printer Roller Cleaning, 3D Printer Bottom Plate Cleaning',False);
+insert into courses (courseID, courseName, cDescription, cOutline, have) values (18, 'Xerox Printer Maintenance v1.0', 'A course on Xerox Printer Basic Maintenance', 'Xerox Printer Cleaning, Xerox Printer Deep Cleaning, Xerox Printer Nozzle Check, Xerox Printer Roller Cleaning, Xerox Printer Bottom Plate Cleaning',True);
+insert into courses (courseID, courseName, cDescription, cOutline, have) values (19, 'HP Printer Maintenance v1.0', 'A course on HP Printer Basic Maintenance', 'HP Printer Cleaning, HP Printer Deep Cleaning, HP Printer Nozzle Check, HP Printer Roller Cleaning, HP Printer Bottom Plate Cleaning',True);
+insert into courses (courseID, courseName, cDescription, cOutline, have) values (20, 'Canon Printer Maintenance v1.0', 'A course on Canon Printer Basic Maintenance', 'Canon Printer Cleaning, Canon Printer Deep Cleaning, Canon Printer Nozzle Check, Canon Printer Roller Cleaning, Canon Printer Bottom Plate Cleaning',True);
 COMMIT;
 
 --
