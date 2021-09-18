@@ -60,7 +60,7 @@
                 </div>
             </div>
             <div class="col-8">
-                <div style="border: 1px solid #dedede">
+                <div style="border: 1px solid #dedede; border-radius: 10px;">
                     <div class="row p-3">
                         <div class="col-lg-6">
                             <h1 class="title">3D Printing and Additive Manufacturing</h1>
