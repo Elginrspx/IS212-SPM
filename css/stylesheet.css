@@ -1,0 +1,183 @@
+/*#region Fonts */
+@font-face {
+  font-family: cuprumRegular;
+  src: url("../fonts/Cuprum-Regular.ttf");
+}
+
+@font-face {
+  font-family: cuprumBold;
+  src: url("../fonts/Cuprum-Bold.ttf");
+}
+
+body {
+  font-family: cuprumRegular;
+}
+
+.title {
+  color: #d15641;
+  font-size: 1.5rem;
+}
+
+a {
+  color: #a0a0a0;
+  font-size: 0.9rem;
+  text-decoration: none;
+}
+
+a.current {
+  color: #d15641;
+}
+/*#endregion */
+
+/*#region Jumbotron */
+.jumbotron {
+  background-image: url("../images/cover.jpg");
+  background-size: cover;
+  height: 100%;
+  min-height: 200px;
+}
+
+.cover-text {
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: cuprumRegular;
+  text-shadow: 2px 2px #837a7a;
+}
+/*#endregion */
+
+/*#region Colors */
+.color-orange {
+  color: #d15641;
+}
+
+.color-lightgrey {
+  color: #efefef;
+}
+
+.color-grey {
+  color: #dedede;
+}
+
+.color-darkgrey {
+  color: #a0a0a0;
+}
+/*#endregion */
+
+/*#region Buttons */
+.btn-default {
+  background-color: white;
+  color: #d15641;
+  border-color: #d15641;
+}
+
+.btn-default:hover {
+  background-color: #d15641;
+  color: white;
+}
+/*#endregion */
+
+/*#region Search */
+.search-container {
+  position: relative;
+}
+
+.search-container > img {
+  position: absolute;
+  top: 10px;
+  right: 20px;
+}
+/*#endregion */
+
+/*#region xxx */
+/*#endregion */
+
+/*#region xxx */
+/*#endregion */
+
+/*#region xxx */
+/*#endregion */
+
+/*#region Course Status */
+/* Class for Course Completed */
+.courseStatus1 {
+  color: green;
+}
+
+/* Class for Pre-requisite Not Met*/
+.courseStatus2 {
+  color: red;
+  text-decoration: underline;
+}
+
+/*#endregion */
+
+/*#region Timeline */
+.timelineWrapper ul,
+.timelineWrapper li {
+  list-style: none;
+  padding: 0;
+}
+
+.timelineWrapper {
+  border: 1px solid #dedede;
+  padding: 2rem;
+  border-radius: 10px;
+  font-family: cuprumBold;
+}
+
+.timelineWrapper h1 {
+  font-size: 1rem;
+  margin: 0rem;
+}
+
+.timelineWrapper p {
+  color: #4f4f4f;
+  line-height: 1.5;
+}
+
+.timelineWrapper .sessions {
+  margin-top: 2rem;
+  border-radius: 12px;
+  position: relative;
+}
+
+.timelineWrapper li {
+  padding-bottom: 1.5rem;
+  border-left: 1px dashed #abaaed;
+  position: relative;
+  padding-left: 20px;
+  margin-left: 10px;
+}
+.timelineWrapper li:last-child {
+  border: 0px;
+  padding-bottom: 0;
+}
+.timelineWrapper li:before {
+  content: "";
+  width: 15px;
+  height: 15px;
+  background: white;
+  border: 1px solid #4e5ed3;
+  border-radius: 50%;
+  position: absolute;
+  left: -8px;
+  top: 0px;
+}
+
+.timelineWrapper li.select:before {
+  background: #d15641;
+}
+
+/*#endregion */
+
+.border-orange {
+  border-color: #d15641;
+}
+
+
+
+.card {
+  border-radius: 10px;
+}
