@@ -76,7 +76,7 @@
                         </div>
                     </div>
                     <div class="card-footer">
-                        <a href="#" class="btn btn-default btn-md active" role="button" aria-pressed="true">View Course</a>
+                        <a href="course.php" class="btn btn-default btn-md active" role="button" aria-pressed="true">View Course</a>
                     </div>
                 </div>
             </div>
