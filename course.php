@@ -83,6 +83,10 @@
         </div>
     </div>
     <?php include 'includes/footer.php' ?>
+    <script>
+        var cCID = localStorage.getItem("chosenCourse");
+        console.log(cCID)
+    </script>
 </body>
 
 </html>
