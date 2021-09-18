@@ -144,8 +144,6 @@ CREATE TABLE IF NOT EXISTS `prerequisites` (
     REFERENCES courses(`courseID`) 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-<<<<<<< Updated upstream
-=======
 --
 -- Insert data into `prerequisites` table
 --
@@ -160,7 +158,6 @@ insert into prerequisites (prereqCourseID, prereqName) values (19, 'HP Printer N
 insert into prerequisites (prereqCourseID, prereqName) values (20, 'Canon Printer Navigation v1.0');
 insert into prerequisites (prereqCourseID, prereqName) values (5, 'Commercial Printer Maintenance v1.0');
 COMMIT;
->>>>>>> Stashed changes
 
 --
 -- Table structure for table `registration`

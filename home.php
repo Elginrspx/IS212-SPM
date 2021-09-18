@@ -50,6 +50,9 @@
 
     <?php include 'includes/footer.php' ?>
     <script>
+        // initialise urls
+        var getCourseURL = "http://localhost:2222/courses"
+        var getPrereqsURL = "http://localhost:2222/prereqs"
         var navbar = new Vue({
             el: '#navbar',
             methods: {
@@ -90,39 +93,131 @@
                     }
                 }
             }
+            
         })
 
         var course = new Vue({
             el: '#course',
             data: {
-                courses: [{
-                        id: 0,
-                        title: '3D Printing and Additive Manufacturing',
-                        status: 'Pre-requisites Met',
-                        prerequisites: ["Intro to 3D Printing", "Intro to 3D Printing 2"]
-                    },
-                    {
-                        id: 1,
-                        title: '3D Printing Hardware',
-                        status: 'Course Completed',
-                        prerequisites: ["Intro to 3D Printing", "Intro to 3D Printing 2"]
-                    },
-                    {
-                        id: 2,
-                        title: '3D Printing Software',
-                        status: 'Pre-requisites NOT met',
-                        prerequisites: ["Intro to 3D Printing", "Intro to 3D Printing 2"]
-                    },
-                    {
-                        id: 2,
-                        title: '3D Engineering Solution',
-                        status: 'Pre-requisites Met',
-                        prerequisites: []
-                    }
-                ]
+                courses: [],
+                trigger: 0
+            },
+            methods: {
+                
+                getCourseCardInfo: function() {
+                    alert("in")
+                    const response =
+                        fetch(getCourseURL)
+                        .then(response => response.json())
+                        .then(data => {
+                            // console.log(data);
+                            if (data.code === 404) {
+                                // alert("oops")
+                                // none returned
+                                // alert(data.message);
+                            } else {
+                                // alert("meep");
+                                for (var c in data.data.courses) {
+                                    id = data.data.courses[c].courseID;
+                                    this.courses[id.toString()] = {
+                                        'id':id,
+                                        'name':data.data.courses[c].courseName,
+                                        'prereqs':[]
+                                    }
+                                    fetch(getPrereqsURL+ `/${id}`)
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        console.log(id)
+                                        // console.log(data)
+                                        if (data.code === 404) {
+                                            alert("oops")
+                                            // none returned
+                                            // alert(data.message);
+                                        } else {
+                                            console.log(data)
+                                            for (var i in data.data.courses){
+                                                console.log(data.data.courses[i].prereqName);
+                                                this.courses[data.data.courses[i].prereqCourseID].prereqs.push(data.data.courses[i].prereqName)
+                                            }
+                                            
+                                        }
+                                    })
+                                }
+                            }
+                        })
+                        .catch(error => {
+                            // Errors when calling the service; such as network error, 
+                            // service offline, etc
+                            console.log(this.message + error);
+                        });
+                }
+            },
+            created: function () {
+                // on Vue instance created, load the course list
+                this.getCourseCardInfo();
+                this.getPrereqs();
+            },
+            computed: {
+                // getPrereqs: function() {
+                //     alert("out")
+                //     heh = this.courses
+                //     console.log(heh[2])
+                //     console.log(typeof(heh))
+                //     for (var id in heh){
+                //         alert("whee")
+                //         console.log(id)
+                //         fetch(getPrereqsURL+ `/${id}`)
+                //         .then(response => response.json())
+                //         .then(data => {
+                //             console.log(id)
+                //             // console.log(data)
+                //             if (data.code === 404) {
+                //                 alert("oops")
+                //                 // none returned
+                //                 // alert(data.message);
+                //             } else {
+                //                 console.log(data)
+                //                 for (var i in data.data.courses){
+                //                     console.log(data.data.courses[i].prereqName);
+                //                     this.courses[id].prereqs.push(data.data.courses[i].prereqName)
+                //                 }
+                                
+                //             }
+                //         })
+                //     }
+                // }
             }
         })
     </script>
 </body>
 
+
+
 </html>
+
+
+<!--  prev setup
+// {
+                    //     id: 0,
+                    //     title: '3D Printing and Additive Manufacturing',
+                    //     status: 'Pre-requisites Met',
+                    //     prerequisites: ["Intro to 3D Printing", "Intro to 3D Printing 2"]
+                    // },
+                    // {
+                    //     id: 1,
+                    //     title: '3D Printing Hardware',
+                    //     status: 'Course Completed',
+                    //     prerequisites: ["Intro to 3D Printing", "Intro to 3D Printing 2"]
+                    // },
+                    // {
+                    //     id: 2,
+                    //     title: '3D Printing Software',
+                    //     status: 'Pre-requisites NOT met',
+                    //     prerequisites: ["Intro to 3D Printing", "Intro to 3D Printing 2"]
+                    // },
+                    // {
+                    //     id: 2,
+                    //     title: '3D Engineering Solution',
+                    //     status: 'Pre-requisites Met',
+                    //     prerequisites: []
+                    // } -->

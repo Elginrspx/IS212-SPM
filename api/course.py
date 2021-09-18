@@ -65,20 +65,20 @@ class Class(db.Model):
 class Prerequisite(db.Model):
     __tablename__ = 'prerequisites'
 
-    reqCourseID = db.Column(db.String(30), db.ForeignKey('courses.courseID', ondelete="CASCADE", onupdate="CASCADE"), primary_key=True)
-    reqBadgeID = db.Column(db.String(30), primary_key=True)
+    prereqCourseID = db.Column(db.String(30), db.ForeignKey('courses.courseID', ondelete="CASCADE", onupdate="CASCADE"), primary_key=True)
+    prereqName = db.Column(db.String(30), primary_key=True)
 
     coursePrereq = db.relationship(
-    'Course', primaryjoin='Prerequisite.reqCourseID == Course.courseID', backref='prerequisites')
+    'Course', primaryjoin='Prerequisite.prereqCourseID == Course.courseID', backref='prerequisites')
 
-    def __init__(self, reqCourseID, reqBadgeID):
-        self.reqCourseID = reqCourseID
-        self.reqBadgeID = reqBadgeID
+    def __init__(self, prereqCourseID, prereqName):
+        self.prereqCourseID = prereqCourseID
+        self.prereqName = prereqName
 
     def json(self):
         return {
-            "reqCourseID" : self.reqCourseID,
-            "reqBadgeID" : self.reqBadgeID
+            "prereqCourseID" : self.prereqCourseID,
+            "prereqName" : self.prereqName
         }
 
 # class Section(db.Model):
@@ -183,16 +183,16 @@ def get_class_details(courseID, classID):
         return jsonify({"message": "Class is not found." + str(e)}), 404
 
 # GET all Prerequisites by course
-@app.route("/courses/<string:courseID>")
-def get_course_prereq():
+@app.route("/prereqs/<string:prereqCourseID>")
+def get_course_prereq(prereqCourseID):
     try:
-        courseList = Course.query.all()
-        if len(courseList):
+        prereqCourseList = Prerequisite.query.filter_by(prereqCourseID = prereqCourseID).all()
+        if len(prereqCourseList):
             return jsonify(
                 {
                     "code": 200,
                     "data": {
-                        "courses": [course.json() for course in courseList]
+                        "courses": [course.json() for course in prereqCourseList]
                     }
                 }
             )
