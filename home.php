@@ -79,15 +79,16 @@
 
                             record.prereqs = []
                             this.courses.push(record);
-
-                            fetch(getPrereqsURL + `/${courseID}`)
-                                .then(response => response.json())
-                                .then(data => {
-                                    result = data.data.courses;
-                                    for (record in result) {
-                                        this.courses[result[record].prereqCourseID].prereqs.push(result[record].prereqName)
-                                    }
-                                })
+                            if (record.have){
+                                fetch(getPrereqsURL + `/${courseID}`)
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        result = data.data.courses;
+                                        for (record in result) {
+                                            this.courses[result[record].prereqCourseID].prereqs.push(result[record].prereqName)
+                                        }
+                                    })
+                            }
                         }
                     })
             }
@@ -110,7 +111,7 @@
                         </div>
                     </div>
                     <div class="card-footer">
-                        <a href="#" class="btn btn-default btn-md active" role="button" aria-pressed="true">View Course</a>
+                        <a href="#" @click="seeCourse($event, course.courseID)" class="btn btn-default btn-md active" role="button" aria-pressed="true">View Course</a>
                     </div>
                 </div>
             </div>
@@ -122,6 +123,11 @@
                     } else {
                         return "courseStatus2"
                     }
+                },                
+                seeCourse: function(e, cID) {
+                    e.preventDefault();
+                    localStorage.setItem("chosenCourse", cID);
+                    window.location.replace("course.php");
                 }
             }
 
