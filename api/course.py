@@ -44,16 +44,18 @@ class Class(db.Model):
     clsTrainer = db.Column(db.String(30), nullable=False)
     clsStartTime = db.Column(db.String(30), nullable = False)
     clsEndTime = db.Column(db.String(30), nullable=False)
+    clsLimit = db.Column(db.Integer, nullable=False)
     # user = relationship('User', backref='child')
     courseClass = db.relationship(
     'Course', primaryjoin='Class.clsCourseID == Course.courseID', backref='classes')
 
-    def __init__(self, clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime):
+    def __init__(self, clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit):
         self.clsCourseID = clsCourseID
         self.classID = classID
         self.clsTrainer = clsTrainer
         self.clsStartTime = clsStartTime
         self.clsEndTime = clsEndTime
+        self.clsLimit = clsLimit
         
 
     def json(self):
@@ -62,7 +64,8 @@ class Class(db.Model):
         "classID": self.classID, 
         "clsTrainer": self.clsTrainer, 
         "clsStartTime": self.clsStartTime, 
-        "clsEndTime": self.clsEndTime
+        "clsEndTime": self.clsEndTime,
+        "clsLimit": self.clsLimit
         }
 
 class Prerequisite(db.Model):
@@ -142,30 +145,33 @@ def get_course_details(courseID):
     try: 
         course = Course.query.filter_by(courseID=courseID).first()
         if course:
-            print("yay")
-            try:
-                classList = Class.query.filter_by(clsCourseID=courseID).first()
-            except Exception as e:
-                print("oh no")
-                return jsonify({
-                    "code": 404,
-                    "data": {
-                        "course" : course.json(),
-                        "classes" : "No classes for this course yet"
-                        },
-                    })
             return jsonify(
                 {
                     "code":200,
                     "data": {
-                        "course" : course.json(),
-                        "classes" : [classes.json() for classes in classList]
+                        "course" : course.json()
                         }
-
                 }
             )
     except Exception as e:
         return jsonify({"message": "Course is not found." + str(e)}), 404
+
+# GET Classes by courseID
+@app.route("/classList/<string:courseID>")
+def get_course_classes(courseID):
+    try:
+        classList = Class.query.filter_by(clsCourseID=courseID).all()
+        if classList:
+            return jsonify(
+                {
+                    "code":200,
+                    "data": {
+                        "classes": [classs.json() for classs in classList]
+                        }
+                }
+            )
+    except Exception as e:
+        return jsonify({"message": "Class is not found." + str(e)}), 404
 
 # GET Class Details by Course-Class (haven't tested)
 @app.route("/classes/<string:courseID>/<string:classID>")

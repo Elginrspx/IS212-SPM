@@ -97,7 +97,7 @@ CREATE TABLE IF NOT EXISTS `completedCourses` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Insert data into `students` table
+-- Insert data into `completedCourses` table
 --
 insert into completedCourses (ccStudentID, completedCName) values (1, '3D Printing Software v1.0');
 insert into completedCourses (ccStudentID, completedCName) values (1, '3D Printing Hardware v1.0');
@@ -113,11 +113,36 @@ CREATE TABLE IF NOT EXISTS `classes` (
   `clsTrainer` varchar(30) NOT NULL,
   `clsStartTime` varchar(30) NOT NULL,
   `clsEndTime` varchar(30) NOT NULL,
+  `clsLimit` int NOT NULL,
   PRIMARY KEY (`clsCourseID`, `classID`),
   CONSTRAINT FK_COURSE FOREIGN KEY (`clsCourseID`)
     REFERENCES courses(`courseID`) 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Insert data into `classes` table
+--
+insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit) values (1,3, "Tommy Locker", "12-Sept-2021", "14-Sept-2023", 35);
+insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit) values (2,2, "Tommy Locker", "12-Sept-2021", "14-Sept-2022", 40);
+insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit) values (1,2, "Tommy Topper", "12-Sept-2021", "14-Sept-2022", 40);
+insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit) values (3,3, "Tommy Locker", "12-Sept-2021", "14-Sept-2022", 40);
+insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit) values (4,3, "Tommy Locker", "12-Sept-2021", "14-Sept-2022", 40);
+insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit) values (5,3, "Tommy Locker", "12-Sept-2021", "14-Sept-2022", 40);
+insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit) values (6,3, "Tommy Locker", "12-Sept-2022", "14-Sept-2023", 30);
+insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit) values (7,3, "Tommy Locker", "12-Sept-2022", "14-Sept-2023", 35);
+insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit) values (8,3, "Tommy Locker", "12-Sept-2022", "14-Sept-2023", 35);
+insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit) values (9,3, "Tommy Locker", "12-Sept-2022", "14-Sept-2023", 35);
+insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit) values (10,3, "Tommy Locker", "12-Sept-2022", "14-Sept-2023", 35);
+insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit) values (11,3, "Tommy Locker", "12-Sept-2022", "14-Sept-2023", 35);
+insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit) values (12,3, "Tommy Locker", "12-Sept-2022", "14-Sept-2023", 45);
+insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit) values (13,3, "Tommy Locker", "12-Sept-2022", "14-Sept-2023", 45);
+insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit) values (14,3, "Tommy Locker", "12-Sept-2022", "14-Sept-2023", 45);
+insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit) values (15,3, "Tommy Locker", "12-Sept-2022", "14-Sept-2023", 45);
+insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit) values (16,3, "Tommy Locker", "12-Sept-2022", "14-Sept-2023", 45);
+insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit) values (17,3, "Tommy Locker", "12-Sept-2022", "14-Sept-2023", 45);
+insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit) values (18,3, "Tommy Locker", "12-Sept-2022", "14-Sept-2023", 45);
+insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit) values (19,3, "Tommy Locker", "12-Sept-2022", "14-Sept-2023", 45);
+insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit) values (20,3, "Tommy Locker", "12-Sept-2022", "14-Sept-2023", 45);
 
 --
 -- Table structure for table `sections`
