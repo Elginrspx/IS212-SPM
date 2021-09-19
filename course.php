@@ -33,16 +33,16 @@
         </nav>
 
     </div>
-    <div class="container">
+    <div id="course" class="container">
         <div class="row p-3">
             <a href="home.php">Courses&nbsp;>&nbsp;</a>
-            <a href="#" class="current">3D Printing and Additive Manufacturing</a>
+            <a href="#" class="current">{{ courseName }}</a>
         </div>
         <div class="row">
             <div class="col-4">
                 <div class="timelineWrapper">
                     <h1 class="color-darkgrey">Courses</h1>
-                    <h1>3D Printing and Additive Manufacturing</h1>
+                    <h1>{{ courseName }}</h1>
                     <ul class="sessions">
                         <li class="select">
                             <div class="color-darkgrey">Chapter 1</div>
@@ -63,7 +63,7 @@
                 <div style="border: 1px solid #dedede; border-radius: 10px;">
                     <div class="row p-3">
                         <div class="col-lg-6">
-                            <h1 class="title">3D Printing and Additive Manufacturing</h1>
+                            <h1 class="title">{{ courseName }}</h1>
                             <div style="position:absolute; bottom:0;">
                                 <a href="class.php" class="btn btn-default btn-md active" role="button" aria-pressed="true">
                                     Enroll Here
@@ -78,14 +78,52 @@
                     </div>
                 </div>
                 <h1 class="my-3 text-center title">Course Description</h1>
-                <p class="color-darkgrey">Lorem ipsum dolor sit amet consectetur adipisicing elit. Asperiores ipsam assumenda quibusdam a quaerat repellendus quos. Perferendis iusto reprehenderit ducimus odit, aspernatur eaque modi architecto repudiandae doloremque cupiditate eveniet provident?</p>
+                <p class="color-darkgrey">{{ courseDescription }}</p>
             </div>
         </div>
     </div>
     <?php include 'includes/footer.php' ?>
     <script>
         var cCID = localStorage.getItem("chosenCourse");
-        console.log(cCID)
+
+        var getCourseDetailsURL = "http://localhost:2222/courses/" + cCID
+        //var getCourseSectionsURL = "http://localhost:2222/courses/10"
+
+        var course = new Vue({
+            el: '#course',
+            data: {
+                courseName: "",
+                courseDescription: ""
+                //sections: []
+
+            },
+            created: function() {
+                // Get Course Details
+                fetch(getCourseDetailsURL)
+                    .then(response => response.json())
+                    .then(data => {
+                        result = data.data.course;
+
+                        this.courseName = result.courseName;
+                        this.courseDescription = result.cDescription;
+                    })
+
+                /*
+                // Get Course Sections
+                fetch(getCourseSectionsURL)
+                    .then(response => response.json())
+                    .then(data => {
+                        result = data.data.course;
+
+                        for (record in result) {
+                            // rmb to replace sectionName with whatever u called it
+                            // get it to return sectionNo and sectionName
+                            this.sections.push(record)
+                        }
+                    })
+                    */
+            }
+        })
     </script>
 </body>
 
