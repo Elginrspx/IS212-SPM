@@ -53,6 +53,8 @@
         // initialise urls
         var getCourseURL = "http://localhost:2222/courses"
         var getPrereqsURL = "http://localhost:2222/prereqs"
+        var getStudentCompletedUrl = "http://localhost:3333/completed/1"
+
         var navbar = new Vue({
             el: '#navbar',
             methods: {
@@ -65,28 +67,47 @@
         var course = new Vue({
             el: '#course',
             data: {
+                completedCourses: [],
                 courses: [],
                 trigger: 0
             },
-            // Get Courses
             created: function() {
+                // Get Student's Completed Courses
+                fetch(getStudentCompletedUrl)
+                    .then(response => response.json())
+                    .then(data => {
+                        result = data.data.courses;
+                        for (record of result) {
+                            this.completedCourses.push(record.completedCName)
+                        }
+                    })
+        
+                // Get Courses
                 fetch(getCourseURL)
                     .then(response => response.json())
                     .then(data => {
                         result = data.data.courses;
                         for (record of result) {
                             courseID = record.courseID
-                            record.prereqs = []
+                            record.prereqsNotMet = []
+
+                            record.status = false
+                            if (this.completedCourses.includes(record.courseName)) {
+                                record.status = true;
+                            }
                             this.courses.push(record);
 
-                            // Get Course Pre-requisites (if exist)
-                            if (record.have) {
+                            /* If Course is not Completed and Course have prerequisites,
+                                Get Course Prerequisites */
+                            if (!record.status && record.have) {
                                 fetch(getPrereqsURL + `/${courseID}`)
                                     .then(response => response.json())
                                     .then(data => {
                                         result = data.data.courses;
                                         for (record in result) {
-                                            this.courses[result[record].prereqCourseID].prereqs.push(result[record].prereqName)
+                                            if (!this.completedCourses.includes(result[record].prereqName)) {
+                                                this.courses[result[record].prereqCourseID].prereqsNotMet.push(result[record].prereqName)
+                                            }
                                         }
                                     })
                             }
@@ -103,15 +124,15 @@
                     <img class="card-img-top" src="images/sample.png">
                     <div class="card-body">
                         <h5 class="card-title color-orange">{{ course.courseName }}</h5>
-                        <div v-if="course.have">
-                            <p v-for="prereqCourse in course.prereqs" class="card-text courseStatus2 m-0">{{ prereqCourse }}</p>
-                            <!--<p class="card-text courseStatus1">Course Completed</p>-->
+                        <div v-if="course.status">
+                            <p class="card-text courseStatus1">Course Completed</p>
                         </div>
-                        <!--
                         <div v-else>
-                            <p class="card-text courseStatus2 mb-0">Pre-requisites NOT met:</p>
+                            <div v-if="course.prereqsNotMet.length != 0">
+                                <p class="card-text courseStatus2 mb-0">Pre-requisites NOT met:</p>
+                                <p v-for="prereqCourse in course.prereqsNotMet" class="card-text courseStatus2 m-0">{{ prereqCourse }}</p>
+                            </div>
                         </div>
-                        -->
                     </div>
                     <div class="card-footer">
                         <a href="#" @click="seeCourse($event, course.courseID)" class="btn btn-default btn-md active" role="button" aria-pressed="true">View Course</a>

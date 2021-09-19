@@ -100,6 +100,7 @@ CREATE TABLE IF NOT EXISTS `completedCourses` (
 -- Insert data into `students` table
 --
 insert into completedCourses (ccStudentID, completedCName) values (1, '3D Printing Software v1.0');
+insert into completedCourses (ccStudentID, completedCName) values (1, '3D Printing Hardware v1.0');
 COMMIT;
 
 --
