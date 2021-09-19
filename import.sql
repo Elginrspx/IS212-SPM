@@ -78,17 +78,29 @@ CREATE TABLE IF NOT EXISTS `students` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
+-- Insert data into `students` table
+--
+insert into students (studentID, sPosition) values (1, 'Engineer Intern');
+COMMIT;
+
+--
 -- Table structure for table `studentBadges`
 --
-DROP TABLE IF EXISTS `studentBadges`;
-CREATE TABLE IF NOT EXISTS `studentBadges` (
-  `sbStudentID` INT NOT NULL,
-  `sBadge` varchar(31) NOT NULL,
-  PRIMARY KEY (`sbStudentID`, `sBadge`),
+DROP TABLE IF EXISTS `completedCourses`;
+CREATE TABLE IF NOT EXISTS `completedCourses` (
+  `ccStudentID` INT NOT NULL,
+  `completedCName` varchar(31) NOT NULL,
+  PRIMARY KEY (`ccStudentID`, `completedCName`),
 
-  CONSTRAINT FK_Student FOREIGN KEY (`sbStudentID`)
+  CONSTRAINT FK_Student FOREIGN KEY (`ccStudentID`)
   REFERENCES students(`studentID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Insert data into `students` table
+--
+insert into completedCourses (ccStudentID, completedCName) values (1, '3D Printing Software v1.0');
+COMMIT;
 
 --
 -- Table structure for table `classes`
