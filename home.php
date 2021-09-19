@@ -76,10 +76,11 @@
                         result = data.data.courses;
                         for (record of result) {
                             courseID = record.courseID
-
                             record.prereqs = []
                             this.courses.push(record);
-                            if (record.have){
+
+                            // Get Course Pre-requisites (if exist)
+                            if (record.have) {
                                 fetch(getPrereqsURL + `/${courseID}`)
                                     .then(response => response.json())
                                     .then(data => {
@@ -102,13 +103,15 @@
                     <img class="card-img-top" src="images/sample.png">
                     <div class="card-body">
                         <h5 class="card-title color-orange">{{ course.courseName }}</h5>
-                        <div v-if="course.status == 'Course Completed'">
-                            <p class="card-text courseStatus1">Course Completed</p>
-                        </div>
-                        <div v-else-if="course.status == 'Pre-requisites NOT met'">
-                            <p class="card-text courseStatus2 mb-0">Pre-requisites NOT met:</p>
+                        <div v-if="course.have">
                             <p v-for="prereqCourse in course.prereqs" class="card-text courseStatus2 m-0">{{ prereqCourse }}</p>
+                            <!--<p class="card-text courseStatus1">Course Completed</p>-->
                         </div>
+                        <!--
+                        <div v-else>
+                            <p class="card-text courseStatus2 mb-0">Pre-requisites NOT met:</p>
+                        </div>
+                        -->
                     </div>
                     <div class="card-footer">
                         <a href="#" @click="seeCourse($event, course.courseID)" class="btn btn-default btn-md active" role="button" aria-pressed="true">View Course</a>
@@ -123,7 +126,7 @@
                     } else {
                         return "courseStatus2"
                     }
-                },                
+                },
                 seeCourse: function(e, cID) {
                     e.preventDefault();
                     localStorage.setItem("chosenCourse", cID);
