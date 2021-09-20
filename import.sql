@@ -81,9 +81,9 @@ CREATE TABLE IF NOT EXISTS `students` (
 --
 -- Insert data into `students` table
 --
-insert into students (studentID, sPosition) values (1, "Ginny Joe Lew",'Engineer Intern');
-insert into students (studentID, sPosition) values (2, "Harley Power", 'Junior Engineer');
-insert into students (studentID, sPosition) values (3, "John Lincoln Page",'Junior Engineer');
+insert into students (studentID, studentName, sPosition) values (1, "Ginny Joe Lew",'Engineer Intern');
+insert into students (studentID, studentName, sPosition) values (2, "Harley Power", 'Junior Engineer');
+insert into students (studentID, studentName, sPosition) values (3, "John Lincoln Page",'Junior Engineer');
 COMMIT;
 
 --

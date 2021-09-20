@@ -78,6 +78,32 @@ def get_students_completed_courses(ccStudentID):
             }
         ), 404
 
+# GET student info by studentName
+@app.route("/student/<string:studentID>")
+def get_student(studentID):
+    print(studentID)
+    try:
+        student = Student.query.filter_by(studentID=studentID).first()
+        
+        if (student):
+            print(student)
+            print("meep")
+            return jsonify(
+                {
+                    "code": 200,
+                    "data": {
+                        "courses": student.json()
+                    }
+                }
+            )
+    except Exception as e:
+        return jsonify(
+            {
+                "code": 404,
+                "message": "There are no courses." + str(e)
+            }
+        ), 404
+
 
 
 if __name__ == '__main__':
