@@ -26,30 +26,14 @@
             </div>
         </div>
     </div>
-    <div id="courseClassList" class="container">
+    <div class="container">
         <div class="row">
             <div class="col">
                 <p class="title text-center pt-5">Choose your preferred class</p>
             </div>
         </div>
-        <div class="row">
-            <div class="col">
-                <div v-for="eachClass in classList">
-                    <div class="col-lg-4 col-md-6 col-sm-12 py-1 my-1">
-                        <div class="card shadow h-100">
-                            <img class="card-img-top" src="images/class.png">
-                            <div class="card-body">
-                                <h5 class="card-title color-orange">Class {{ eachClass.classNo }}</h5>
-                                <p class="card-text">Start Date: {{ eachClass.clsStartTime }}<br>End Date: {{ eachClass.clsEndTime }}</p>
-                                <div class="d-flex align-items-end justify-content-between">
-                                    <a href="#" @click="selectClass($event, eachClass.classID, eachclass.classNo)" class="btn btn-default btn-md active" role="button" aria-pressed="true">View</a>
-                                    <p class="mb-0 registrationText">Registration period:<br>{{ eachClass.regPeriod }}</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div id="courseClassList" class="row">
+            <class-list v-for="classitem in classes" v-bind:classitem="classitem" v-bind:key="classitem.classID"></class-list>
         </div>
     </div>
 
@@ -84,7 +68,7 @@
         var courseClassList = new Vue({
             el: '#courseClassList',
             data: {
-                classList: []
+                classes: []
             },
             created: function() {
                 // Get Course Class List
@@ -93,20 +77,34 @@
                     .then(data => {
                         result = data.data.classes;
 
-                        var classNo = 1;
                         for (record of result) {
-                            record['classNo'] = classNo;
-                            this.classList.push(record)
-
-                            classNo++;
+                            this.classes.push(record)
                         }
                     })
-            },
+            }
+        })
+
+        Vue.component('class-list', {
+            props: ['classitem'],
+            template: `
+            <div class="col-lg-4 col-md-6 col-sm-12 py-1 my-1">
+                <div class="card shadow h-100">
+                    <img class="card-img-top" src="images/class.png">
+                    <div class="card-body">
+                        <h5 class="card-title color-orange">Class {{ classitem.classID }}</h5>
+                        <p class="card-text">Start Date: {{ classitem.clsStartTime }}<br>End Date: {{ classitem.clsEndTime }}</p>
+                        <div class="d-flex align-items-end justify-content-between">
+                            <a href="#" @click="selectClass($event, classitem.classID)" class="btn btn-default btn-md active" role="button" aria-pressed="true">View</a>
+                            <p class="mb-0 registrationText">Registration period:<br>{{ classitem.regPeriod }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            `,
             methods: {
-                selectClass: function(e, classID, classNo) {
+                selectClass: function(e, classID) {
                     e.preventDefault();
                     localStorage.setItem("chosenClass", classID);
-                    localStorage.setItem("chosenClassNo", classNo);
                     window.location.replace("class.php");
                 }
             }

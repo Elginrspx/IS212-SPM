@@ -124,7 +124,6 @@
                     window.location.replace("course.php");
                 }
             }
-
         })
     </script>
 </body>
