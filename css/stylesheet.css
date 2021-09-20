@@ -30,19 +30,25 @@ a.current {
 /*#endregion */
 
 /*#region Jumbotron */
-.jumbotron {
-  background-image: url("../images/cover.jpg");
+.home-jumbotron {
+  color: white;
+  font-family: cuprumRegular;
   background-size: cover;
   height: 100%;
   min-height: 200px;
-}
-
-.cover-text {
-  color: white;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.course-jumbotron {
+  color: white;
   font-family: cuprumRegular;
+  min-height: 350px;
+  padding: 2rem;
+}
+
+.text-shadow {
   text-shadow: 2px 2px #837a7a;
 }
 /*#endregion */
@@ -176,8 +182,11 @@ a.current {
   border-color: #d15641;
 }
 
-
-
 .card {
   border-radius: 10px;
+}
+
+.registrationText {
+  color: #d15641;
+  font-style: italic;
 }

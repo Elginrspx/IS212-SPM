@@ -7,95 +7,66 @@
 </head>
 
 <body>
-    <div id="navbar">
-        <nav class="navbar navbar-expand-md navbar-light bg-light">
-            <div class="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
+    <?php include 'includes/navbar.php' ?>
+    <div id="course">
+        <div class="container">
+            <nav class="mt-2" style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="home.php">Courses</a></li>
+                    <li class="breadcrumb-item"><a href="#">{{ courseName }}</a></li>
+                    <li class="breadcrumb-item"><a href="#">Registration</a></li>
+                    <li class="breadcrumb-item"><a href="#" class="current">Choose your preferred class</a></li>
+                </ol>
+            </nav>
+        </div>
+        <div class="container-fluid p-0">
+            <div class="jumbotron jumbotron-fluid course-jumbotron" style="background:linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url(images/sample.png); background-size:cover;">
+                <h1 class="display-4 text-shadow">{{ courseName }}</h1>
+                <p>{{ courseDescription }}</p>
             </div>
-            <div class="mx-auto order-0">
-                <a class="navbar-brand mx-auto" href="#"><img src="images/All-In-One logo.png"></a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".dual-collapse2">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-            </div>
-            <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
-                <div class="d-flex flex-md-fill flex-shrink-1 justify-content-end order-3">
-                    <form class="d-flex flex-nowrap align-items-center">
-                        <div class="search-container pr-2">
-                            <input class="form-control border-orange" type="search" placeholder="Search" aria-label="Search" />
-                            <img @click="navbarSearch" src="images/search.svg" style="width:20px;" />
-                        </div>
-                    </form>
-                    <button class="btn btn-default" type="button">
-                        Login
-                    </button>
-                </div>
-            </div>
-        </nav>
-
+        </div>
     </div>
-    <div id="course" class="container">
-        <div class="row p-3">
-            <a href="home.php">Courses&nbsp;>&nbsp;</a>
-            <a href="#" class="current">{{ courseName }}</a>
+    <div id="courseClassList" class="container">
+        <div class="row">
+            <div class="col">
+                <p class="title text-center pt-5">Choose your preferred class</p>
+            </div>
         </div>
         <div class="row">
-            <div class="col-4">
-                <div class="timelineWrapper">
-                    <h1 class="color-darkgrey">Courses</h1>
-                    <h1>{{ courseName }}</h1>
-                    <ul class="sessions">
-                        <li class="select">
-                            <div class="color-darkgrey">Chapter 1</div>
-                            <p>3D Printing and Additive Manufacturing</p>
-                        </li>
-                        <li>
-                            <div class="color-darkgrey">Chapter 2</div>
-                            <p>3D Printing Hardware</p>
-                        </li>
-                        <li>
-                            <div class="color-darkgrey">Chapter 3</div>
-                            <p>3D Printing Software</p>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <div class="col-8">
-                <div style="border: 1px solid #dedede; border-radius: 10px;">
-                    <div class="row p-3">
-                        <div class="col-lg-6">
-                            <h1 class="title">{{ courseName }}</h1>
-                            <div style="position:absolute; bottom:0;">
-                                <a href="class.php" class="btn btn-default btn-md active" role="button" aria-pressed="true">
-                                    Enroll Here
-                                </a>
-                                <p class="color-orange m-0">Registration Period:<br>13 September 2021 - 17 October 2021</p>
+            <div class="col">
+                <div v-for="eachClass in classList">
+                    <div class="col-lg-4 col-md-6 col-sm-12 py-1 my-1">
+                        <div class="card shadow h-100">
+                            <img class="card-img-top" src="images/class.png">
+                            <div class="card-body">
+                                <h5 class="card-title color-orange">Class {{ eachClass.classNo }}</h5>
+                                <p class="card-text">Start Date: {{ eachClass.clsStartTime }}<br>End Date: {{ eachClass.clsEndTime }}</p>
+                                <div class="d-flex align-items-end justify-content-between">
+                                    <a href="#" @click="selectClass($event, eachClass.classID, eachclass.classNo)" class="btn btn-default btn-md active" role="button" aria-pressed="true">View</a>
+                                    <p class="mb-0 registrationText">Registration period:<br>{{ eachClass.regPeriod }}</p>
+                                </div>
                             </div>
-
-                        </div>
-                        <div class="col-lg-6 p-1">
-                            <img src="images/sample.png" style="width:100%">
                         </div>
                     </div>
                 </div>
-                <h1 class="my-3 text-center title">Course Description</h1>
-                <p class="color-darkgrey">{{ courseDescription }}</p>
             </div>
         </div>
     </div>
+
+
     <?php include 'includes/footer.php' ?>
     <script>
-        var cCID = localStorage.getItem("chosenCourse");
+        var courseID = localStorage.getItem("chosenCourse");
 
-        var getCourseDetailsURL = "http://localhost:2222/courses/" + cCID
-        //var getCourseSectionsURL = "http://localhost:2222/courses/10"
+        // Initialise URLs
+        var getCourseDetailsURL = "http://localhost:2222/courses/" + courseID
+        var getCourseClassListURL = "http://localhost:2222/classList/" + courseID
 
         var course = new Vue({
             el: '#course',
             data: {
                 courseName: "",
                 courseDescription: ""
-                //sections: []
-
             },
             created: function() {
                 // Get Course Details
@@ -107,21 +78,37 @@
                         this.courseName = result.courseName;
                         this.courseDescription = result.cDescription;
                     })
+            }
+        })
 
-                /*
-                // Get Course Sections
-                fetch(getCourseSectionsURL)
+        var courseClassList = new Vue({
+            el: '#courseClassList',
+            data: {
+                classList: []
+            },
+            created: function() {
+                // Get Course Class List
+                fetch(getCourseClassListURL)
                     .then(response => response.json())
                     .then(data => {
-                        result = data.data.course;
+                        result = data.data.classes;
 
-                        for (record in result) {
-                            // rmb to replace sectionName with whatever u called it
-                            // get it to return sectionNo and sectionName
-                            this.sections.push(record)
+                        var classNo = 1;
+                        for (record of result) {
+                            record['classNo'] = classNo;
+                            this.classList.push(record)
+
+                            classNo++;
                         }
                     })
-                    */
+            },
+            methods: {
+                selectClass: function(e, classID, classNo) {
+                    e.preventDefault();
+                    localStorage.setItem("chosenClass", classID);
+                    localStorage.setItem("chosenClassNo", classNo);
+                    window.location.replace("class.php");
+                }
             }
         })
     </script>

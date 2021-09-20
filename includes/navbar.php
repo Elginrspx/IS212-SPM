@@ -1,0 +1,31 @@
+<?php
+echo '
+    <div id="navbar">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid">
+                <div class="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
+                </div>
+                <div class="mx-auto order-0">
+                    <a class="navbar-brand mx-auto" href="#"><img src="images/All-In-One logo.png"></a>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".dual-collapse2">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                </div>
+                <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
+                    <div class="d-flex flex-md-fill flex-shrink-1 justify-content-end order-3d">
+                        <form class="d-flex flex-nowrap align-items-center" style="margin-right:15px;">
+                            <div class="search-container">
+                                <input class="form-control border-orange" type="search" placeholder="Search" aria-label="Search" />
+                                <img @click="navbarSearch" src="images/search.svg" style="width:20px;" />
+                            </div>
+                        </form>
+                        <button class="btn btn-default" type="button">
+                            Login
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </div>
+'
+?>

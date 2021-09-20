@@ -7,33 +7,9 @@
 </head>
 
 <body>
-    <div id="navbar">
-        <nav class="navbar navbar-expand-md navbar-light bg-light">
-            <div class="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
-            </div>
-            <div class="mx-auto order-0">
-                <a class="navbar-brand mx-auto" href="#"><img src="images/All-In-One logo.png"></a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".dual-collapse2">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-            </div>
-            <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
-                <div class="d-flex flex-md-fill flex-shrink-1 justify-content-end order-3">
-                    <form class="d-flex flex-nowrap align-items-center">
-                        <div class="search-container pr-2">
-                            <input class="form-control border-orange" type="search" placeholder="Search" aria-label="Search" />
-                            <img @click="navbarSearch" src="images/search.svg" style="width:20px;" />
-                        </div>
-                    </form>
-                    <button class="btn btn-default" type="button">
-                        Login
-                    </button>
-                </div>
-            </div>
-        </nav>
-    </div>
+    <?php include 'includes/navbar.php' ?>
     <div class="container-fluid p-0">
-        <div class="jumbotron jumbotron-fluid cover-text">
+        <div class="jumbotron jumbotron-fluid home-jumbotron text-shadow" style="background-image:url(images/cover.jpg)">
             <h1 class="display-4">STAY AHEAD OF THE GAME<br>UPSKILL YOURSELF TODAY</h1>
         </div>
     </div>
@@ -50,26 +26,26 @@
 
     <?php include 'includes/footer.php' ?>
     <script>
-        // initialise urls
-        var getCourseURL = "http://localhost:2222/courses"
+        // Initialise URLs
+        var getCoursesURL = "http://localhost:2222/courses"
         var getPrereqsURL = "http://localhost:2222/prereqs"
-        var getStudentCompletedUrl = "http://localhost:3333/completed/1"
+        var getStudentCompletedUrl = "http://localhost:2222/completed/1"
 
-        var navbar = new Vue({
-            el: '#navbar',
-            methods: {
-                navbarSearch: function() {
-                    /* Function to search..?*/
-                }
-            }
-        })
+        // var navbar = new Vue({
+        //     el: '#navbar',
+        //     methods: {
+        //         navbarSearch: function() {
+        //             /* Function to search..?*/
+        //         }
+        //     }
+        // })
 
+        // Get Course Details
         var course = new Vue({
             el: '#course',
             data: {
                 completedCourses: [],
-                courses: [],
-                trigger: 0
+                courses: []
             },
             created: function() {
                 // Get Student's Completed Courses
@@ -81,9 +57,9 @@
                             this.completedCourses.push(record.completedCName)
                         }
                     })
-        
+
                 // Get Courses
-                fetch(getCourseURL)
+                fetch(getCoursesURL)
                     .then(response => response.json())
                     .then(data => {
                         result = data.data.courses;
@@ -104,9 +80,10 @@
                                     .then(response => response.json())
                                     .then(data => {
                                         result = data.data.courses;
-                                        for (record in result) {
-                                            if (!this.completedCourses.includes(result[record].prereqName)) {
-                                                this.courses[result[record].prereqCourseID].prereqsNotMet.push(result[record].prereqName)
+                                        for (record of result) {
+                                            console.log(record.prereqCourseID)
+                                            if (!this.completedCourses.includes(record.prereqName)) {
+                                                this.courses[record.prereqCourseID].prereqsNotMet.push(record.prereqName)
                                             }
                                         }
                                     })
@@ -135,22 +112,15 @@
                         </div>
                     </div>
                     <div class="card-footer">
-                        <a href="#" @click="seeCourse($event, course.courseID)" class="btn btn-default btn-md active" role="button" aria-pressed="true">View Course</a>
+                        <a href="#" @click="selectCourse($event, course.courseID)" class="btn btn-default btn-md active" role="button" aria-pressed="true">View Course</a>
                     </div>
                 </div>
             </div>
             `,
             methods: {
-                statusClass: function(status) {
-                    if (status == "Course Completed") {
-                        return "courseStatus1"
-                    } else {
-                        return "courseStatus2"
-                    }
-                },
-                seeCourse: function(e, cID) {
+                selectCourse: function(e, courseID) {
                     e.preventDefault();
-                    localStorage.setItem("chosenCourse", cID);
+                    localStorage.setItem("chosenCourse", courseID);
                     window.location.replace("course.php");
                 }
             }
