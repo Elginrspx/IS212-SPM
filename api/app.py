@@ -363,6 +363,28 @@ def get_student_registration(courseID, classID):
             }
         ), 404
 
+# POST registration for courseClass
+@app.route("/registerClass", methods=['POST'])
+def register_class():
+    data = request.get_json()
+    print(data['regCourseID'])
+    regCourseID = data['regCourseID']
+    regClassID = data['regClassID']
+    regStudentID = data['regStudentID']
+    if (Registration.query.filter_by(regCourseID=regCourseID, regClassID = regClassID, regStudentID = regStudentID).all()):
+        return jsonify({"code": 400,"message": "The student has already made a registration for this class"}), 400
+ 
+    
+    registration = Registration(**data)
+ 
+    try:
+        db.session.add(registration)
+        db.session.commit()
+    except Exception as e:
+        return jsonify({"code": 500, "message": "An error occurred creating the assignment." + str(e)}), 500
+ 
+    return jsonify({"code": 201, "data": registration.json()}), 201
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=2222, debug=True)
