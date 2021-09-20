@@ -45,17 +45,19 @@ class Class(db.Model):
     clsStartTime = db.Column(db.String(30), nullable = False)
     clsEndTime = db.Column(db.String(30), nullable=False)
     clsLimit = db.Column(db.Integer, nullable=False)
+    regPeriod = db.Column(db.String(30), nullable=False)
     # user = relationship('User', backref='child')
     courseClass = db.relationship(
     'Course', primaryjoin='Class.clsCourseID == Course.courseID', backref='classes')
 
-    def __init__(self, clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit):
+    def __init__(self, clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit, regPeriod):
         self.clsCourseID = clsCourseID
         self.classID = classID
         self.clsTrainer = clsTrainer
         self.clsStartTime = clsStartTime
         self.clsEndTime = clsEndTime
         self.clsLimit = clsLimit
+        self.regPeriod = regPeriod
         
 
     def json(self):
@@ -65,8 +67,46 @@ class Class(db.Model):
         "clsTrainer": self.clsTrainer, 
         "clsStartTime": self.clsStartTime, 
         "clsEndTime": self.clsEndTime,
-        "clsLimit": self.clsLimit
+        "clsLimit": self.clsLimit,
+        "regPeriod": self.regPeriod
         }
+
+# class Registration(db.Model):
+#     __tablename__ = 'registrations'
+
+#     regStudentID = db.column(db.Integer, db.ForeignKey('classes.clsCourseID', ondelete="CASCADE", onupdate="CASCADE"), primary_key=True)
+#     clsCourseID = db.Column(db.String(30), db.ForeignKey('classes.clsCourseID', ondelete="CASCADE", onupdate="CASCADE"), primary_key=True)
+#     classID = db.Column(db.Integer,db.ForeignKey('classes.classID', ondelete="CASCADE", onupdate="CASCADE"), primary_key=True)
+#     clsTrainer = db.Column(db.String(30), nullable=False)
+#     clsStartTime = db.Column(db.String(30), nullable = False)
+#     clsEndTime = db.Column(db.String(30), nullable=False)
+#     clsLimit = db.Column(db.Integer, nullable=False)
+#     regPeriod = db.Column(db.String(30), nullable=False)
+#     # user = relationship('User', backref='child')
+#     classRegistration = db.relationship(
+#     'Course', primaryjoin='Class.clsCourseID == Course.courseID', backref='classes')
+
+#     def __init__(self, clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit, regPeriod):
+#         self.clsCourseID = clsCourseID
+#         self.classID = classID
+#         self.clsTrainer = clsTrainer
+#         self.clsStartTime = clsStartTime
+#         self.clsEndTime = clsEndTime
+#         self.clsLimit = clsLimit
+#         self.regPeriod = regPeriod
+        
+
+#     def json(self):
+#         return {
+#         "clsCourseID": self.clsCourseID, 
+#         "classID": self.classID, 
+#         "clsTrainer": self.clsTrainer, 
+#         "clsStartTime": self.clsStartTime, 
+#         "clsEndTime": self.clsEndTime,
+#         "clsLimit": self.clsLimit,
+#         "regPeriod": self.regPeriod
+#         }
+
 
 class Prerequisite(db.Model):
     __tablename__ = 'prerequisites'
@@ -86,6 +126,7 @@ class Prerequisite(db.Model):
             "prereqCourseID" : self.prereqCourseID,
             "prereqName" : self.prereqName
         }
+
 
 # class Section(db.Model):
 #     __tablename__ = 'sections'

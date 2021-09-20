@@ -73,6 +73,7 @@ COMMIT;
 DROP TABLE IF EXISTS `students`;
 CREATE TABLE IF NOT EXISTS `students` (
   `studentID` INT NOT NULL,
+  `studentName` varchar(30) NOT NULL,
   `sPosition` varchar(30) NOT NULL,
   PRIMARY KEY (`studentID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -80,7 +81,9 @@ CREATE TABLE IF NOT EXISTS `students` (
 --
 -- Insert data into `students` table
 --
-insert into students (studentID, sPosition) values (1, 'Engineer Intern');
+insert into students (studentID, sPosition) values (1, "Ginny Joe Lew",'Engineer Intern');
+insert into students (studentID, sPosition) values (2, "Harley Power", 'Junior Engineer');
+insert into students (studentID, sPosition) values (3, "John Lincoln Page",'Junior Engineer');
 COMMIT;
 
 --
@@ -114,6 +117,7 @@ CREATE TABLE IF NOT EXISTS `classes` (
   `clsStartTime` varchar(30) NOT NULL,
   `clsEndTime` varchar(30) NOT NULL,
   `clsLimit` int NOT NULL,
+  `regPeriod` varchar(30) NOT NULL,
   PRIMARY KEY (`clsCourseID`, `classID`),
   CONSTRAINT FK_COURSE FOREIGN KEY (`clsCourseID`)
     REFERENCES courses(`courseID`) 
@@ -122,27 +126,27 @@ CREATE TABLE IF NOT EXISTS `classes` (
 --
 -- Insert data into `classes` table
 --
-insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit) values (1,3, "Tommy Locker", "12-Sept-2021", "14-Sept-2023", 35);
-insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit) values (2,2, "Tommy Locker", "12-Sept-2021", "14-Sept-2022", 40);
-insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit) values (1,2, "Tommy Topper", "12-Sept-2021", "14-Sept-2022", 40);
-insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit) values (3,3, "Tommy Locker", "12-Sept-2021", "14-Sept-2022", 40);
-insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit) values (4,3, "Tommy Locker", "12-Sept-2021", "14-Sept-2022", 40);
-insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit) values (5,3, "Tommy Locker", "12-Sept-2021", "14-Sept-2022", 40);
-insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit) values (6,3, "Tommy Locker", "12-Sept-2022", "14-Sept-2023", 30);
-insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit) values (7,3, "Tommy Locker", "12-Sept-2022", "14-Sept-2023", 35);
-insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit) values (8,3, "Tommy Locker", "12-Sept-2022", "14-Sept-2023", 35);
-insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit) values (9,3, "Tommy Locker", "12-Sept-2022", "14-Sept-2023", 35);
-insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit) values (10,3, "Tommy Locker", "12-Sept-2022", "14-Sept-2023", 35);
-insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit) values (11,3, "Tommy Locker", "12-Sept-2022", "14-Sept-2023", 35);
-insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit) values (12,3, "Tommy Locker", "12-Sept-2022", "14-Sept-2023", 45);
-insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit) values (13,3, "Tommy Locker", "12-Sept-2022", "14-Sept-2023", 45);
-insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit) values (14,3, "Tommy Locker", "12-Sept-2022", "14-Sept-2023", 45);
-insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit) values (15,3, "Tommy Locker", "12-Sept-2022", "14-Sept-2023", 45);
-insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit) values (16,3, "Tommy Locker", "12-Sept-2022", "14-Sept-2023", 45);
-insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit) values (17,3, "Tommy Locker", "12-Sept-2022", "14-Sept-2023", 45);
-insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit) values (18,3, "Tommy Locker", "12-Sept-2022", "14-Sept-2023", 45);
-insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit) values (19,3, "Tommy Locker", "12-Sept-2022", "14-Sept-2023", 45);
-insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit) values (20,3, "Tommy Locker", "12-Sept-2022", "14-Sept-2023", 45);
+insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit, regPeriod) values (1,3, "Tommy Locker", "12-Sept-2021", "14-Sept-2023", 35, "9 August, 2021 to 1 September, 2021");
+insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit, regPeriod) values (2,2, "Tommy Locker", "12-Sept-2021", "14-Sept-2022", 35, "9 August, 2021 to 1 September, 2021");
+insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit, regPeriod) values (1,2, "Tommy Topper", "12-Sept-2021", "14-Sept-2022", 40, "9 August, 2021 to 1 September, 2021");
+insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit, regPeriod) values (3,3, "Tommy Locker", "12-Sept-2021", "14-Sept-2022", 40, "9 August, 2021 to 1 September, 2021");
+insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit, regPeriod) values (4,3, "Tommy Locker", "12-Sept-2021", "14-Sept-2022", 40, "9 August, 2021 to 1 September, 2021");
+insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit, regPeriod) values (5,3, "Tommy Locker", "12-Sept-2021", "14-Sept-2022", 40, "9 August, 2021 to 1 September, 2021");
+insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit, regPeriod) values (6,3, "Tommy Locker", "12-Sept-2022", "14-Sept-2023", 30, "9 August, 2022 to 1 September, 2022");
+insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit, regPeriod) values (7,3, "Tommy Locker", "12-Sept-2022", "14-Sept-2023", 35, "9 August, 2022 to 1 September, 2022");
+insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit, regPeriod) values (8,3, "Tommy Locker", "12-Sept-2022", "14-Sept-2023", 35, "9 August, 2022 to 1 September, 2022");
+insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit, regPeriod) values (9,3, "Tommy Locker", "12-Sept-2022", "14-Sept-2023", 35, "9 August, 2022 to 1 September, 2022");
+insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit, regPeriod) values (10,3, "Tommy Locker", "12-Sept-2022", "14-Sept-2023", 35, "9 August, 2022 to 1 September, 2022");
+insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit, regPeriod) values (11,3, "Tommy Locker", "12-Sept-2022", "14-Sept-2023", 35, "9 August, 2022 to 1 September, 2022");
+insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit, regPeriod) values (12,3, "Tommy Locker", "12-Sept-2022", "14-Sept-2023", 45, "9 August, 2022 to 1 September, 2022");
+insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit, regPeriod) values (13,3, "Tommy Locker", "12-Sept-2022", "14-Sept-2023", 45, "9 August, 2022 to 1 September, 2022");
+insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit, regPeriod) values (14,3, "Tommy Locker", "12-Sept-2022", "14-Sept-2023", 45, "9 August, 2022 to 1 September, 2022");
+insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit, regPeriod) values (15,3, "Tommy Locker", "12-Sept-2022", "14-Sept-2023", 45, "9 August, 2022 to 1 September, 2022");
+insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit, regPeriod) values (16,3, "Tommy Locker", "12-Sept-2022", "14-Sept-2023", 45, "9 August, 2022 to 1 September, 2022");
+insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit, regPeriod) values (17,3, "Tommy Locker", "12-Sept-2022", "14-Sept-2023", 45, "9 August, 2022 to 1 September, 2022");
+insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit, regPeriod) values (18,3, "Tommy Locker", "12-Sept-2022", "14-Sept-2023", 45, "9 August, 2022 to 1 September, 2022");
+insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit, regPeriod) values (19,3, "Tommy Locker", "12-Sept-2022", "14-Sept-2023", 45, "9 August, 2022 to 1 September, 2022");
+insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit, regPeriod) values (20,3, "Tommy Locker", "12-Sept-2022", "14-Sept-2023", 45, "9 August, 2022 to 1 September, 2022");
 
 --
 -- Table structure for table `sections`
@@ -201,8 +205,8 @@ COMMIT;
 --
 -- Table structure for table `registration`
 --
-DROP TABLE IF EXISTS `registration`;
-CREATE TABLE IF NOT EXISTS `registration` (
+DROP TABLE IF EXISTS `registrations`;
+CREATE TABLE IF NOT EXISTS `registrations` (
   `regStudentID` INT NOT NULL,
   `regCourseID` varchar(30) NOT NULL,
   `regClassID` INT NOT NULL,
@@ -212,8 +216,17 @@ CREATE TABLE IF NOT EXISTS `registration` (
   REFERENCES classes(`clsCourseID`,`classID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-
-
+--
+-- Insert data into `registrations` table (regStatus can be "enrolled", "accepted", or "rejected")
+--
+insert into `registrations` (regStudentID, regCourseID, regClassID, regStatus) values (1, 6, 3, "enrolled");
+insert into `registrations` (regStudentID, regCourseID, regClassID, regStatus) values (2, 6, 3, "enrolled");
+insert into `registrations` (regStudentID, regCourseID, regClassID, regStatus) values (3, 6, 3, "enrolled");
+insert into `registrations` (regStudentID, regCourseID, regClassID, regStatus) values (2, 7, 3, "enrolled");
+insert into `registrations` (regStudentID, regCourseID, regClassID, regStatus) values (3, 7, 3, "enrolled");
+insert into `registrations` (regStudentID, regCourseID, regClassID, regStatus) values (2, 9, 3, "enrolled");
+insert into `registrations` (regStudentID, regCourseID, regClassID, regStatus) values (3, 9, 3, "enrolled");
+COMMIT;
 
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
