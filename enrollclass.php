@@ -73,14 +73,46 @@
     <?php include 'includes/footer.php' ?>
 
     <script>
+        var cCID = localStorage.getItem("chosenCourse");
+        var courseID = localStorage.getItem("courseID");
+        var classID = localStorage.getItem("classID");
+        var studentID = localStorage.getItem("studentID");
+        console.log(courseID);
+        alert("meep");
+
+        var registrationURL = "http://localhost:2222/registerClass" 
+
         var enrollment = new Vue({
             el: '#enrollment',
             data: {
-                isSubmit: false
+                isSubmit: false,
+                courseID: courseID,
+                classID: classID,
+                studentID: studentID
             },
             methods: {
                 submitApplication: function() {
-                    this.isSubmit = true;
+                    alert("insubmit")
+                    let jsonData = JSON.stringify({
+                        "regStudentID": studentID,
+                        "regCourseID": courseID,
+                        "regClassID": classID,
+                        "regStatus": "enrolled"
+                    });
+                    fetch(registrationURL, {
+                        method: "POST",
+                        headers: {
+                            "Content-type": "application/json"
+                        },
+                        body: jsonData
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        result = data;
+                        console.log(result);
+                        this.isSubmit = true;
+                    })
+                    
                 }
             }
         })

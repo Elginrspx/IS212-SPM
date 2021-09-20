@@ -6,7 +6,7 @@
     <title>Course | LMS</title>
 </head>
 
-<body>
+<body onload='getClasses()'>
     <div id="navbar">
         <nav class="navbar navbar-expand-md navbar-light bg-light">
             <div class="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
@@ -33,7 +33,7 @@
         </nav>
 
     </div>
-    <div class="container">
+    <div id="classes" class="container">
         <div class="row p-3">
             <a href="home.php">Courses&nbsp;>&nbsp;</a>
             <a href="course.php">3D Printing and Additive Manufacturing&nbsp;>&nbsp;</a>
@@ -45,50 +45,50 @@
                 <p class="title text-center">Choose your preferred class</p>
             </div>
         </div>
-        <div class="row">
-            <div class="col-lg-4 col-md-6 col-sm-12 py-1 my-1">
-                <div class="card shadow h-100">
-                    <img class="card-img-top" src="images/class.png">
-                    <div class="card-body">
-                        <h5 class="card-title color-orange">Class 1</h5>
-                        <p class="card-text">Start Date: 1 November 2021<br>End Date: 28 November 2021</p>
-                        <a href="enrollclass.php" class="btn btn-default btn-md active" role="button" aria-pressed="true">Enroll</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-6 col-sm-12 py-1 my-1">
-                <div class="card shadow h-100">
-                    <img class="card-img-top" src="images/class.png">
-                    <div class="card-body">
-                        <h5 class="card-title color-orange">Class 2</h5>
-                        <p class="card-text">Start Date: 1 November 2021<br>End Date: 28 November 2021</p>
-                        <a href="enrollclass.php" class="btn btn-default btn-md active" role="button" aria-pressed="true">Enroll</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-6 col-sm-12 py-1 my-1">
-                <div class="card shadow h-100">
-                    <img class="card-img-top" src="images/class.png">
-                    <div class="card-body">
-                        <h5 class="card-title color-orange">Class 3</h5>
-                        <p class="card-text">Start Date: 1 November 2021<br>End Date: 28 November 2021</p>
-                        <a href="enrollclass.php" class="btn btn-default btn-md active" role="button" aria-pressed="true">Enroll</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-6 col-sm-12 py-1 my-1">
-                <div class="card shadow h-100">
-                    <img class="card-img-top" src="images/class.png">
-                    <div class="card-body">
-                        <h5 class="card-title color-orange">Class 4</h5>
-                        <p class="card-text">Start Date: 1 November 2021<br>End Date: 28 November 2021</p>
-                        <a href="enrollclass.php" class="btn btn-default btn-md active" role="button" aria-pressed="true">Enroll</a>
-                    </div>
-                </div>
-            </div>
+        <div class="row" id="cardContainer">
+            
         </div>
     </div>
     <?php include 'includes/footer.php' ?>
+    <script>
+        var cCID = localStorage.getItem("chosenCourse");
+        var loginID = 1 //student ID but initialised for now cos no login
+
+
+        var getClassesURL = "http://localhost:2222/classList/" + cCID
+        //var getCourseSectionsURL = "http://localhost:2222/courses/10"
+        window.onload = function(){
+            fetch(getClassesURL)
+            .then(response => response.json())
+            .then(data => {
+                classes = data.data.classes;
+                for (classs in classes){
+                    console.log(classes[classs].classID)
+                    document.getElementById("cardContainer").innerHTML +=
+                    `<div class="col-lg-4 col-md-6 col-sm-12 py-1 my-1">
+                        <div class="card shadow h-100">
+                            <img class="card-img-top" src="images/class.png">
+                            <div class="card-body">
+                                <h5 class="card-title color-orange">Class ${classes[classs].classID}</h5>
+                                <p class="card-text">Start Date: ${classes[classs].clsStartTime}<br>End Date: ${classes[classs].clsEndTime}</p>
+                                <a href="enrollclass.php" onclick="return prepareAssignment($event, ${classes[classs].clsCourseID},${classes[classs].classID}, ${loginID})" class="btn btn-default btn-md active" role="button" aria-pressed="true">Enroll</a>
+                            </div>
+                        </div>
+                    </div>`
+                }
+            })
+        }
+        function prepareAssignment(e, courseID,classID , studentID){
+            e.preventDefault();
+            localStorage.setItem("courseID", courseID);
+            localStorage.setItem("classID", classID);
+            localStorage.setItem("studentID", studentID)
+
+            alert("check")
+            // window.location.replace("enrollclass.php");
+        }
+        
+    </script>
 </body>
 
 </html>
