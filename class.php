@@ -52,10 +52,10 @@
     <?php include 'includes/footer.php' ?>
     <script>
         var cCID = localStorage.getItem("chosenCourse");
-        var loginID = 1 //student ID but initialised for now cos no login
+        var loginID = 1; //student ID but initialised for now cos no login
 
 
-        var getClassesURL = "http://localhost:2222/classList/" + cCID
+        var getClassesURL = "http://localhost:2222/classList/" + cCID;
         //var getCourseSectionsURL = "http://localhost:2222/courses/10"
         window.onload = function(){
             fetch(getClassesURL)
@@ -64,6 +64,7 @@
                 classes = data.data.classes;
                 for (classs in classes){
                     console.log(classes[classs].classID)
+                    //ELGIN HELP PLS
                     document.getElementById("cardContainer").innerHTML +=
                     `<div class="col-lg-4 col-md-6 col-sm-12 py-1 my-1">
                         <div class="card shadow h-100">
@@ -71,22 +72,44 @@
                             <div class="card-body">
                                 <h5 class="card-title color-orange">Class ${classes[classs].classID}</h5>
                                 <p class="card-text">Start Date: ${classes[classs].clsStartTime}<br>End Date: ${classes[classs].clsEndTime}</p>
-                                <a href="enrollclass.php" onclick="return prepareAssignment($event, ${classes[classs].clsCourseID},${classes[classs].classID}, ${loginID})" class="btn btn-default btn-md active" role="button" aria-pressed="true">Enroll</a>
+                                <a id="form" href="enrollclass.php" onclick="callFunction($event)" class="btn btn-default btn-md active" role="button" aria-pressed="true">Enroll</a>
                             </div>
                         </div>
                     </div>`
                 }
             })
         }
-        function prepareAssignment(e, courseID,classID , studentID){
-            e.preventDefault();
-            localStorage.setItem("courseID", courseID);
-            localStorage.setItem("classID", classID);
-            localStorage.setItem("studentID", studentID)
+        //ELGIN this is a test function but it's not called
+        function callFunction(e){
+            // e.preventDefault();
+            alert("help");
+        }
+        //ELGIN this should work if it is able to be called
+        document.getElementById("form").addEventListener("click", function() {
+            //ELGIN haven't set the data yet, so studentID, courseID, classID are empty
+            let jsonData = JSON.stringify({
+                "regStudentID": studentID,
+                "regCourseID": courseID,
+                "regClassID": classID,
+                "regStatus": "enrolled"
+            });
+            fetch(registrationURL, {
+                method: "POST",
+                headers: {
+                    "Content-type": "application/json"
+                },
+                body: jsonData
+            })
+            .then(response => response.json())
+            .then(data => {
+                result = data;
+                console.log(result);
+            })
 
             alert("check")
             // window.location.replace("enrollclass.php");
-        }
+            return false
+        })
         
     </script>
 </body>

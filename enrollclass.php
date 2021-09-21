@@ -85,7 +85,7 @@
         var enrollment = new Vue({
             el: '#enrollment',
             data: {
-                isSubmit: false,
+                isSubmit: true,
                 courseID: courseID,
                 classID: classID,
                 studentID: studentID
@@ -93,25 +93,25 @@
             methods: {
                 submitApplication: function() {
                     alert("insubmit")
-                    let jsonData = JSON.stringify({
-                        "regStudentID": studentID,
-                        "regCourseID": courseID,
-                        "regClassID": classID,
-                        "regStatus": "enrolled"
-                    });
-                    fetch(registrationURL, {
-                        method: "POST",
-                        headers: {
-                            "Content-type": "application/json"
-                        },
-                        body: jsonData
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        result = data;
-                        console.log(result);
-                        this.isSubmit = true;
-                    })
+                    // let jsonData = JSON.stringify({
+                    //     "regStudentID": studentID,
+                    //     "regCourseID": courseID,
+                    //     "regClassID": classID,
+                    //     "regStatus": "enrolled"
+                    // });
+                    // fetch(registrationURL, {
+                    //     method: "POST",
+                    //     headers: {
+                    //         "Content-type": "application/json"
+                    //     },
+                    //     body: jsonData
+                    // })
+                    // .then(response => response.json())
+                    // .then(data => {
+                    //     result = data;
+                    //     console.log(result);
+                    //     this.isSubmit = true;
+                    // })
                     
                 }
             }
