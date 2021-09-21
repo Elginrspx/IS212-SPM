@@ -14,7 +14,6 @@
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="home.php">Courses</a></li>
                     <li class="breadcrumb-item"><a href="#">{{ courseName }}</a></li>
-                    <li class="breadcrumb-item"><a href="#">Registration</a></li>
                     <li class="breadcrumb-item"><a href="#" class="current">Choose your preferred class</a></li>
                 </ol>
             </nav>
@@ -94,7 +93,7 @@
                         <h5 class="card-title color-orange">Class {{ classitem.classID }}</h5>
                         <p class="card-text">Start Date: {{ classitem.clsStartTime }}<br>End Date: {{ classitem.clsEndTime }}</p>
                         <div class="d-flex align-items-end justify-content-between">
-                            <a href="#" @click="selectClass($event, classitem.classID)" class="btn btn-default btn-md active" role="button" aria-pressed="true">View</a>
+                            <a href="#" @click="callFunctionTest(classitem.classID)" class="btn btn-default btn-md active" role="button" aria-pressed="true">View</a>
                             <p class="mb-0 registrationText">Registration period:<br>{{ classitem.regPeriod }}</p>
                         </div>
                     </div>
@@ -102,13 +101,44 @@
             </div>
             `,
             methods: {
-                selectClass: function(e, classID) {
-                    e.preventDefault();
-                    localStorage.setItem("chosenClass", classID);
-                    window.location.replace("class.php");
+                // selectClass: function(e, classID) {
+                //     e.preventDefault();
+                //     localStorage.setItem("chosenClass", classID);
+                //     window.location.replace("class.php");
+                // }
+                callFunctionTest: function(classID) {
+                    console.log("in function courseID" + courseID)
+                    console.log("in function classID" + classID)
+                    // let jsonData = JSON.stringify({
+                    //     "regStudentID": studentID,
+                    //     "regCourseID": courseID,
+                    //     "regClassID": classID,
+                    //     "regStatus": "enrolled"
+                    // });
+                    // fetch(registrationURL, {
+                    //         method: "POST",
+                    //         headers: {
+                    //             "Content-type": "application/json"
+                    //         },
+                    //         body: jsonData
+                    //     })
+                    //     .then(response => response.json())
+                    //     .then(data => {
+                    //         result = data;
+                    //         console.log(result);
+                    //     })
+
+                    // alert("check")
+                    // // window.location.replace("enrollclass.php");
+                    // return false
                 }
             }
         })
+
+        function callFunction() {
+            // e.preventDefault();
+            alert("help");
+        }
     </script>
 </body>
 
