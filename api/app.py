@@ -341,11 +341,33 @@ def get_student(studentID):
             }
         ), 404
 
-# GET student registrations by course+class
-@app.route("/registration/<string:courseID>/<string:classID>")
-def get_student_registration(courseID, classID):
+# GET all student registrations
+@app.route("/registration")
+def get_all_registration():
     try:
-        registrationn = Registration.query.filter_by(regCourseID=courseID, regClassID = classID).all()
+        registrationn = Registration.query.all()
+        if (registrationn):
+            return jsonify(
+                {
+                    "code": 200,
+                    "data": {
+                        "registrations": [registration.json() for registration in registrationn]
+                    }
+                }
+            )
+    except Exception as e:
+        return jsonify(
+            {
+                "code": 404,
+                "message": "There are no student registrations." + str(e)
+            }
+        ), 404
+
+# GET student registrations by course
+@app.route("/registration/<string:courseID>")
+def get_student_registration(courseID):
+    try:
+        registrationn = Registration.query.filter_by(regCourseID=courseID).all()
         if (registrationn):
             return jsonify(
                 {
