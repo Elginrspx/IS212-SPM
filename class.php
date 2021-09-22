@@ -49,7 +49,7 @@
                                     <h1 class="title mb-auto">Class {{ classDetails[0].classID }}</h1>
                                 </div>
                                 <div>
-                                    <a href="enrollclass.php" @click="enrollClass($event, classDetails[0].classID)" class="btn btn-default btn-md active" role="button" aria-pressed="true">Enroll Here</a>
+                                    <a href="enrollclass.php" @click="enrollClass($event, classDetails[0].clsCourseID, classDetails[0].classID)" class="btn btn-default btn-md active" role="button" aria-pressed="true">Enroll Here</a>
                                 </div>
                                 <div>
                                     <p class="color-orange m-0">Registration Period:<br>{{ classDetails[0].regPeriod }}</p>
@@ -68,11 +68,13 @@
     </div>
     <?php include 'includes/footer.php' ?>
     <script>
-        var courseCID = localStorage.getItem("chosenCourse");
-        var classCID = localStorage.getItem("chosenClass");
+        var courseID = localStorage.getItem("chosenCourse");
+        var classID = localStorage.getItem("chosenClass");
+        var loginID = localStorage.getItem("userID");
 
-        var getCourseDetailsURL = "http://localhost:2222/courses/" + courseID
-        var getClassDetailsURL = "http://localhost:2222/classes/" + courseID + "/" + classID
+        var getCourseDetailsURL = "http://localhost:2222/courses/" + courseID;
+        var getClassDetailsURL = "http://localhost:2222/classes/" + courseID + "/" + classID;
+        var registrationURL = "http://localhost:2222/registerClass";
 
         var classDetail = new Vue({
             el: '#classDetail',
@@ -100,41 +102,41 @@
                     })
             },
             methods: {
-                enrollClass: function(e, classID) {
+                enrollClass: function(e, courseID, classID) {
                     e.preventDefault();
                     console.log("in function classID" + classID)
 
-                    callFunction();
-                    // let jsonData = JSON.stringify({
-                    //     "regStudentID": studentID,
-                    //     "regCourseID": courseID,
-                    //     "regClassID": classID,
-                    //     "regStatus": "enrolled"
-                    // });
-                    // fetch(registrationURL, {
-                    //         method: "POST",
-                    //         headers: {
-                    //             "Content-type": "application/json"
-                    //         },
-                    //         body: jsonData
-                    //     })
-                    //     .then(response => response.json())
-                    //     .then(data => {
-                    //         result = data;
-                    //         console.log(result);
-                    //     })
+                    // callFunction();
+                    let jsonData = JSON.stringify({
+                        "regStudentID": loginID,
+                        "regCourseID": courseID,
+                        "regClassID": classID,
+                        "regStatus": "enrolled"
+                    });
+                    fetch(registrationURL, {
+                            method: "POST",
+                            headers: {
+                                "Content-type": "application/json"
+                            },
+                            body: jsonData
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            result = data;
+                            console.log(result);
+                        })
 
                     // alert("check")
-                    // // window.location.replace("enrollclass.php");
+                    window.location.replace("enrollclass.php");
                     // return false
                 }
             }
         })
 
-        function callFunction() {
-            // e.preventDefault();
-            alert("help");
-        }
+        // function callFunction() {
+        //     // e.preventDefault();
+        //     alert("help");
+        // }
     </script>
 </body>
 

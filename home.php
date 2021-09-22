@@ -26,6 +26,7 @@
 
     <?php include 'includes/footer.php' ?>
     <script>
+        localStorage.setItem("userID", 1)
         // Initialise URLs
         var getCoursesURL = "http://localhost:2222/courses"
         var getPrereqsURL = "http://localhost:2222/prereqs"
