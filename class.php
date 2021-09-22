@@ -6,111 +6,135 @@
     <title>Course | LMS</title>
 </head>
 
-<body onload='getClasses()'>
-    <div id="navbar">
-        <nav class="navbar navbar-expand-md navbar-light bg-light">
-            <div class="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
-            </div>
-            <div class="mx-auto order-0">
-                <a class="navbar-brand mx-auto" href="#"><img src="images/All-In-One logo.png"></a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".dual-collapse2">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-            </div>
-            <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
-                <div class="d-flex flex-md-fill flex-shrink-1 justify-content-end order-3">
-                    <form class="d-flex flex-nowrap align-items-center">
-                        <div class="search-container pr-2">
-                            <input class="form-control border-orange" type="search" placeholder="Search" aria-label="Search" />
-                            <img @click="navbarSearch" src="images/search.svg" style="width:20px;" />
-                        </div>
-                    </form>
-                    <button class="btn btn-default" type="button">
-                        Login
-                    </button>
-                </div>
-            </div>
-        </nav>
-
-    </div>
-    <div id="classes" class="container">
-        <div class="row p-3">
-            <a href="home.php">Courses&nbsp;>&nbsp;</a>
-            <a href="course.php">3D Printing and Additive Manufacturing&nbsp;>&nbsp;</a>
-            <a href="#">Registration&nbsp;>&nbsp;</a>
-            <a href="#" class="current">Choose your preferred class</a>
+<body>
+    <?php include 'includes/navbar.php' ?>
+    <div id="classDetail" class="container">
+        <div class="container">
+            <nav class="mt-2" style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="home.php">Courses</a></li>
+                    <li class="breadcrumb-item"><a href="course.php">{{ courseName }}</a></li>
+                    <li class="breadcrumb-item"><a href="course.php">Choose your preferred class</a></li>
+                    <li class="breadcrumb-item"><a href="#" class="current">Registration</a></li>
+                </ol>
+            </nav>
         </div>
         <div class="row">
-            <div class="col">
-                <p class="title text-center">Choose your preferred class</p>
+            <div class="col-4">
+                <div class="timelineWrapper">
+                    <h1 class="color-darkgrey">Courses</h1>
+                    <h1>{{ courseName }}</h1>
+                    <ul class="sessions">
+                        <li class="select">
+                            <div class="color-darkgrey">Chapter 1</div>
+                            <p>3D Printing and Additive Manufacturing</p>
+                        </li>
+                        <li>
+                            <div class="color-darkgrey">Chapter 2</div>
+                            <p>3D Printing Hardware</p>
+                        </li>
+                        <li>
+                            <div class="color-darkgrey">Chapter 3</div>
+                            <p>3D Printing Software</p>
+                        </li>
+                    </ul>
+                </div>
             </div>
-        </div>
-        <div class="row" id="cardContainer">
-            
+            <div class="col-8">
+                <div style="border: 1px solid #dedede; border-radius: 10px;">
+                    <div class="row p-3">
+                        <div class="col-lg-6">
+                            <div class="d-flex align-items-start flex-column" style="height:175px">
+                                <div class="mb-auto p-2 bd-highlight">
+                                    <h1 class="title mb-auto">Class {{ classDetails[0].classID }}</h1>
+                                </div>
+                                <div>
+                                    <a href="enrollclass.php" @click="enrollClass($event, classDetails[0].classID)" class="btn btn-default btn-md active" role="button" aria-pressed="true">Enroll Here</a>
+                                </div>
+                                <div>
+                                    <p class="color-orange m-0">Registration Period:<br>{{ classDetails[0].regPeriod }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 p-1">
+                            <img src="images/class.png" style="width:100%">
+                        </div>
+                    </div>
+                </div>
+                <h1 class="my-3 text-center title">Course Description</h1>
+                <!-- <p class="color-darkgrey"></p> -->
+            </div>
         </div>
     </div>
     <?php include 'includes/footer.php' ?>
     <script>
-        var cCID = localStorage.getItem("chosenCourse");
-        var loginID = 1; //student ID but initialised for now cos no login
+        var courseCID = localStorage.getItem("chosenCourse");
+        var classCID = localStorage.getItem("chosenClass");
 
+        var getCourseDetailsURL = "http://localhost:2222/courses/" + courseID
+        var getClassDetailsURL = "http://localhost:2222/classes/" + courseID + "/" + classID
 
-        var getClassesURL = "http://localhost:2222/classList/" + cCID;
-        //var getCourseSectionsURL = "http://localhost:2222/courses/10"
-        window.onload = function(){
-            fetch(getClassesURL)
-            .then(response => response.json())
-            .then(data => {
-                classes = data.data.classes;
-                for (classs in classes){
-                    console.log(classes[classs].classID)
-                    //ELGIN HELP PLS
-                    document.getElementById("cardContainer").innerHTML +=
-                    `<div class="col-lg-4 col-md-6 col-sm-12 py-1 my-1">
-                        <div class="card shadow h-100">
-                            <img class="card-img-top" src="images/class.png">
-                            <div class="card-body">
-                                <h5 class="card-title color-orange">Class ${classes[classs].classID}</h5>
-                                <p class="card-text">Start Date: ${classes[classs].clsStartTime}<br>End Date: ${classes[classs].clsEndTime}</p>
-                                <a id="form" href="enrollclass.php" onclick="callFunction($event)" class="btn btn-default btn-md active" role="button" aria-pressed="true">Enroll</a>
-                            </div>
-                        </div>
-                    </div>`
+        var classDetail = new Vue({
+            el: '#classDetail',
+            data: {
+                courseName: "",
+                classDetails: []
+            },
+            created: function() {
+                // Get Course Details
+                fetch(getCourseDetailsURL)
+                    .then(response => response.json())
+                    .then(data => {
+                        result = data.data.course;
+
+                        this.courseName = result.courseName;
+                    })
+
+                // Get Class Details
+                fetch(getClassDetailsURL)
+                    .then(response => response.json())
+                    .then(data => {
+                        result = data.data.class;
+
+                        this.classDetails.push(result)
+                    })
+            },
+            methods: {
+                enrollClass: function(e, classID) {
+                    e.preventDefault();
+                    console.log("in function classID" + classID)
+
+                    callFunction();
+                    // let jsonData = JSON.stringify({
+                    //     "regStudentID": studentID,
+                    //     "regCourseID": courseID,
+                    //     "regClassID": classID,
+                    //     "regStatus": "enrolled"
+                    // });
+                    // fetch(registrationURL, {
+                    //         method: "POST",
+                    //         headers: {
+                    //             "Content-type": "application/json"
+                    //         },
+                    //         body: jsonData
+                    //     })
+                    //     .then(response => response.json())
+                    //     .then(data => {
+                    //         result = data;
+                    //         console.log(result);
+                    //     })
+
+                    // alert("check")
+                    // // window.location.replace("enrollclass.php");
+                    // return false
                 }
-            })
-        }
-        //ELGIN this is a test function but it's not called
-        function callFunction(e){
+            }
+        })
+
+        function callFunction() {
             // e.preventDefault();
             alert("help");
         }
-        //ELGIN this should work if it is able to be called
-        document.getElementById("form").addEventListener("click", function() {
-            //ELGIN haven't set the data yet, so studentID, courseID, classID are empty
-            let jsonData = JSON.stringify({
-                "regStudentID": studentID,
-                "regCourseID": courseID,
-                "regClassID": classID,
-                "regStatus": "enrolled"
-            });
-            fetch(registrationURL, {
-                method: "POST",
-                headers: {
-                    "Content-type": "application/json"
-                },
-                body: jsonData
-            })
-            .then(response => response.json())
-            .then(data => {
-                result = data;
-                console.log(result);
-            })
-
-            alert("check")
-            // window.location.replace("enrollclass.php");
-            return false
-        })
-        
     </script>
 </body>
 

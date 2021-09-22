@@ -14,7 +14,6 @@
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="home.php">Courses</a></li>
                     <li class="breadcrumb-item"><a href="#">{{ courseName }}</a></li>
-                    <li class="breadcrumb-item"><a href="#">Registration</a></li>
                     <li class="breadcrumb-item"><a href="#" class="current">Choose your preferred class</a></li>
                 </ol>
             </nav>
