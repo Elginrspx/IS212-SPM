@@ -315,7 +315,7 @@ def get_students_completed_courses(ccStudentID):
             }
         ), 404
 
-# GET student info by studentName
+# GET student info by studentID
 @app.route("/student/<string:studentID>")
 def get_student(studentID):
     print(studentID)
@@ -329,7 +329,7 @@ def get_student(studentID):
                 {
                     "code": 200,
                     "data": {
-                        "courses": student.json()
+                        "student": student.json()
                     }
                 }
             )
@@ -345,13 +345,35 @@ def get_student(studentID):
 @app.route("/registration")
 def get_all_registration():
     try:
-        registrationn = Registration.query.all()
+        registrationn = Registration.query.filter_by(regStatus="enrolled").all()
         if (registrationn):
             return jsonify(
                 {
                     "code": 200,
                     "data": {
                         "registrations": [registration.json() for registration in registrationn]
+                    }
+                }
+            )
+    except Exception as e:
+        return jsonify(
+            {
+                "code": 404,
+                "message": "There are no student registrations." + str(e)
+            }
+        ), 404
+
+# GET no of student accepted to class
+@app.route("/noAccepted/<string:courseID>/<string:classID>")
+def get_no_accepted(courseID, classID):
+    try:
+        accepted = Registration.query.filter_by(regCourseID = courseID, regClassID = classID, regStatus="accepted").count()
+        if (accepted):
+            return jsonify(
+                {
+                    "code": 200,
+                    "data": {
+                        "registrations": accepted
                     }
                 }
             )

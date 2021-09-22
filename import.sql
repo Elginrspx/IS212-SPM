@@ -223,10 +223,11 @@ insert into `registrations` (regStudentID, regCourseID, regClassID, regStatus) v
 insert into `registrations` (regStudentID, regCourseID, regClassID, regStatus) values (2, 6, 3, "enrolled");
 insert into `registrations` (regStudentID, regCourseID, regClassID, regStatus) values (3, 6, 3, "enrolled");
 insert into `registrations` (regStudentID, regCourseID, regClassID, regStatus) values (2, 7, 3, "enrolled");
-insert into `registrations` (regStudentID, regCourseID, regClassID, regStatus) values (3, 7, 3, "enrolled");
+insert into `registrations` (regStudentID, regCourseID, regClassID, regStatus) values (3, 7, 3, "accepted");
 insert into `registrations` (regStudentID, regCourseID, regClassID, regStatus) values (2, 9, 3, "enrolled");
 insert into `registrations` (regStudentID, regCourseID, regClassID, regStatus) values (3, 9, 3, "enrolled");
 COMMIT;
+
 
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
