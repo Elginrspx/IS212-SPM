@@ -1,0 +1,255 @@
+{
+	"info": {
+		"_postman_id": "0dcf764c-bf86-4c44-99b3-e215105ba4d0",
+		"name": "SPM",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get all courses (test)",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:2222/courses/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "2222",
+					"path": [
+						"courses",
+						"1"
+					],
+					"query": [
+						{
+							"key": "courseID",
+							"value": "3",
+							"disabled": true
+						}
+					]
+				},
+				"description": "sends a list of all courses "
+			},
+			"response": []
+		},
+		{
+			"name": "Get course details by course id (test)",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:2222/courses/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "2222",
+					"path": [
+						"courses",
+						"1"
+					]
+				},
+				"description": "Get course details by course id"
+			},
+			"response": []
+		},
+		{
+			"name": "Get class info by courseID (test)",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:2222/classList/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "2222",
+					"path": [
+						"classList",
+						"1"
+					]
+				},
+				"description": "get class info by courseID"
+			},
+			"response": []
+		},
+		{
+			"name": "get class info by course+classID (test)",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:2222/classes/6/3",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "2222",
+					"path": [
+						"classes",
+						"6",
+						"3"
+					]
+				},
+				"description": "get class info by course+classID"
+			},
+			"response": []
+		},
+		{
+			"name": "get prereqs by course ID (test)",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:2222/prereqs/3",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "2222",
+					"path": [
+						"prereqs",
+						"3"
+					]
+				},
+				"description": "get prereqs by course ID (test)"
+			},
+			"response": []
+		},
+		{
+			"name": "get courses completed by studentID (test)",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:2222/completed/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "2222",
+					"path": [
+						"completed",
+						"1"
+					]
+				},
+				"description": "get courses completed by studentID"
+			},
+			"response": []
+		},
+		{
+			"name": "get student info by studentID (test)",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:2222/student/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "2222",
+					"path": [
+						"student",
+						"1"
+					]
+				},
+				"description": "get student info by studentID "
+			},
+			"response": []
+		},
+		{
+			"name": "get enrolled students (test)",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:2222/registration",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "2222",
+					"path": [
+						"registration"
+					]
+				},
+				"description": "Calls all students who enrolled but have not been accepted/rejected"
+			},
+			"response": []
+		},
+		{
+			"name": "calls number of students in class (test)",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:2222/noAccepted/7/3",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "2222",
+					"path": [
+						"noAccepted",
+						"7",
+						"3"
+					]
+				},
+				"description": "calls number of accepted student in a particular class"
+			},
+			"response": []
+		},
+		{
+			"name": "Call students who enrolled in class (test)",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:2222/registration/6",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "2222",
+					"path": [
+						"registration",
+						"6"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "register a student to a course (test)",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"regClassID\": 3,\n    \"regCourseID\": 14,\n    \"regStatus\": \"enrolled\",\n    \"regStudentID\": 2\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:2222/registerClass",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "2222",
+					"path": [
+						"registerClass"
+					]
+				},
+				"description": "sends registration info to SQL"
+			},
+			"response": []
+		}
+	]
+}
