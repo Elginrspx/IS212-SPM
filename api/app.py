@@ -315,6 +315,31 @@ def get_students_completed_courses(ccStudentID):
             }
         ), 404
 
+# GET all students
+@app.route("/students")
+def get_all_students():
+    try:
+        studentList = Student.query.all()
+        
+        if len(studentList):
+            print(studentList)
+            print("meep")
+            return jsonify(
+                {
+                    "code": 200,
+                    "data": {
+                        "students": [student.json() for student in studentList]
+                    }
+                }
+            )
+    except Exception as e:
+        return jsonify(
+            {
+                "code": 404,
+                "message": "There are no students." + str(e)
+            }
+        ), 404
+
 # GET student info by studentID
 @app.route("/student/<string:studentID>")
 def get_student(studentID):
