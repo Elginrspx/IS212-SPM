@@ -73,10 +73,9 @@
     <?php include 'includes/footer.php' ?>
 
     <script>
-        var cCID = localStorage.getItem("chosenCourse");
-        var courseID = localStorage.getItem("courseID");
-        var classID = localStorage.getItem("classID");
-        var studentID = localStorage.getItem("studentID");
+        var courseID = localStorage.getItem("chosenCourse");
+        var classID = localStorage.getItem("chosenClass");
+        var studentID = localStorage.getItem("userID");
         console.log(courseID);
         alert("meep");
 
@@ -85,7 +84,7 @@
         var enrollment = new Vue({
             el: '#enrollment',
             data: {
-                isSubmit: true,
+                isSubmit: false,
                 courseID: courseID,
                 classID: classID,
                 studentID: studentID
@@ -93,25 +92,25 @@
             methods: {
                 submitApplication: function() {
                     alert("insubmit")
-                    // let jsonData = JSON.stringify({
-                    //     "regStudentID": studentID,
-                    //     "regCourseID": courseID,
-                    //     "regClassID": classID,
-                    //     "regStatus": "enrolled"
-                    // });
-                    // fetch(registrationURL, {
-                    //     method: "POST",
-                    //     headers: {
-                    //         "Content-type": "application/json"
-                    //     },
-                    //     body: jsonData
-                    // })
-                    // .then(response => response.json())
-                    // .then(data => {
-                    //     result = data;
-                    //     console.log(result);
-                    //     this.isSubmit = true;
-                    // })
+                    let jsonData = JSON.stringify({
+                        "regStudentID": studentID,
+                        "regCourseID": courseID,
+                        "regClassID": classID,
+                        "regStatus": "enrolled"
+                    });
+                    fetch(registrationURL, {
+                        method: "POST",
+                        headers: {
+                            "Content-type": "application/json"
+                        },
+                        body: jsonData
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        result = data;
+                        console.log(result);
+                        this.isSubmit = true;
+                    })
                     
                 }
             }

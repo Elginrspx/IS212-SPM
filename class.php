@@ -107,24 +107,24 @@
                     console.log("in function classID" + classID)
 
                     // callFunction();
-                    let jsonData = JSON.stringify({
-                        "regStudentID": loginID,
-                        "regCourseID": courseID,
-                        "regClassID": classID,
-                        "regStatus": "enrolled"
-                    });
-                    fetch(registrationURL, {
-                            method: "POST",
-                            headers: {
-                                "Content-type": "application/json"
-                            },
-                            body: jsonData
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            result = data;
-                            console.log(result);
-                        })
+                    // let jsonData = JSON.stringify({
+                    //     "regStudentID": loginID,
+                    //     "regCourseID": courseID,
+                    //     "regClassID": classID,
+                    //     "regStatus": "enrolled"
+                    // });
+                    // fetch(registrationURL, {
+                    //         method: "POST",
+                    //         headers: {
+                    //             "Content-type": "application/json"
+                    //         },
+                    //         body: jsonData
+                    //     })
+                    //     .then(response => response.json())
+                    //     .then(data => {
+                    //         result = data;
+                    //         console.log(result);
+                    //     })
 
                     // alert("check")
                     window.location.replace("enrollclass.php");
