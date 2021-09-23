@@ -9,15 +9,13 @@
 <body>
     <?php include 'includes/navbar.php' ?>
     <div id="course">
-        <div class="container">
-            <nav class="mt-2" style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="home.php">Courses</a></li>
-                    <li class="breadcrumb-item"><a href="#">{{ courseName }}</a></li>
-                    <li class="breadcrumb-item"><a href="#" class="current">Choose your preferred class</a></li>
-                </ol>
-            </nav>
-        </div>
+        <nav class="mt-2" style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="home.php">Courses</a></li>
+                <li class="breadcrumb-item"><a href="#">{{ courseName }}</a></li>
+                <li class="breadcrumb-item"><a href="#" class="current">Choose your preferred class</a></li>
+            </ol>
+        </nav>
         <div class="container-fluid p-0">
             <div class="jumbotron jumbotron-fluid course-jumbotron" style="background:linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url(images/sample.png); background-size:cover;">
                 <h1 class="display-4 text-shadow">{{ courseName }}</h1>

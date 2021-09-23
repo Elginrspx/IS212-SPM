@@ -13,33 +13,22 @@
             <h1 class="display-4">STAY AHEAD OF THE GAME<br>UPSKILL YOURSELF TODAY</h1>
         </div>
     </div>
-
     <div class="container">
-        <div class="row mb-3">
+        <div class="row m-3">
             <h2>All Courses</h2>
         </div>
         <div id="course" class="row">
             <course-list v-for="course in courses" v-bind:course="course" v-bind:key="course.courseID"></course-list>
         </div>
     </div>
-
-
     <?php include 'includes/footer.php' ?>
     <script>
         localStorage.setItem("userID", 1)
+        
         // Initialise URLs
         var getCoursesURL = "http://localhost:2222/courses"
         var getPrereqsURL = "http://localhost:2222/prereqs"
         var getStudentCompletedUrl = "http://localhost:2222/completed/1"
-
-        // var navbar = new Vue({
-        //     el: '#navbar',
-        //     methods: {
-        //         navbarSearch: function() {
-        //             /* Function to search..?*/
-        //         }
-        //     }
-        // })
 
         // Get Course Details
         var course = new Vue({

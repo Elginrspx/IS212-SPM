@@ -9,16 +9,14 @@
 <body>
     <?php include 'includes/navbar.php' ?>
     <div id="classDetail" class="container">
-        <div class="container">
-            <nav class="mt-2" style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="home.php">Courses</a></li>
-                    <li class="breadcrumb-item"><a href="course.php">{{ courseName }}</a></li>
-                    <li class="breadcrumb-item"><a href="course.php">Choose your preferred class</a></li>
-                    <li class="breadcrumb-item"><a href="#" class="current">Registration</a></li>
-                </ol>
-            </nav>
-        </div>
+        <nav class="mt-2" style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="home.php">Courses</a></li>
+                <li class="breadcrumb-item"><a href="course.php">{{ courseName }}</a></li>
+                <li class="breadcrumb-item"><a href="course.php">Choose your preferred class</a></li>
+                <li class="breadcrumb-item"><a href="#" class="current">Registration</a></li>
+            </ol>
+        </nav>
         <div class="row">
             <div class="col-4">
                 <div class="timelineWrapper">
@@ -104,39 +102,10 @@
             methods: {
                 enrollClass: function(e, courseID, classID) {
                     e.preventDefault();
-                    console.log("in function classID" + classID)
-
-                    // callFunction();
-                    // let jsonData = JSON.stringify({
-                    //     "regStudentID": loginID,
-                    //     "regCourseID": courseID,
-                    //     "regClassID": classID,
-                    //     "regStatus": "enrolled"
-                    // });
-                    // fetch(registrationURL, {
-                    //         method: "POST",
-                    //         headers: {
-                    //             "Content-type": "application/json"
-                    //         },
-                    //         body: jsonData
-                    //     })
-                    //     .then(response => response.json())
-                    //     .then(data => {
-                    //         result = data;
-                    //         console.log(result);
-                    //     })
-
-                    // alert("check")
                     window.location.replace("enrollclass.php");
-                    // return false
                 }
             }
         })
-
-        // function callFunction() {
-        //     // e.preventDefault();
-        //     alert("help");
-        // }
     </script>
 </body>
 

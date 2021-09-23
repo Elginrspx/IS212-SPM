@@ -7,40 +7,18 @@
 </head>
 
 <body>
-    <div id="navbar">
-        <nav class="navbar navbar-expand-md navbar-light bg-light">
-            <div class="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
-            </div>
-            <div class="mx-auto order-0">
-                <a class="navbar-brand mx-auto" href="#"><img src="images/All-In-One logo.png"></a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".dual-collapse2">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-            </div>
-            <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
-                <div class="d-flex flex-md-fill flex-shrink-1 justify-content-end order-3">
-                    <form class="d-flex flex-nowrap align-items-center">
-                        <div class="search-container pr-2">
-                            <input class="form-control border-orange" type="search" placeholder="Search" aria-label="Search" />
-                            <img @click="navbarSearch" src="images/search.svg" style="width:20px;" />
-                        </div>
-                    </form>
-                    <button class="btn btn-default" type="button">
-                        Login
-                    </button>
-                </div>
-            </div>
-        </nav>
+    <?php include 'includes/navbar.php' ?>
 
-    </div>
     <div class="container">
-        <div class="row p-3">
-            <a href="home.php">Courses&nbsp;>&nbsp;</a>
-            <a href="course.php">3D Printing and Additive Manufacturing&nbsp;>&nbsp;</a>
-            <a href="#">Registration&nbsp;>&nbsp;</a>
-            <a href="class.php">Choose your preferred class&nbsp;>&nbsp;</a>
-            <a href="#" class="current">Enrollment Application Confirmation</a>
-        </div>
+        <nav id="course" class="mt-2" style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="home.php">Courses</a></li>
+                <li class="breadcrumb-item"><a href="course.php">{{ courseName }}</a></li>
+                <li class="breadcrumb-item"><a href="course.php">Choose your preferred class</a></li>
+                <li class="breadcrumb-item"><a href="class.php">Registration</a></li>
+                <li class="breadcrumb-item"><a href="#" class="current">Enrollment Application Confirmation</a></li>
+            </ol>
+        </nav>
         <div class="row">
             <div class="col">
                 <p class="title text-center">Enrollment Application Confirmation</p>
@@ -76,10 +54,27 @@
         var courseID = localStorage.getItem("chosenCourse");
         var classID = localStorage.getItem("chosenClass");
         var studentID = localStorage.getItem("userID");
-        console.log(courseID);
-        alert("meep");
 
-        var registrationURL = "http://localhost:2222/registerClass" 
+        // Initialise URLs
+        var getCourseDetailsURL = "http://localhost:2222/courses/" + courseID
+        var registrationURL = "http://localhost:2222/registerClass"
+
+        var course = new Vue({
+            el: '#course',
+            data: {
+                courseName: ""
+            },
+            created: function() {
+                // Get Course Details
+                fetch(getCourseDetailsURL)
+                    .then(response => response.json())
+                    .then(data => {
+                        result = data.data.course;
+
+                        this.courseName = result.courseName;
+                    })
+            }
+        })
 
         var enrollment = new Vue({
             el: '#enrollment',
@@ -91,7 +86,6 @@
             },
             methods: {
                 submitApplication: function() {
-                    alert("insubmit")
                     let jsonData = JSON.stringify({
                         "regStudentID": studentID,
                         "regCourseID": courseID,
@@ -99,19 +93,17 @@
                         "regStatus": "enrolled"
                     });
                     fetch(registrationURL, {
-                        method: "POST",
-                        headers: {
-                            "Content-type": "application/json"
-                        },
-                        body: jsonData
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        result = data;
-                        console.log(result);
-                        this.isSubmit = true;
-                    })
-                    
+                            method: "POST",
+                            headers: {
+                                "Content-type": "application/json"
+                            },
+                            body: jsonData
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            result = data;
+                            this.isSubmit = true;
+                        })
                 }
             }
         })
