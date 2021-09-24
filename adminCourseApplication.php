@@ -32,6 +32,7 @@
     <script>
         // initialise urls
         var getCourseURL = "http://localhost:2222/courses"
+        var getRegistrationInfo = "http://localhost:2222/registrations"
 
         var classAccordion = new Vue({
             el: '#classAccordion',
@@ -41,10 +42,10 @@
             },
             created: function() {
                 // Get Courses
-                fetch(getCourseURL)
+                fetch(getRegistrationInfo)
                     .then(response => response.json())
                     .then(data => {
-                        result = data.data.courses;
+                        result = data.courseList;
 
                         for (record of result) {
                             this.courses.push(record);
@@ -100,6 +101,30 @@
                                 classAccordion.classList.push(record)
                             }
                         })
+                },
+
+                assignStudent: function() {
+                    let jsonData = JSON.stringify({
+                        "studentID": studentID,
+                        "courseID": courseID,
+                        "classID": classID,
+                        "regStatus": "accepted"
+                    });
+                    fetch(registrationURL, {
+                            method: "PUT",
+                            headers: {
+                                "Content-type": "application/json"
+                            },
+                            body: jsonData
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            result = data;
+                            console.log(result)
+                        })
+                    alert("check console to confirm it went through")
+                    //refreshes page automatically
+                    location.reload()
                 }
             }
         })
@@ -111,7 +136,7 @@
                 <td>name??</td>
                 <td>{{ classitem.classID }}</td>
                 <td>{{ classitem.clsLimit }}</td>
-                <td><a href="#" class="btn btn-default btn-md active" role="button" aria-pressed="true">Enroll</a></td>           
+                <td><a href="#" @click class="btn btn-default btn-md active" role="button" aria-pressed="true">Enroll</a></td>           
             </tr>
             `
         })
