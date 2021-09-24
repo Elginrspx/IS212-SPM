@@ -462,29 +462,32 @@ def register_class():
 def all_reg():
     try:
         # test = db.session.query(func.count('*').group_by(Registration.regCourseID, Registration.regClassID), Registration.regCourseID, Registration.regClassID, Student.studentName).join(Class, and_(Class.classID == Registration.regClassID, Class.clsCourseID == Registration.regCourseID)).join(Student, Student.studentID == Registration.regStudentID).all()
-        registration_info = db.session.query(Registration.regCourseID, Registration.regClassID, Student.studentName, Class.clsLimit).join(Class, and_(Class.classID == Registration.regClassID, Class.clsCourseID == Registration.regCourseID)).join(Student, Student.studentID == Registration.regStudentID).all()
+        registration_info = db.session.query(Registration.regCourseID, Registration.regClassID, Student.studentName, Class.clsLimit, Registration.regStatus).join(Class, and_(Class.classID == Registration.regClassID, Class.clsCourseID == Registration.regCourseID)).join(Student, Student.studentID == Registration.regStudentID).all()
         # print(test)
 
         # ape ini idgi 
         if registration_info:
             real = []
             data = {}
+            courseList = []
             # print(registration_info)
             for each in registration_info:
-                print(each[0])
-                data["courseName"] = db.session.query(Course.courseName).join(Registration, Registration.regCourseID == each[0]).first()[0]
-                data["regClassID"] = each[1]
-                data["studentName"] = each[2]
-                data['clsLimit'] = each[3]
-                data['taken'] = Registration.query.filter_by(regCourseID = each[0], regClassID = each[1], regStatus="accepted").count()
-
-                # data['assignments']= each.json()
-                # print(data)
-                real.append(data)
-                data = {}
-                
+                # print(each[0])
+                # print(db.session.query(Course.courseName).filter(Course.courseID == each[0]).first()[0])
+                if each[4] == "enrolled":
+                    data["courseName"] = db.session.query(Course.courseName).filter(Course.courseID == each[0]).first()[0]
+                    data["regClassID"] = each[1]
+                    data["studentName"] = each[2]
+                    data['clsLimit'] = each[3]
+                    data['taken'] = Registration.query.filter_by(regCourseID = each[0], regClassID = each[1], regStatus="accepted").count()
+                    if data["courseName"] not in courseList:
+                        courseList.append(data["courseName"])
+                    # data['assignments']= each.json()
+                    # print(data)
+                    real.append(data)
+                    data = {}
             # return jsonify({"assignments": data})
-            return jsonify({"code": 200, "message": real}),200
+            return jsonify({"code": 200, "courseList": courseList, "message": real}),200
             # return jsonify({"assignments": [assignment.json() for assignment in test[0]]})
     except Exception as e:
         return jsonify({"message": "Assignment had a problem fetching" + str(e)}), 500
