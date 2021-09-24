@@ -1,5 +1,7 @@
+from types import ClassMethodDescriptorType
 from flask import Flask, request, jsonify, make_response
 from flask_sqlalchemy import SQLAlchemy 
+from sqlalchemy import *
 from sqlalchemy.orm import relationship
 from flask_cors import CORS
 from os import environ
@@ -443,6 +445,86 @@ def register_class():
     if (Registration.query.filter_by(regCourseID=regCourseID, regClassID = regClassID, regStudentID = regStudentID).all()):
         return jsonify({"code": 400,"message": "The student has already made a registration for this class"}), 400
  
+    
+    registration = Registration(**data)
+ 
+    try:
+        db.session.add(registration)
+        db.session.commit()
+    except Exception as e:
+        return jsonify({"code": 500, "message": "An error occurred creating the assignment." + str(e)}), 500
+ 
+    return jsonify({"code": 201, "data": registration.json()}), 201
+
+
+# GET all registrations with class and student table joined
+@app.route("/registrations", methods=["GET"])
+def all_reg():
+    try:
+        # test = db.session.query(func.count('*').group_by(Registration.regCourseID, Registration.regClassID), Registration.regCourseID, Registration.regClassID, Student.studentName).join(Class, and_(Class.classID == Registration.regClassID, Class.clsCourseID == Registration.regCourseID)).join(Student, Student.studentID == Registration.regStudentID).all()
+        registration_info = db.session.query(Registration.regCourseID, Registration.regClassID, Student.studentName, Class.clsLimit).join(Class, and_(Class.classID == Registration.regClassID, Class.clsCourseID == Registration.regCourseID)).join(Student, Student.studentID == Registration.regStudentID).all()
+        # print(test)
+
+        # ape ini idgi 
+        if registration_info:
+            real = []
+            data = {}
+            # print(registration_info)
+            for each in registration_info:
+                print(each[0])
+                data["courseName"] = db.session.query(Course.courseName).join(Registration, Registration.regCourseID == each[0]).first()[0]
+                data["regClassID"] = each[1]
+                data["studentName"] = each[2]
+                data['clsLimit'] = each[3]
+                data['taken'] = Registration.query.filter_by(regCourseID = each[0], regClassID = each[1], regStatus="accepted").count()
+
+                # data['assignments']= each.json()
+                # print(data)
+                real.append(data)
+                data = {}
+                
+            # return jsonify({"assignments": data})
+            return jsonify({"code": 200, "message": real}),200
+            # return jsonify({"assignments": [assignment.json() for assignment in test[0]]})
+    except Exception as e:
+        return jsonify({"message": "Assignment had a problem fetching" + str(e)}), 500
+
+
+# UPDATE registration to accepted
+@app.route("/assignRegistration", methods=['PUT'])
+def assign_registration():
+    try:
+        
+        print("check")
+        data = request.get_json()
+        registration = Registration.query.filter_by(regCourseID = data['courseID'], regClassID = data['classID'], regStudentID = data['studentID']).first()
+        if data['regStatus'] == "accepted":
+            registration.regStatus = data['regStatus']
+        db.session.commit()
+        return jsonify(
+            {
+                "code": 200,
+                "data": registration.json()
+            }
+        ), 200
+    except Exception as e:
+        return jsonify(
+            {
+                "code": 500,
+                "message": "An error occurred while updating the user. " + str(e)
+            }
+        ), 500
+
+# POST registration for courseClass
+@app.route("/assignStudent", methods=['POST'])
+def force_assign():
+    data = request.get_json()
+    print(data['regCourseID'])
+    regCourseID = data['regCourseID']
+    regClassID = data['regClassID']
+    regStudentID = data['regStudentID']
+    if (Registration.query.filter_by(regCourseID=regCourseID, regClassID = regClassID, regStudentID = regStudentID).all()):
+        return jsonify({"code": 400,"message": "The student has already been registered for this class"}), 400
     
     registration = Registration(**data)
  
