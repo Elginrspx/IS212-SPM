@@ -500,6 +500,41 @@ def all_reg():
         return jsonify({"message": "Assignment had a problem fetching" + str(e)}), 500
 
 
+# GET all registrations with class and student table joined
+@app.route("/classInfo/<string:courseID>", methods=["GET"])
+def all_class_info(courseID):
+    try:
+        # test = db.session.query(func.count('*').group_by(Registration.regCourseID, Registration.regClassID), Registration.regCourseID, Registration.regClassID, Student.studentName).join(Class, and_(Class.classID == Registration.regClassID, Class.clsCourseID == Registration.regCourseID)).join(Student, Student.studentID == Registration.regStudentID).all()
+        classList = db.session.query(Class.clsCourseID, Class.classID, Class.clsTrainer, Class.clsStartTime, Class.clsEndTime, Class.clsLimit, Class.regPeriod).filter(Class.clsCourseID==courseID).all()
+        Class.query.filter_by(clsCourseID=courseID).all()        # print(test)
+
+        # ape ini idgi 
+        if classList:
+            real = []
+            data = {}
+            print(classList)
+            for each in classList:
+                print(each[0])
+                # print(db.session.query(Course.courseName).filter(Course.courseID == each[0]).first()[0])
+                data["clsCourseID"] = each[0]
+                data["classID"] = each[1]
+                data["clsTrainer"] = each[2]
+                data["clsStartTime"] = each[3]
+                data["clsEndTime"] = each[4]
+                data["clsLimit"] = each[5]
+                data["regPeriod"] = each[6]
+                data["noAccepted"] = Registration.query.filter_by(regCourseID = each[0], regClassID = each[1], regStatus="accepted").count()
+                # data['assignments']= each.json()
+                # print(data)
+                real.append(data)
+                data = {}
+            # return jsonify({"assignments": data})
+            return jsonify({"code": 200, "classInfo": real}),200
+            # return jsonify({"assignments": [assignment.json() for assignment in test[0]]})
+    except Exception as e:
+        return jsonify({"message": "Assignment had a problem fetching" + str(e)}), 500
+
+
 # UPDATE registration to accepted
 @app.route("/assignRegistration", methods=['PUT'])
 def assign_registration():
@@ -509,8 +544,9 @@ def assign_registration():
         data = request.get_json()
         registration = Registration.query.filter_by(regCourseID = data['courseID'], regClassID = data['classID'], regStudentID = data['studentID']).first()
         if data['regStatus'] == "accepted":
+            print(registration)
             registration.regStatus = data['regStatus']
-        db.session.commit()
+            db.session.commit()
         return jsonify(
             {
                 "code": 200,
