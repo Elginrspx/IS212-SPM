@@ -23,7 +23,7 @@
         <div class="row">
             <div class="col">
                 <div class="accordion" id="classAccordion">
-                    <course-list v-for="courseitem in courseList" v-bind:courseitem="courseitem" v-bind:classlist="classList" v-bind:key="courseitem.regCourseID"></course-list>
+                    <course-list ref="courseComponent" v-for="courseitem in courseList" v-bind:courseitem="courseitem" v-bind:classlist="classList" v-bind:key="courseitem.regCourseID"></course-list>
                 </div>
             </div>
         </div>
@@ -31,8 +31,9 @@
     <?php include 'includes/footer.php' ?>
     <script>
         // initialise urls
-        //var getCourseURL = "http://localhost:2222/courses"
-        var getRegistrationInfo = "http://localhost:2222/registrations"
+        var getRegistrationCoursesURL = "http://localhost:2222/registrationCourses"
+        var getRegistrationURL = "http://localhost:2222/registration/"
+        var getAssignRegistrationURL = "http://localhost:2222/assignRegistration"
 
         var classAccordion = new Vue({
             el: '#classAccordion',
@@ -41,22 +42,15 @@
                 classList: []
             },
             created: function() {
-                fetch(getRegistrationInfo)
+                fetch(getRegistrationCoursesURL)
                     .then(response => response.json())
                     .then(data => {
-                        // Get Course List
+                        // Get Course List that has registrations
                         result = data.courseList;
 
                         for (record of result) {
                             this.courseList.push(record);
                         }
-
-                        // // Get Registrations
-                        // result = data.registrations;
-
-                        // for (record of result) {
-                        //     this.classList.push(record);
-                        // }
                     })
             }
         })
@@ -66,7 +60,7 @@
             template: `
             <div class="accordion-item my-1">
                 <h2 class="accordion-header" v-bind:id="'heading' + courseitem.regCourseID">
-                    <button @click="selectCourse($event, courseitem.regCourseID)" class="accordion-button collapsed py-1" type="button" data-bs-toggle="collapse" v-bind:data-bs-target="'#collapse' + courseitem.regCourseID" aria-expanded="false" v-bind:aria-controls="'collapse' + courseitem.regCourseID">
+                    <button @click="selectCourse(courseitem.regCourseID)" class="accordion-button collapsed py-1" type="button" data-bs-toggle="collapse" v-bind:data-bs-target="'#collapse' + courseitem.regCourseID" aria-expanded="false" v-bind:aria-controls="'collapse' + courseitem.regCourseID">
                         {{ courseitem.courseName }}
                     </button>
                 </h2>
@@ -82,7 +76,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <class-list v-for="classitem in classlist" v-bind:classitem="classitem" v-bind:key="classitem.classID"></class-list>
+                                <class-list @reload="reloadCourse(courseitem.regCourseID)" v-for="classitem in classlist" v-bind:classitem="classitem" v-bind:key="classitem.classID"></class-list>
                             </tbody>
                         </table>
                     </div>
@@ -90,35 +84,45 @@
             </div>
             `,
             methods: {
-                selectCourse: function(e, courseID) {
-                    e.preventDefault();
-
-                    // Initialise URLs
-                    var getCourseClassListURL = "http://localhost:2222/classList/" + courseID
+                selectCourse: function(courseID) {
+                    classAccordion.classList = []
 
                     //Get Course Details
-                    fetch(getCourseClassListURL)
+                    fetch(getRegistrationURL + courseID)
                         .then(response => response.json())
                         .then(data => {
-                            console.log(data)
-                            result = data.data.classes;
-
-                            classAccordion.classList = []
+                            result = data.data.registrations;
 
                             for (record of result) {
                                 classAccordion.classList.push(record)
                             }
                         })
                 },
+                reloadCourse: function(courseID) {
+                    this.selectCourse(courseID)
+                }
+            }
+        })
 
-                assignStudent: function() {
+        Vue.component('class-list', {
+            props: ['classitem'],
+            template: `
+            <tr>
+                <td>{{ classitem.studentName }}</td>
+                <td>Class {{ classitem.regClassID }}</td>
+                <td>{{ classitem.taken }} / {{ classitem.clsLimit }}</td>
+                <td><a @click="assignStudent(classitem.studentID, classitem.regCourseID, classitem.regClassID)" class="btn btn-default btn-md active" role="button" aria-pressed="true">Enroll</a></td>           
+            </tr>
+            `,
+            methods: {
+                assignStudent: function(studentID, courseID, classID) {
                     let jsonData = JSON.stringify({
                         "studentID": studentID,
                         "courseID": courseID,
                         "classID": classID,
                         "regStatus": "accepted"
                     });
-                    fetch(registrationURL, {
+                    fetch(getAssignRegistrationURL, {
                             method: "PUT",
                             headers: {
                                 "Content-type": "application/json"
@@ -129,24 +133,10 @@
                         .then(data => {
                             result = data;
                             console.log(result)
+                            this.$emit('reload')
                         })
-                    alert("check console to confirm it went through")
-                    //refreshes page automatically
-                    location.reload()
                 }
             }
-        })
-
-        Vue.component('class-list', {
-            props: ['classitem'],
-            template: `
-            <tr>
-                <td>name??</td>
-                <td>{{ classitem.classID }}</td>
-                <td>{{ classitem.clsLimit }}</td>
-                <td><a href="#" @click class="btn btn-default btn-md active" role="button" aria-pressed="true">Enroll</a></td>           
-            </tr>
-            `
         })
     </script>
 </body>

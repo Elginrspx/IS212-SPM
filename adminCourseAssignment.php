@@ -20,7 +20,7 @@
                 <p class="title">Course Assignment</p>
             </div>
         </div>
-        <div class="row bg-primary">
+        <div class="row bg-secondary">
             <div class="col-11 p-2">
                 <div class="row">
                     <div class="col-4">
