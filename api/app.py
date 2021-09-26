@@ -7,7 +7,7 @@ from flask_cors import CORS
 from os import environ
 import json
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:3306/systemdb'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:@localhost:3306/systemdb'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
@@ -470,18 +470,25 @@ def all_reg():
             real = []
             data = {}
             courseList = []
+            courses = {}
             # print(registration_info)
             for each in registration_info:
                 # print(each[0])
                 # print(db.session.query(Course.courseName).filter(Course.courseID == each[0]).first()[0])
                 if each[4] == "enrolled":
                     data["courseName"] = db.session.query(Course.courseName).filter(Course.courseID == each[0]).first()[0]
+                    data["regCourseID"] = each[0]
                     data["regClassID"] = each[1]
                     data["studentName"] = each[2]
                     data['clsLimit'] = each[3]
                     data['taken'] = Registration.query.filter_by(regCourseID = each[0], regClassID = each[1], regStatus="accepted").count()
-                    if data["courseName"] not in courseList:
-                        courseList.append(data["courseName"])
+                    if data["courseName"] not in courses:
+                        # courseList[each[0]] = data["courseName"]
+                        courseData = {}
+                        courseData["courseName"] = data["courseName"]
+                        courseData["regCourseID"] = data["regCourseID"]
+                        courses.append(data["regCourseID"])
+                        courses.append(data["regCourseID"])
                     # data['assignments']= each.json()
                     # print(data)
                     real.append(data)
