@@ -34,7 +34,7 @@
                             Submit Application
                         </button>
                         <br>
-                        <a href="class.php">Back</a>
+                        <a href="course.php">Back</a>
                     </div>
                     <div v-else class="card-body text-center">
                         <img src="images/check.svg" style="height: 30px;">

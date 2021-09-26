@@ -41,7 +41,7 @@
                 </div>
             </div>
             <div class="col-1 p-2 text-center">
-                <button class="btn btn-default" type="button">
+                <button class="btn btn-default" type="button" @click="forceAssign">
                     Assign
                 </button>
             </div>
@@ -54,7 +54,7 @@
                             <table class="table table-hover">
                                 <tbody v-for="student in studentSearchList">
                                     <tr>
-                                        <td @click="selectStudent(student.studentName)">{{ student.studentName }}</td>
+                                        <td @click="selectStudent(student.studentName, student.studentID)">{{ student.studentName }}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -83,6 +83,7 @@
         var getCoursesURL = "http://localhost:2222/courses"
         var getStudentsURL = "http://localhost:2222/students"
         var getCourseClassListURL = "http://localhost:2222/classList/"
+        var assignURL = "http://localhost:2222/registerClass"
 
         // Get Course Details
         var assignment = new Vue({
@@ -141,6 +142,7 @@
                 },
                 selectCourse: function(courseName, courseID) {
                     this.courseInput = courseName
+                    this.selectedCourse = courseID
                     this.courseSearchList = [];
 
                     this.classes = [];
@@ -168,8 +170,9 @@
                         }
                     }
                 },
-                selectStudent: function(studentName) {
+                selectStudent: function(studentName, studentID) {
                     this.studentInput = studentName
+                    this.selectedStudent = studentID
                     this.studentSearchList = [];
                 },
                 forceAssign: function() {
@@ -194,6 +197,7 @@
                         })
 
                 }
+
             }
         })
     </script>
