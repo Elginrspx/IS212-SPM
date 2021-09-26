@@ -15,7 +15,6 @@
                 <li class="breadcrumb-item"><a href="home.php">Courses</a></li>
                 <li class="breadcrumb-item"><a href="course.php">{{ courseName }}</a></li>
                 <li class="breadcrumb-item"><a href="course.php">Choose your preferred class</a></li>
-                <li class="breadcrumb-item"><a href="class.php">Registration</a></li>
                 <li class="breadcrumb-item"><a href="#" class="current">Enrollment Application Confirmation</a></li>
             </ol>
         </nav>
@@ -29,8 +28,8 @@
                 <div class="card shadow h-100">
                     <img class="card-img-top" src="images/class.png" style="object-fit: cover; height: 250px;">
                     <div v-if="!isSubmit" class="card-body text-center">
-                        <h5 class="card-title color-orange">Choice: Class 1</h5>
-                        <p class="card-text">Start Date: 1 November 2021<br>End Date: 28 November 2021</p>
+                        <h5 class="card-title color-orange">Choice: Class {{ classDetail[0].classID }}</h5>
+                        <p class="card-text">Start Date: {{ classDetail[0].clsStartTime }}<br>End Date: {{ classDetail[0].clsEndTime }}</p>
                         <button @click="submitApplication" class="btn btn-default" type="button">
                             Submit Application
                         </button>
@@ -57,6 +56,7 @@
 
         // Initialise URLs
         var getCourseDetailsURL = "http://localhost:2222/courses/" + courseID
+        var getClassDetailsURL = "http://localhost:2222/classes/" + courseID + "/" + classID
         var registrationURL = "http://localhost:2222/registerClass"
 
         var course = new Vue({
@@ -80,16 +80,25 @@
             el: '#enrollment',
             data: {
                 isSubmit: false,
-                courseID: courseID,
-                classID: classID,
-                studentID: studentID
+                studentID: studentID,
+                classDetail: []
+            },
+            created: function() {
+                // Get Class Details
+                fetch(getClassDetailsURL)
+                    .then(response => response.json())
+                    .then(data => {
+                        result = data.data.class;
+
+                        this.classDetail.push(result)
+                    })
             },
             methods: {
                 submitApplication: function() {
                     let jsonData = JSON.stringify({
                         "regStudentID": studentID,
-                        "regCourseID": courseID,
-                        "regClassID": classID,
+                        "regCourseID": this.classDetail[0].clsCourseID,
+                        "regClassID": this.classDetail[0].classID,
                         "regStatus": "enrolled"
                     });
                     fetch(registrationURL, {
@@ -101,7 +110,6 @@
                         })
                         .then(response => response.json())
                         .then(data => {
-                            result = data;
                             this.isSubmit = true;
                         })
                 }

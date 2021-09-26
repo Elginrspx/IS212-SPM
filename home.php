@@ -71,7 +71,7 @@
                                     .then(data => {
                                         result = data.data.courses;
                                         for (record of result) {
-                                            console.log(record.prereqCourseID)
+                                            
                                             if (!this.completedCourses.includes(record.prereqName)) {
                                                 this.courses[record.prereqCourseID].prereqsNotMet.push(record.prereqName)
                                             }

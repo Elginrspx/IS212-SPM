@@ -23,7 +23,7 @@
         <div class="row">
             <div class="col">
                 <div class="accordion" id="classAccordion">
-                    <course-list v-for="courseitem in courses" v-bind:courseitem="courseitem" v-bind:classlist="classList" v-bind:key="courseitem.courseID"></course-list>
+                    <course-list v-for="courseitem in courseList" v-bind:courseitem="courseitem" v-bind:classlist="classList" v-bind:key="courseitem.regCourseID"></course-list>
                 </div>
             </div>
         </div>
@@ -31,25 +31,32 @@
     <?php include 'includes/footer.php' ?>
     <script>
         // initialise urls
-        var getCourseURL = "http://localhost:2222/courses"
+        //var getCourseURL = "http://localhost:2222/courses"
         var getRegistrationInfo = "http://localhost:2222/registrations"
 
         var classAccordion = new Vue({
             el: '#classAccordion',
             data: {
-                courses: [],
+                courseList: [],
                 classList: []
             },
             created: function() {
-                // Get Courses
                 fetch(getRegistrationInfo)
                     .then(response => response.json())
                     .then(data => {
+                        // Get Course List
                         result = data.courseList;
 
                         for (record of result) {
-                            this.courses.push(record);
+                            this.courseList.push(record);
                         }
+
+                        // // Get Registrations
+                        // result = data.registrations;
+
+                        // for (record of result) {
+                        //     this.classList.push(record);
+                        // }
                     })
             }
         })
@@ -58,12 +65,12 @@
             props: ['courseitem', 'classlist'],
             template: `
             <div class="accordion-item my-1">
-                <h2 class="accordion-header" v-bind:id="'heading' + courseitem.courseID">
-                    <button @click="selectCourse($event, courseitem.courseID)" class="accordion-button collapsed py-1" type="button" data-bs-toggle="collapse" v-bind:data-bs-target="'#collapse' + courseitem.courseID" aria-expanded="false" v-bind:aria-controls="'collapse' + courseitem.courseID">
+                <h2 class="accordion-header" v-bind:id="'heading' + courseitem.regCourseID">
+                    <button @click="selectCourse($event, courseitem.regCourseID)" class="accordion-button collapsed py-1" type="button" data-bs-toggle="collapse" v-bind:data-bs-target="'#collapse' + courseitem.regCourseID" aria-expanded="false" v-bind:aria-controls="'collapse' + courseitem.regCourseID">
                         {{ courseitem.courseName }}
                     </button>
                 </h2>
-                <div v-bind:id="'collapse' + courseitem.courseID" class="accordion-collapse collapse" v-bind:aria-labelledby="'heading' + courseitem.courseID" data-bs-parent="#classAccordion">
+                <div v-bind:id="'collapse' + courseitem.regCourseID" class="accordion-collapse collapse" v-bind:aria-labelledby="'heading' + courseitem.regCourseID" data-bs-parent="#classAccordion">
                     <div class="accordion-body">
                         <table class="table">
                             <thead>
@@ -93,6 +100,7 @@
                     fetch(getCourseClassListURL)
                         .then(response => response.json())
                         .then(data => {
+                            console.log(data)
                             result = data.data.classes;
 
                             classAccordion.classList = []

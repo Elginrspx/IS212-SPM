@@ -30,17 +30,13 @@
                         <input v-on:keyup="searchCourse" v-model="courseInput" class="form-control" type="text" placeholder="Course" aria-label="Course" />
                     </div>
                     <div class="col-4">
-                        <div v-if="!classes.length" class="input-group">
-                            <select class="form-select" id="classDropdown" disabled>
-                                <option selected>Select a Course</option>
-                            </select>
-                        </div>
-                        <div v-else class="input-group">
-                            <select v-for="classitem in classes" class="form-select" id="classDropdown">
-                                <option v-bind:value="classitem.classID">Class {{ classitem.classID }}</option>
-                            </select>
-                        </div>
-
+                        <select v-if="!classes.length" class="form-select" disabled>
+                            <option selected>Select a Class</option>
+                        </select>
+                        <select v-else class="form-select" id="classDropdown">
+                            <option selected>Select a Class</option>
+                            <option v-for="classitem in classes" v-bind:value="classitem.classID">Class {{ classitem.classID }}</option>
+                        </select>
                     </div>
                 </div>
             </div>
@@ -55,7 +51,7 @@
                 <div class="row">
                     <div class="col-4">
                         <div v-if="studentInput.length">
-                            <table class="table">
+                            <table class="table table-hover">
                                 <tbody v-for="student in studentSearchList">
                                     <tr>
                                         <td @click="selectStudent(student.studentName)">{{ student.studentName }}</td>
@@ -66,7 +62,7 @@
                     </div>
                     <div class="col-4">
                         <div v-if="courseInput.length">
-                            <table class="table">
+                            <table class="table table-hover">
                                 <tbody v-for="course in courseSearchList">
                                     <tr>
                                         <td @click="selectCourse(course.courseName, course.courseID)">{{ course.courseName }}</td>
@@ -94,10 +90,12 @@
             data: {
                 courses: [],
                 courseInput: "",
+                selectedCourse: "",
                 courseSearchList: [],
 
                 students: [],
                 studentInput: "",
+                selectedStudent: "",
                 studentSearchList: [],
 
                 classes: []
@@ -131,6 +129,7 @@
                     this.classes = [];
 
                     if (this.courseInput == "") {
+                        this.courseSearchList.push(this.courses)
                         return
                     } else {
                         for (course of this.courses) {
@@ -172,6 +171,28 @@
                 selectStudent: function(studentName) {
                     this.studentInput = studentName
                     this.studentSearchList = [];
+                },
+                forceAssign: function() {
+                    alert("clicked")
+                    let jsonData = JSON.stringify({
+                        "regStudentID": this.selectedStudent,
+                        "regCourseID": this.selectedCourse,
+                        "regClassID": document.getElementById("classDropdown").value,
+                        "regStatus": "accepted"
+                    });
+                    fetch(assignURL, {
+                            method: "POST",
+                            headers: {
+                                "Content-type": "application/json"
+                            },
+                            body: jsonData
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            result = data;
+                            console.log(result)
+                        })
+
                 }
             }
         })
