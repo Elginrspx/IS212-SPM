@@ -7,7 +7,7 @@ from flask_cors import CORS
 from os import environ
 import json
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:@localhost:3306/systemdb'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:3306/systemdb'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
@@ -470,7 +470,7 @@ def all_reg():
             real = []
             data = {}
             courseList = []
-            courses = {}
+            courses = []
             # print(registration_info)
             for each in registration_info:
                 # print(each[0])
@@ -483,18 +483,20 @@ def all_reg():
                     data['clsLimit'] = each[3]
                     data['taken'] = Registration.query.filter_by(regCourseID = each[0], regClassID = each[1], regStatus="accepted").count()
                     if data["courseName"] not in courses:
+                        print("lol")
                         # courseList[each[0]] = data["courseName"]
                         courseData = {}
                         courseData["courseName"] = data["courseName"]
                         courseData["regCourseID"] = data["regCourseID"]
+                        courseList.append(courseData)
                         courses.append(data["regCourseID"])
-                        courses.append(data["regCourseID"])
+                        print(courseList)
                     # data['assignments']= each.json()
                     # print(data)
                     real.append(data)
                     data = {}
             # return jsonify({"assignments": data})
-            return jsonify({"code": 200, "courseList": courseList, "message": real}),200
+            return jsonify({"code": 200, "courseList": courseList, "registrations": real}),200
             # return jsonify({"assignments": [assignment.json() for assignment in test[0]]})
     except Exception as e:
         return jsonify({"message": "Assignment had a problem fetching" + str(e)}), 500
