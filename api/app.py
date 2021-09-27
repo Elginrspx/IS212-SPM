@@ -512,7 +512,7 @@ def all_class_info(courseID):
     try:
         # test = db.session.query(func.count('*').group_by(Registration.regCourseID, Registration.regClassID), Registration.regCourseID, Registration.regClassID, Student.studentName).join(Class, and_(Class.classID == Registration.regClassID, Class.clsCourseID == Registration.regCourseID)).join(Student, Student.studentID == Registration.regStudentID).all()
         classList = db.session.query(Class.clsCourseID, Class.classID, Class.clsTrainer, Class.clsStartTime, Class.clsEndTime, Class.clsLimit, Class.regPeriod).filter(Class.clsCourseID==courseID).all()
-        Class.query.filter_by(clsCourseID=courseID).all()        # print(test)
+        # Class.query.filter_by(clsCourseID=courseID).all()        # print(test)
 
         # ape ini idgi 
         if classList:
@@ -587,6 +587,59 @@ def force_assign():
         return jsonify({"code": 500, "message": "An error occurred creating the assignment." + str(e)}), 500
  
     return jsonify({"code": 201, "data": registration.json()}), 201
+
+# GET all eligible courses by user
+#create four tables. 1)taken  2)all  3)eligible  4)prereqs
+@app.route("/eligibleCourses/<string:userID>")
+def get_sligible_courses(userID):
+    taken = []
+    all = []
+    eligible = {}
+    prereqs = {}
+
+    #query for table population
+    courses = db.session.query(Course.courseID, Course.courseName).all()
+    took = db.session.query(Completed.completedCName).filter(userID==Completed.ccStudentID).all()
+    havePrereq = db.session.query(Prerequisite.prereqCourseID, Prerequisite.prereqName).all()
+
+    #populate lists of all, taken, and prerequisite courses
+    for course in courses:
+        all.append(course)
+    for course in took:
+        taken.append(course[0])
+    for each in havePrereq:
+        if each[0] in prereqs:
+            prereqs[each[0]].append(each[1])
+            print("have")
+        else:
+            prereqs[each[0]] = []
+            prereqs[each[0]].append(each[1])
+    print(prereqs)
+    print(taken)
+    print(all)
+
+    #algo to compute list of eligible courses
+
+    for id, name in all:
+        print(id)
+        if name in taken:
+            print("check3")
+            pass
+        elif id in prereqs:
+            check = True
+            print("check1")
+            for c in prereqs[id]:
+                # print(c)
+                if c not in taken:
+                    check=False
+            if check:    
+                eligible[id]=name
+        else:
+            eligible[id]=name
+    print(eligible)
+    return eligible
+
+
 
 
 if __name__ == '__main__':
