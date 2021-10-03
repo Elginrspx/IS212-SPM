@@ -139,27 +139,27 @@ CREATE TABLE IF NOT EXISTS `classes` (
 --
 -- Insert data into `classes` table
 --
-insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit, regPeriod) values (1,3, "Tommy Locker", "12-Sept-2021", "14-Sept-2023", 35, "9 August, 2021 to 1 September, 2021");
-insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit, regPeriod) values (2,2, "Tommy Locker", "12-Sept-2021", "14-Sept-2022", 35, "9 August, 2021 to 1 September, 2021");
-insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit, regPeriod) values (1,2, "Tommy Topper", "12-Sept-2021", "14-Sept-2022", 40, "9 August, 2021 to 1 September, 2021");
-insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit, regPeriod) values (3,3, "Tommy Locker", "12-Sept-2021", "14-Sept-2022", 40, "9 August, 2021 to 1 September, 2021");
-insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit, regPeriod) values (4,3, "Tommy Locker", "12-Sept-2021", "14-Sept-2022", 40, "9 August, 2021 to 1 September, 2021");
-insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit, regPeriod) values (5,3, "Tommy Locker", "12-Sept-2021", "14-Sept-2022", 40, "9 August, 2021 to 1 September, 2021");
-insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit, regPeriod) values (6,3, "Tommy Locker", "12-Sept-2022", "14-Sept-2023", 30, "9 August, 2022 to 1 September, 2022");
-insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit, regPeriod) values (7,3, "Tommy Locker", "12-Sept-2022", "14-Sept-2023", 35, "9 August, 2022 to 1 September, 2022");
-insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit, regPeriod) values (8,3, "Tommy Locker", "12-Sept-2022", "14-Sept-2023", 35, "9 August, 2022 to 1 September, 2022");
-insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit, regPeriod) values (9,3, "Tommy Locker", "12-Sept-2022", "14-Sept-2023", 35, "9 August, 2022 to 1 September, 2022");
-insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit, regPeriod) values (10,3, "Tommy Locker", "12-Sept-2022", "14-Sept-2023", 35, "9 August, 2022 to 1 September, 2022");
-insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit, regPeriod) values (11,3, "Tommy Locker", "12-Sept-2022", "14-Sept-2023", 35, "9 August, 2022 to 1 September, 2022");
-insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit, regPeriod) values (12,3, "Tommy Locker", "12-Sept-2022", "14-Sept-2023", 45, "9 August, 2022 to 1 September, 2022");
-insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit, regPeriod) values (13,3, "Tommy Locker", "12-Sept-2022", "14-Sept-2023", 45, "9 August, 2022 to 1 September, 2022");
-insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit, regPeriod) values (14,3, "Tommy Locker", "12-Sept-2022", "14-Sept-2023", 45, "9 August, 2022 to 1 September, 2022");
-insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit, regPeriod) values (15,3, "Tommy Locker", "12-Sept-2022", "14-Sept-2023", 45, "9 August, 2022 to 1 September, 2022");
-insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit, regPeriod) values (16,3, "Tommy Locker", "12-Sept-2022", "14-Sept-2023", 45, "9 August, 2022 to 1 September, 2022");
-insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit, regPeriod) values (17,3, "Tommy Locker", "12-Sept-2022", "14-Sept-2023", 45, "9 August, 2022 to 1 September, 2022");
-insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit, regPeriod) values (18,3, "Tommy Locker", "12-Sept-2022", "14-Sept-2023", 45, "9 August, 2022 to 1 September, 2022");
-insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit, regPeriod) values (19,3, "Tommy Locker", "12-Sept-2022", "14-Sept-2023", 45, "9 August, 2022 to 1 September, 2022");
-insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit, regPeriod) values (20,3, "Tommy Locker", "12-Sept-2022", "14-Sept-2023", 45, "9 August, 2022 to 1 September, 2022");
+insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit, regPeriod) values (1,3, "Lim Ah Hock", "12-Sept-2021", "14-Sept-2023", 35, "9 October, 2021 to 9 November, 2021");
+insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit, regPeriod) values (2,2, "David Balakrishnan", "12-Sept-2021", "14-Sept-2022", 35, "11 October, 2021 to 11 November, 2021");
+insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit, regPeriod) values (1,2, "Chew Pek Ham", "12-Sept-2021", "14-Sept-2022", 40, "9 August, 2021 to 1 September, 2021");
+insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit, regPeriod) values (3,3, "Lim Ah Hock", "12-Sept-2021", "14-Sept-2022", 40, "9 August, 2021 to 1 September, 2021");
+insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit, regPeriod) values (4,3, "Lim Ah Hock", "12-Sept-2021", "14-Sept-2022", 40, "9 August, 2021 to 1 September, 2021");
+insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit, regPeriod) values (5,3, "Muhammad Zulaiddin", "12-Sept-2021", "14-Sept-2022", 40, "9 August, 2021 to 1 September, 2021");
+insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit, regPeriod) values (6,3, "Muhammad Danial Hakim", "12-Sept-2022", "14-Sept-2023", 30, "9 August, 2022 to 1 September, 2022");
+insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit, regPeriod) values (7,3, "David Balakrishnan", "12-Sept-2022", "14-Sept-2023", 35, "9 August, 2022 to 1 September, 2022");
+insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit, regPeriod) values (8,3, "David Balakrishnan", "12-Sept-2022", "14-Sept-2023", 35, "9 August, 2022 to 1 September, 2022");
+insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit, regPeriod) values (9,3, "Muhammad Zulaiddin", "12-Sept-2022", "14-Sept-2023", 35, "9 August, 2022 to 1 September, 2022");
+insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit, regPeriod) values (10,3, "Chew Pek Ham", "12-Sept-2022", "14-Sept-2023", 35, "9 August, 2022 to 1 September, 2022");
+insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit, regPeriod) values (11,3, "Chew Pek Ham", "12-Sept-2022", "14-Sept-2023", 35, "9 August, 2022 to 1 September, 2022");
+insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit, regPeriod) values (12,3, "Muhammad Danial Hakim", "12-Sept-2022", "14-Sept-2023", 45, "9 August, 2022 to 1 September, 2022");
+insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit, regPeriod) values (13,3, "Andrew Chong", "12-Sept-2022", "14-Sept-2023", 45, "9 August, 2022 to 1 September, 2022");
+insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit, regPeriod) values (14,3, "Andrew Chong", "12-Sept-2022", "14-Sept-2023", 45, "9 August, 2022 to 1 September, 2022");
+insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit, regPeriod) values (15,3, "Muhammad Danial Hakim", "12-Sept-2022", "14-Sept-2023", 45, "9 August, 2022 to 1 September, 2022");
+insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit, regPeriod) values (16,3, "David Balakrishnan", "12-Sept-2022", "14-Sept-2023", 45, "9 August, 2022 to 1 September, 2022");
+insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit, regPeriod) values (17,3, "Andrew Chong", "12-Sept-2022", "14-Sept-2023", 45, "9 August, 2022 to 1 September, 2022");
+insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit, regPeriod) values (18,3, "Fong Heng Heng", "12-Sept-2022", "14-Sept-2023", 45, "9 August, 2022 to 1 September, 2022");
+insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit, regPeriod) values (19,3, "Fong Heng Heng", "12-Sept-2022", "14-Sept-2023", 45, "9 August, 2022 to 1 September, 2022");
+insert into classes (clsCourseID, classID, clsTrainer, clsStartTime, clsEndTime, clsLimit, regPeriod) values (20,3, "Andrew Chong", "12-Sept-2022", "14-Sept-2023", 45, "9 August, 2022 to 1 September, 2022");
 
 --
 -- Table structure for table `sections`
