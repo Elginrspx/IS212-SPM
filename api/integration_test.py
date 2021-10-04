@@ -20,5 +20,7 @@ class TestApp(flask_testing.TestCase):
         db.drop_all()
 
 
+#testing if it works
+
 if __name__ == '__main__':
     unittest.main()
