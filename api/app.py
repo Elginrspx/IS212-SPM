@@ -190,6 +190,7 @@ class Registration(db.Model):
 #         "sectionID": self.sectionID
 #         }
 
+db.create_all()
 
 # GET all Courses (not finalised, might want to add prereqs to return value and condition to only appear if classes are available, but this works for first sprint...?)
 @app.route("/courses")
