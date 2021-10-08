@@ -136,18 +136,18 @@ class Completed(db.Model):
 class Registration(db.Model):
     __tablename__ = 'registrations'
 
-    regStudentID = db.Column(db.Integer, db.ForeignKey('students.studentID', ondelete="CASCADE", onupdate="CASCADE"), primary_key=True)
-    regCourseID = db.Column(db.String(30), db.ForeignKey('classes.clsCourseID', ondelete="CASCADE", onupdate="CASCADE"), primary_key=True)
-    regClassID = db.Column(db.Integer,db.ForeignKey('classes.classID', ondelete="CASCADE", onupdate="CASCADE"), primary_key=True)
+    regStudentID = db.Column(db.Integer, primary_key=True)
+    # regCourseID = db.Column(db.String(30), db.ForeignKey('classes.clsCourseID', ondelete="CASCADE", onupdate="CASCADE"), primary_key=True)
+    # regClassID = db.Column(db.Integer,db.ForeignKey('classes.classID', ondelete="CASCADE", onupdate="CASCADE"), primary_key=True)
+    regCourseID = db.Column(db.String(30),nullable=False, primary_key = True)
+    regClassID = db.Column(db.Integer,nullable=False, primary_key = True)
     regStatus = db.Column(db.String(30), nullable=False)
     # user = relationship('User', backref='child')
-    classRegistration1 = db.relationship(
-    'Class', primaryjoin='Class.clsCourseID == Registration.regCourseID', backref='registrations1')
-    classRegistration2 = db.relationship(
-    'Class', primaryjoin='Class.classID == Registration.regClassID', backref='registrations2')
-    studentRegistration = db.relationship(
-    'Student', primaryjoin='Student.studentID == Registration.regStudentID', backref='registrations3')
-
+    __table_args__ = (ForeignKeyConstraint([regCourseID, regClassID],
+                                           [Class.clsCourseID, Class.classID]),
+                      {})
+    # classRegistration = db.relationship(
+    # 'Class', primaryjoin='and_(Class.classID == Registration.regClassID, Class.clsCourseID == Registration.regCourseID)', backref='registrations')
     def __init__(self, regStudentID, regCourseID, regClassID, regStatus):
         self.regStudentID = regStudentID
         self.regCourseID = regCourseID
