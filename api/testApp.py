@@ -18,32 +18,10 @@ class TestApp(flask_testing.TestCase):
 
     def tearDown(self):
         db.session.remove()
-        # db.drop_all()
+        db.drop_all()
 
 class TestCreateRegistration(TestApp):
     def test_create_registration(self):
-<<<<<<< Updated upstream
-        # d1 = Registration(1, 7, 3, "enrolled")
-        # db.session.add(d1)
-        # db.session.commit()
-
-        request_body = {
-            "regStudentID": 1, 
-            "regCourseID": 7, 
-            "regClassID": 3, 
-            "regStatus": "enrolled"
-        }
-        response = self.client.post("/registerClass",
-                                    data=json.dumps(request_body),
-                                    content_type='application/json')
-        print(response.json['data'])
-        self.assertEqual(response.json['data'], {"regStudentID": 1, "regCourseID": "7", "regClassID": 3, "regStatus": "enrolled"}
-        )
-    
-    # def test_create_registration_already_taken(self):
-
-    # def test_create_registration_prereqs_not_satisfied(self):
-=======
         d1 = Course(1, '3D Printing Software v1.0', 'A course on 3D printing software', '3D Printing Basics, 3D Printer Software Installation', False)
         d2 = Class(1,3, "Lim Ah Hock", "12-Sept-2021", "14-Sept-2023", 35, "9 Oct, 2021 to 9 Nov, 2021")
         db.session.add(d1)
@@ -108,7 +86,6 @@ class TestCreateRegistration(TestApp):
         # print(response.json)
         # self.assertEqual(response.json['message'], {"Student has already been registered"}
         # )
->>>>>>> Stashed changes
     # def test_create_registration_already_registered(self):
 
 #testing if it works
