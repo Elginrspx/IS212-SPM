@@ -131,7 +131,7 @@ class TestCompleted(TestApp):
 #test for faulty automated courseCompleted. ONLY IF the student passes the final quiz in a course, then a record should be 
 #automatically created in courseCompleted
     def test_faulty_auto_create_courseCompleted(self):
-        ss2 = studentScore(4,1,3,3,4,0.5) #SectionID should be last quiz in the course
+        ss2 = studentScore(4,1,3,3,3,0.5) #SectionID should be last quiz in the course
         db.session.add(ss2)
         db.session.commit()
         response = self.client.get("/completed/4",
