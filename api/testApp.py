@@ -126,20 +126,18 @@ class TestCompleted(TestApp):
         db.session.commit()
         response = self.client.get("/completed/4",
                                     content_type='application/json')
-        # print(response.json['data']['courses'])
         self.assertEqual(response.json['data']['courses'], [{'ccStudentID': 4, 'completedCName': '3D Printing Software v1.0'}])
 
-#test for faulty automated courseCompleted. ONLY IF the student passes the final quiz in a course, a record should be 
+#test for faulty automated courseCompleted. ONLY IF the student passes the final quiz in a course, then a record should be 
 #automatically created in courseCompleted
     def test_faulty_auto_create_courseCompleted(self):
-#Score table should be studentScore: studentID, clsCourseID, classID, clsTrainer, sectionID(chapter1), scorePercentage
-        ss = studentScore(4,1,3,3,4,0.5) #SectionID should be last quiz in the course
-        db.session.add(ss)
+        ss2 = studentScore(4,1,3,3,4,0.5) #SectionID should be last quiz in the course
+        db.session.add(ss2)
         db.session.commit()
         response = self.client.get("/completed/4",
                                     content_type='application/json')
-        # print(response.json['data']['courses'])
-        # self.assertEqual(response.json['data']['courses'], [{'ccStudentID': 4, 'completedCName': '3D Printing Software v1.0'}])
+#The creation of courseCompleted should fail as it is not the final quiz which the student passed
+        self.assertEqual(response.json['code'], 500)
 
 if __name__ == '__main__':
     unittest.main()
