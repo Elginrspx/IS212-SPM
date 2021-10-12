@@ -139,5 +139,45 @@ class TestCompleted(TestApp):
 #The creation of courseCompleted should fail as it is not the final quiz which the student passed
         self.assertEqual(response.json['code'], 500)
 
+#Wei Xiang's TDD portion
+class TestStudent(TestApp):
+
+#Test if we are able to get the data if we create it
+    def test_Student(self):
+        s1 = Student(1, 'Lim Ah Hock', 'Repair Engineer (Senior)')
+        db.session.add(s1)
+        db.session.commit()
+        response = self.client.get("/student/1",
+                                    content_type='application/json')
+        # print(response.json['data']['student'])
+        self.assertEqual(response.json['data']['student'], {'sPosition': 'Repair Engineer (Senior)', 'studentID': 1, 'studentName': 'Lim Ah Hock'})
+#Test if 2 students can have the same name. (They can)
+    def test_Same_name_Student(self):
+        s1 = Student(1, 'Lim Ah Hock', 'Repair Engineer (Senior)')
+        s2 = Student(2, 'Lim Ah Hock', 'Repair Engineer (Senior)')
+        db.session.add(s1)
+        db.session.add(s2)
+        db.session.commit()
+        response = self.client.get("/student/2",
+                                    content_type='application/json')
+        self.assertEqual(response.json['code'], 200)
+
+#Test if 2 students can have the same stuednt ID. (They cant)
+#Currently there is no such function registerStudent
+    def test_Same_studentID(self):
+        s1 = Student(1, 'Lim Ah Hock', 'Repair Engineer (Senior)')
+        # s2 = Student(1, 'Tan Kah Kee', 'Service Engineer (Junior)')
+        db.session.add(s1)
+        db.session.commit()
+        request_body = {
+            "regStudentID": 1, 
+            "studentName": 'Tan Kah Kee', 
+            "sPosition": 'Service Engineer (Junior)'
+        }
+        response = self.client.post("/registerStudent",
+                                    data=json.dumps(request_body),
+                                    content_type='application/json')
+        self.assertEqual(response.json['code'], 500)
+        
 if __name__ == '__main__':
     unittest.main()
