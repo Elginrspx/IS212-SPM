@@ -15,6 +15,13 @@ class TestApp(flask_testing.TestCase):
 
     def setUp(self):
         db.create_all()
+        dummyCourse = Course(1, '3D Printing Software v1.0', 'A course on 3D printing software', '3D Printing Basics, 3D Printer Software Installation', False)
+        dummyClass = Class(1,3, "Lim Ah Hock", "12-Sept-2021", "14-Sept-2023", 35, "9 Oct, 2021 to 9 Nov, 2021")
+        dummyUserReg = Registration(1,1,3,"enrolled")
+        db.session.add(dummyCourse)
+        db.session.add(dummyClass)
+        db.session.add(dummyUserReg)
+        db.session.commit()
 
     def tearDown(self):
         db.session.remove()
@@ -35,15 +42,37 @@ class TestCreatePrereq(TestApp):
         self.assertEqual(response.json['code'], 200)
 
 class TestRegistration(TestApp):
-    def test_force_create_registration(self):
-        d1 = Course(1, '3D Printing Software v1.0', 'A course on 3D printing software', '3D Printing Basics, 3D Printer Software Installation', False)
-        d2 = Class(1,3, "Lim Ah Hock", "12-Sept-2021", "14-Sept-2023", 35, "9 Oct, 2021 to 9 Nov, 2021")
-        db.session.add(d1)
-        db.session.add(d2)
-        db.session.commit()
-
+    def test_force_update_registration_success(self):
         request_body = {
             "regStudentID": 1, 
+            "regCourseID": 1, 
+            "regClassID": 3, 
+            "regStatus": "assigned"
+        }
+        response = self.client.post("/registerClass",
+                                    data=json.dumps(request_body),
+                                    content_type='application/json')
+        print(response.json)
+        self.assertEqual(response.json['data'], {"regStudentID": 1, "regCourseID": "1", "regClassID": 3, "regStatus": "assigned"})
+
+
+    def test_force_create_registration_wDiff_Class_success(self):
+        request_body = {
+            "regStudentID": 1, 
+            "regCourseID": 2, 
+            "regClassID": 3, 
+            "regStatus": "assigned"
+        }
+        response = self.client.post("/registerClass",
+                                    data=json.dumps(request_body),
+                                    content_type='application/json')
+        print(response.json)
+        self.assertEqual(response.json['data'], {"regStudentID": 1, "regCourseID": "2", "regClassID": 3, "regStatus": "assigned"})
+        #create one more self.assert to check if it was deleted/updated
+
+    def test_student_create_new_registration_success(self):
+        request_body = {
+            "regStudentID": 2, 
             "regCourseID": 1, 
             "regClassID": 3, 
             "regStatus": "enrolled"
@@ -52,10 +81,7 @@ class TestRegistration(TestApp):
                                     data=json.dumps(request_body),
                                     content_type='application/json')
         print(response.json)
-        self.assertEqual(response.json['data'], {"regStudentID": 1, "regCourseID": "1", "regClassID": 3, "regStatus": "enrolled"}
-        )
-    
-    
+        self.assertEqual(response.json['data'], {"regStudentID": 2, "regCourseID": "1", "regClassID": 3, "regStatus": "enrolled"})
 
 class TestCompleted(TestApp):
 
