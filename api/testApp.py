@@ -17,7 +17,7 @@ class TestApp(flask_testing.TestCase):
 
     def tearDown(self):
         db.session.remove()
-        # db.drop_all()
+        db.drop_all()
 
 class TestCreateRegistration(TestApp):
     def test_create_registration(self):
@@ -87,14 +87,10 @@ class TestCreateRegistration(TestApp):
         # )
     # def test_create_registration_already_registered(self):
 
-#test for course completed
-#Score table should be studentScore: studentID, clsCourseID, classID, clsTrainer, sectionID(chapter1), scorePercentage
 class TestCompleted(TestApp):
+
+#Test if we are able to get the data if we create it
     def test_Completed(self):
-        #Get request dunnid request_body
-        # request_body = {
-        #     "ccStudentID": 1, 
-        # }
         s1 = Student(1, 'Lim Ah Hock', 'Repair Engineer (Senior)')
         d1 = Completed(1, "3D Printing Hardware v1.0")
         db.session.add(d1)
@@ -102,8 +98,33 @@ class TestCompleted(TestApp):
         db.session.commit()
         response = self.client.get("/completed/1",
                                     content_type='application/json')
-        print(response.json['data']['courses'])
+        print(response.json['code'])
         self.assertEqual(response.json['data']['courses'], [{'ccStudentID': 1, 'completedCName': '3D Printing Hardware v1.0'}])
+
+
+#test for automated courseCompleted. Once student passes the final quiz in a course, a record should be 
+#automatically created in courseCompleted
+    def test_auto_create_courseCompleted(self):
+#Score table should be studentScore: studentID, clsCourseID, classID, clsTrainer, sectionID(chapter1), scorePercentage
+        ss = studentScore(4,1,3,3,6,0.5) #SectionID should be last quiz in the course. I assume 6 is last one
+        db.session.add(ss)
+        db.session.commit()
+        response = self.client.get("/completed/4",
+                                    content_type='application/json')
+        # print(response.json['data']['courses'])
+        self.assertEqual(response.json['data']['courses'], [{'ccStudentID': 4, 'completedCName': '3D Printing Software v1.0'}])
+
+#test for faulty automated courseCompleted. ONLY IF the student passes the final quiz in a course, a record should be 
+#automatically created in courseCompleted
+    def test_faulty_auto_create_courseCompleted(self):
+#Score table should be studentScore: studentID, clsCourseID, classID, clsTrainer, sectionID(chapter1), scorePercentage
+        ss = studentScore(4,1,3,3,4,0.5) #SectionID should be last quiz in the course
+        db.session.add(ss)
+        db.session.commit()
+        response = self.client.get("/completed/4",
+                                    content_type='application/json')
+        # print(response.json['data']['courses'])
+        # self.assertEqual(response.json['data']['courses'], [{'ccStudentID': 4, 'completedCName': '3D Printing Software v1.0'}])
 
 if __name__ == '__main__':
     unittest.main()
