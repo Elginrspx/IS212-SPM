@@ -15,8 +15,6 @@ class TestApp(flask_testing.TestCase):
 
     def setUp(self):
         db.create_all()
-<<<<<<< HEAD
-=======
         dummyCourse = Course(1, '3D Printing Software v1.0', 'A course on 3D printing software', '3D Printing Basics, 3D Printer Software Installation', False)
         dummyClass = Class(1,3, "Lim Ah Hock", "12-Sept-2021", "14-Sept-2023", 35, "9 Oct, 2021 to 9 Nov, 2021")
         dummyUserReg = Registration(1,1,3,"enrolled")
@@ -24,7 +22,6 @@ class TestApp(flask_testing.TestCase):
         db.session.add(dummyClass)
         db.session.add(dummyUserReg)
         db.session.commit()
->>>>>>> parent of b023114 (Merge branch 'TDD-Elgin' into TDD)
 
     def tearDown(self):
         db.session.remove()
@@ -44,25 +41,12 @@ class TestCreatePrereq(TestApp):
         response = self.client.get("/prereqs/3")
         self.assertEqual(response.json['code'], 200)
 
-<<<<<<< HEAD
-class TestCreateRegistration(TestApp):
-    def test_create_registration(self):
-        d1 = Course(1, '3D Printing Software v1.0', 'A course on 3D printing software', '3D Printing Basics, 3D Printer Software Installation', False)
-        d2 = Class(1,3, "Lim Ah Hock", "12-Sept-2021", "14-Sept-2023", 35, "9 Oct, 2021 to 9 Nov, 2021")
-        db.session.add(d1)
-        db.session.add(d2)
-        db.session.commit()
-
-=======
 class TestRegistration(TestApp):
     def test_force_update_registration_success(self):
->>>>>>> parent of b023114 (Merge branch 'TDD-Elgin' into TDD)
         request_body = {
             "regStudentID": 1, 
             "regCourseID": 1, 
             "regClassID": 3, 
-<<<<<<< HEAD
-=======
             "regStatus": "assigned"
         }
         response = self.client.post("/registerClass",
@@ -91,7 +75,6 @@ class TestRegistration(TestApp):
             "regStudentID": 2, 
             "regCourseID": 1, 
             "regClassID": 3, 
->>>>>>> parent of b023114 (Merge branch 'TDD-Elgin' into TDD)
             "regStatus": "enrolled"
         }
         response = self.client.post("/registerClass",
