@@ -72,7 +72,7 @@
 
         var getCourseDetailsURL = "http://localhost:2222/courses/" + courseID;
         var getClassDetailsURL = "http://localhost:2222/classes/" + courseID + "/" + classID;
-        var registrationURL = "http://localhost:2222/registerClass";
+        // var registrationURL = "http://localhost:2222/registerClass";
 
         var classDetail = new Vue({
             el: '#classDetail',
