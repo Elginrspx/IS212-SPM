@@ -1,2 +1,9 @@
 api/__pycache__/app.cpython-39.pyc
 api/__pycache__/testApp.cpython-39.pyc
+api/__pycache__/classs.cpython-39.pyc
+api/__pycache__/completed.cpython-39.pyc
+api/__pycache__/course.cpython-39.pyc
+api/__pycache__/main.cpython-39.pyc
+api/__pycache__/prerequisite.cpython-39.pyc
+api/__pycache__/registration.cpython-39.pyc
+api/__pycache__/student.cpython-39.pyc
