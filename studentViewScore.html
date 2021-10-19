@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <title>Student Class | Take quiz</title>
+    <title>Student Class | View Score</title>
 </head>
 
 <body>
@@ -23,6 +23,7 @@
                 <li class="breadcrumb-item"><a href="#">Home</a></li>
                 <li class="breadcrumb-item"><a href="#" class="current">My Classes</a></li>
                 <li class="breadcrumb-item"><a href="#" class="current">Quiz 3</a></li>
+                <li class="breadcrumb-item"><a href="#" class="current">View Results</a></li>
             </ol>
         </nav>
         <div class="row">
@@ -47,12 +48,15 @@
                         </thead>
                         <tbody>
                             <form id="qn1">
-                                <input type="radio" id="html" name="qn1" value="Wrench">
-                                <label for="html">Wrench</label><br><br>
+                                <input type="radio" id="html" name="qn1" value="Wrench"> 
+                                <label for="html">Wrench</label>
+                                <br><br>
                                 <input type="radio" id="css" name="qn1" value="Screwdriver">
                                 <label for="css">Screwdriver</label><br><br>
-                                <input type="radio" id="javascript" name="qn1" value="Hammer">
-                                <label for="javascript">Hammer</label> <br><br>
+                                <input type="radio" id="javascript" name="qn1" value="Hammer" checked=True>
+                                <label for="javascript">Hammer</label> 
+                                <img src="images/wrong.jpg" width="24" height="18" style="margin-left: 1cm;">
+                                <br><br>
                                 <input type="radio" id="javascript" name="qn1" value="Crowbar">
                                 <label for="javascript">Crowbar</label>
                               </form>
@@ -79,8 +83,10 @@
                         <form id="qn2">
                             <input type="radio" id="html" name="qn2" value="12">
                             <label for="html">12 minutes</label><br><br>
-                            <input type="radio" id="css" name="qn2" value="24">
-                            <label for="css">24 minutes</label><br><br>
+                            <input type="radio" id="css" name="qn2" value="24" checked=True>
+                            <label for="css">24 minutes</label>
+                            <img src="images/Vector.svg" style="margin-left: 1cm;">
+                            <br><br>
                             <input type="radio" id="javascript" name="qn2" value="30">
                             <label for="javascript">30 minutes</label> <br><br>
                             <input type="radio" id="javascript" name="qn2" value="18">
@@ -108,13 +114,19 @@
                             <form id="qn3">
                                 <input type="radio" id="html" name="qn3" value="True">
                                 <label for="html">True</label><br><br>
-                                <input type="radio" id="css" name="qn3" value="False">
-                                <label for="css">False</label><br><br>
+                                <input type="radio" id="css" name="qn3" value="False" checked=True>
+                                <label for="css">False</label>
+                                <img src="images/wrong.jpg" width="24" height="18" style="margin-left: 1cm;">
+                                <br><br>
                               </form>
                         </tbody>
                     </table>
             </div>
-            <input type="submit" style="margin-top: 1cm; margin-left: 28cm; background-color: rgb(252, 140, 3); border-radius: 5px;" value="Submit">
+            <div style="margin-left: 27cm;">
+            <a style="font-size: 20px; color:rgb(252, 140, 3)">Results 1/3</a>
+            <br>
+            <a style="font-size: 20px; color: red;">FAIL</a>
+            </div>
             </div>
     <!-- Div below is the end of the column -->
     </div>
