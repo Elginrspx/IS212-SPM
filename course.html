@@ -1,13 +1,28 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 
+<!DOCTYPE html>
+
 <head>
-    <?php include 'includes/header.php' ?>
+    
     <title>Course | LMS</title>
 </head>
 
 <body>
-    <?php include 'includes/navbar.php' ?>
+    <div id="nav-placeholder"></div>
+    <div id="header-placeholder"></div>
+    <script src="//code.jquery.com/jquery.min.js"></script>
+    <script>
+    $.get("includes/navbar.html", function(data){
+        $("#nav-placeholder").replaceWith(data);
+     });
+    $.get("includes/header.html", function(data){
+        $("#header-placeholder").replaceWith(data);
+     });
+    $.get("includes/footer.html", function(data){
+        $("#footer-placeholder").replaceWith(data);
+     });
+     </script>
     <div id="course">
         <nav class="m-2" style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
             <ol class="breadcrumb">
@@ -36,7 +51,7 @@
     </div>
 
 
-    <?php include 'includes/footer.php' ?>
+    
     <script>
         var courseID = localStorage.getItem("chosenCourse");
 
@@ -111,6 +126,7 @@
             }
         })
     </script>
+    <div id="footer-placeholder"></div>
 </body>
 
 </html>
