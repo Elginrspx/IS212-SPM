@@ -2,12 +2,24 @@
 <html lang="en">
 
 <head>
-    <?php include 'includes/header.php' ?>
     <title>Trainer Class | LMS</title>
 </head>
 
 <body>
-    <?php include 'includes/navbar.php' ?>
+<div id="nav-placeholder"></div>
+    <div id="header-placeholder"></div>
+    <script src="//code.jquery.com/jquery.min.js"></script>
+    <script>
+    $.get("includes/navbar.html", function(data){
+        $("#nav-placeholder").replaceWith(data);
+     });
+    $.get("includes/header.html", function(data){
+        $("#header-placeholder").replaceWith(data);
+     });
+     $.get("includes/footer.html", function(data){
+        $("#footer-placeholder").replaceWith(data);
+     });
+     </script>
     <div class="container" id="trainerClass">
         <nav class="mt-2" style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
             <ol class="breadcrumb">
@@ -96,7 +108,7 @@
         </div>
     </div>
     </div>
-    <?php include 'includes/footer.php' ?>
+    <div id="footer-placeholder"></div>
     <script>
         /* FOR YINGHUI
         Need you to get me the data in the following format. You can take a look at Figma and see if you understand what I mean

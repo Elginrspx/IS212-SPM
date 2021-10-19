@@ -1,13 +1,21 @@
-<!doctype html>
+<!DOCTYPE html>
+
 <html lang="en">
 
+<!DOCTYPE html>
+<div id="header"></div>
+<scrip??? src="//code.jquery.com/jquery.min.js"></scrip???>
+<script>
+$.get("includes/header.html", function(data){
+ $("#header").replaceWith(data);
+});
+</script>
 <head>
-    <?php include 'includes/header.php' ?>
+    
     <title>Course | LMS</title>
 </head>
 
 <body>
-    <?php include 'includes/navbar.php' ?>
     <div id="course">
         <nav class="m-2" style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
             <ol class="breadcrumb">
