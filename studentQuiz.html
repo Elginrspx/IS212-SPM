@@ -22,45 +22,19 @@
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="#">Home</a></li>
                 <li class="breadcrumb-item"><a href="#" class="current">My Classes</a></li>
+                <li class="breadcrumb-item"><a href="#" class="current">Quiz 3</a></li>
             </ol>
         </nav>
         <div class="row">
             <div class="col">
-                <p class="title">My Classes</p>
+                <p class="title">Quiz 3 Chapter 3 Printing Software</p>
             </div>
-        </div>
-        <div class="row">
-            <select class="form-select" id="classDropdown">
-                <option selected>Select course...</option>
-                <option value="1">3D Printing Test [Class 2]</option>
-                <option value="2">3D Manufacturing Test [Class 3]</option>
-                <option value="3">Introduction to Printing Test [Class 2]</option>
-            </select>
         </div>
         <div class="row mt-5">
-            <div class="col-4">
-                <div class="timelineWrapper">
-                    <h1 class="color-darkgrey">Courses</h1>
-                    <h1>3D Printing Test</h1>
-                    <ul class="sessions">
-                        <li>
-                            <div class="color-darkgrey">Chapter 1</div>
-                            <p>3D Printing and Additive Manufacturing</p>
-                        </li>
-                        <li>
-                            <div class="color-darkgrey">Chapter 2</div>
-                            <p>3D Printing Hardware</p>
-                        </li>
-                        <li class="select">
-                            <div class="color-darkgrey">Chapter 3</div>
-                            <p>3D Printing Software</p>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <div class="col-8">
+        <!-- First question -->
+            <div class="col-12" style="margin-bottom: 1cm;">
                 <div class="p-3" style="border: 1px solid #dedede; border-radius: 10px;">
-                    <p style="font-size:1.5em;">Course Materials</p>
+                    <p style="font-size:1.5em;">What tool should you use to open the battery compartment of the 3D printer?</p>
                     <hr>
                     <table class="table table-borderless table-sm">
                         <thead>
@@ -72,37 +46,78 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td class="text-center"><img src="images/download.png" style="width:15px;height:15px;"></td>
-                                <td class="text-center"><img src="images/download.png" style="width:15px;height:15px;"></td>
-                                <td>Chapter_01_Introduction_to_3D_printing.pdf</td>
-                                <td class="text-center"><img src="images/download.png" style="width:15px;height:15px;"></td>
-                            </tr>
-                            <tr>
-                                <td class="text-center"><img src="images/download.png" style="width:15px;height:15px;"></td>
-                                <td class="text-center"><img src="images/download.png" style="width:15px;height:15px;"></td>
-                                <td>Chapter_01_Introduction_to_3D_printing.mp4</td>
-                                <td class="text-center"><img src="images/download.png" style="width:15px;height:15px;"></td>
-                            </tr>
-                            <tr>
-                                <td class="text-center"><img src="images/download.png" style="width:15px;height:15px;"></td> 
-                                <td class="text-center"><img src="images/download.png" style="width:15px;height:15px;"></td>
-                                <td>Chapter_01_Introduction_to_3D_printing</td>
-                                <td class="text-center"><img src="images/download.png" style="width:15px;height:15px;"></td>
-                            </tr>
-                            <tr>
-                                <td class="text-center"><img src="images/download.png" style="width:15px;height:15px;"></td> 
-                            </tr>
+                            <form id="qn1">
+                                <input type="radio" id="html" name="qn1" value="Wrench">
+                                <label for="html">Wrench</label><br><br>
+                                <input type="radio" id="css" name="qn1" value="Screwdriver">
+                                <label for="css">Screwdriver</label><br><br>
+                                <input type="radio" id="javascript" name="qn1" value="Hammer">
+                                <label for="javascript">Hammer</label> <br><br>
+                                <input type="radio" id="javascript" name="qn1" value="Crowbar">
+                                <label for="javascript">Crowbar</label>
+                              </form>
                         </tbody>
                     </table>
-                </div>
-                <div class="p-3 mt-4" style="border: 1px solid #dedede; border-radius: 10px;">
-                    <p style="font-size:1.5em;">Quiz</p>
-                    <hr>
-                </div>
             </div>
-
+            </div>
+        <br>
+        <!-- Second question -->
+        <div class="col-12" style="margin-bottom: 1cm;">
+            <div class="p-3" style="border: 1px solid #dedede; border-radius: 10px;">
+                <p style="font-size:1.5em;">What is the average time required for a standard 3D printing to print a 12cm by 12cm by 12cm cube?</p>
+                <hr>
+                <table class="table table-borderless table-sm">
+                    <thead>
+                        <tr>
+                            <th style="width:7.5%"></th>
+                            <th style="width:7.5%"></th>
+                            <th style="width:77.5%"></th>
+                            <th style="width:7.5%"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <form id="qn2">
+                            <input type="radio" id="html" name="qn2" value="12">
+                            <label for="html">12 minutes</label><br><br>
+                            <input type="radio" id="css" name="qn2" value="24">
+                            <label for="css">24 minutes</label><br><br>
+                            <input type="radio" id="javascript" name="qn2" value="30">
+                            <label for="javascript">30 minutes</label> <br><br>
+                            <input type="radio" id="javascript" name="qn2" value="18">
+                            <label for="javascript">18 minutes</label>
+                          </form>
+                    </tbody>
+                </table>
         </div>
+        </div>
+            <!-- Third question -->
+            <div class="col-12">
+                <div class="p-3" style="border: 1px solid #dedede; border-radius: 10px;">
+                    <p style="font-size:1.5em;">The battery compartment is the most fragile part of the 3D printer.</p>
+                    <hr>
+                    <table class="table table-borderless table-sm">
+                        <thead>
+                            <tr>
+                                <th style="width:7.5%"></th>
+                                <th style="width:7.5%"></th>
+                                <th style="width:77.5%"></th>
+                                <th style="width:7.5%"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <form id="qn3">
+                                <input type="radio" id="html" name="qn3" value="True">
+                                <label for="html">True</label><br><br>
+                                <input type="radio" id="css" name="qn3" value="False">
+                                <label for="css">False</label><br><br>
+                              </form>
+                        </tbody>
+                    </table>
+            </div>
+            <input type="submit" style="margin-top: 1cm; margin-left: 28cm; background-color: rgb(252, 140, 3); border-radius: 5px;" value="Submit">
+            </div>
+    <!-- Div below is the end of the column -->
+    </div>
     </div>
     </div>
     <div id="footer-placeholder"></div>
