@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Trainer Class | LMS</title>
+</head>
+
+<body><!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/stylesheet.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    
+    <div id="nav-placeholder"></div>
+    <div class="container" id="quizResults">
+        <nav class="mt-2" style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="trainerClass.html">Home</a></li>
+                <li class="breadcrumb-item"><a href="trainerClass.html">My Classes</a></li>
+                <li class="breadcrumb-item"><a href="trainerClass.html">Class Materials</a></li>
+                <li class="breadcrumb-item"><a href="#" class="current">Quiz Results</a></li>
+            </ol>
+        </nav>
+        <div class="row">
+            <p class="title">Chapter {{ sectionID }} Quiz Results - {{ course[0].courseName }}</p>
+        </div>
+        <div class="row">
+            <input v-on:keyup="searchQuiz" v-model="quizInput" class="form-control" type="text" placeholder="Search..." aria-label="Name" />
+        </div>
+        <div class="row mt-3">
+            <table class="table table-borderless table-sm quizTable">
+                <thead>
+                    <tr>
+                        <th style="width:55%">Name</th>
+                        <th style="width:15%">Marks</th>
+                        <th style="width:15%">Grade</th>
+                        <th style="width:15%">No. of Attempts</th>
+                    </tr>
+                </thead>
+                <tbody v-for="quizSearchResult in quizSearchResults">
+                    <tr>
+                        <td>{{ quizSearchResult.studentName }}</td>
+                        <td>{{ quizSearchResult.score }}/{{ quizSearchResult.totalScore }}</td>
+                        <td v-if="quizSearchResult.status == 'Pass'"><p style="color:green;">{{ quizSearchResult.status }}</p></td>
+                        <td v-else><p style="color:red;">{{ quizSearchResult.status }}</p></td>
+                        <td>{{ quizSearchResult.noAttempts }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="float-end">
+            <a href="trainerClass.html" class="btn btn-default btn-md active" role="button" aria-pressed="true">Back</a>
+        </div>
+    </div>
+</div>
+    <script src="//code.jquery.com/jquery.min.js"></script>
+    <script>
+        $.get("includes/navbar.html", function(data){
+            $("#nav-placeholder").replaceWith(data);
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script>
+        var courseID = localStorage.getItem("trainerCourse");
+        var classID = localStorage.getItem("trainerClass");
+        var sectionID = localStorage.getItem("trainerSection");
+        console.log(courseID,classID,sectionID)
+
+        // Initialise URLs
+        //var getCourseURL = "http://localhost:2222/courses/" + courseID
+        //var getQuizResultsURL = "http://localhost:2222/courses/" + courseID ???
+
+        var quizResults = new Vue({
+            el: '#quizResults',
+            data: {
+                course: [
+                    {"courseID": 1, "courseName": "Introduction to 3D Printing"}
+                ],
+                quizResults: [],
+                quizInput: "",
+                quizSearchResults: [],
+                sectionID: sectionID
+            },
+            created: function() {
+                // Get Courses
+                // fetch(getCoursesURL)
+                //     .then(response => response.json())
+                //     .then(data => {
+                //         result = data.data.courses;
+
+                //         for (record of result) {
+                //             this.courses.push(record);
+                //         }
+                //     })
+                this.quizResults = [
+                    {"studentName": "Justin Bieber", "score": 7, "totalScore": 10, "status": "Pass", "noAttempts": 2},
+                    {"studentName": "Selena Gomez", "score": 5, "totalScore": 10, "status": "Fail", "noAttempts": 1},
+                    {"studentName": "Hilary Duff", "score": 9, "totalScore": 10, "status": "Pass", "noAttempts": 3},
+                    {"studentName": "Ariana Grande", "score": 4, "totalScore": 10, "status": "Fail", "noAttempts": 2}
+                ]
+                this.quizSearchResults = this.quizResults
+            },
+            methods: {
+                searchQuiz: function() {
+                    this.quizSearchResults = [];
+                    if (this.quizInput == "") {
+                        this.quizSearchResults = this.quizResults
+                        return
+                    } else {
+                        for (quizResult of this.quizResults) {
+                            if (quizResult.studentName.toLowerCase().includes(this.quizInput)) {
+                                this.quizSearchResults.push(quizResult)
+                            }
+                        }
+                    }
+                },
+            }
+        })
+
+        // // Get Class by Trainer
+        // var trainerClass = new Vue({
+        //     el: '#trainerClass',
+        //     data: {
+        //         courseClass: [
+        //             {"courseID": 1, "classID": 2, "courseName": "3D Printing Test"},
+        //             {"courseID": 2, "classID": 2, "courseName": "3D Manufacturing Test"},
+        //             {"courseID": 3, "classID": 3, "courseName": "Introduction to Printing Test"}
+        //         ],
+        //         sectionItems: [],
+        //         sectionMaterials: [],
+        //         selectedItemDetails: {
+        //             "courseID": 0,
+        //             "classID": 0,
+        //             "sectionID": 0,
+        //             "courseName": "",
+        //             "quizName": ""
+        //         }
+        //     },
+        //     methods: {
+        //         selectCourseClass: function() {
+        //             this.sectionItems = []
+        //             this.sectionMaterials = []
+
+        //             var courseClassElement = document.getElementById("courseClassDropdown")
+
+        //             // If user selects "Select course..." i.e. nothing
+        //             if (courseClassElement.value == "Select course...") {
+        //                 return
+        //             }
+
+        //             [this.selectedItemDetails.courseID, this.selectedItemDetails.classID] = courseClassElement.value.split(",")
+        //             var courseClassElementText = courseClassElement.options[courseClassElement.selectedIndex].text
+        //             this.selectedItemDetails.courseName = courseClassElementText.split(" [")[0]
+                    
+        //             // Insert function to get section items based on courseID, classID
+        //             // Append to sectionItems
+                    
+        //             this.sectionItems.push(
+        //                 {"sectionID": 1, "sectionName": "Test Section 1"},
+        //                 {"sectionID": 2, "sectionName": "Test Section 2"},
+        //                 {"sectionID": 3, "sectionName": "Test Section 3"}
+        //             )
+        //         },
+        //         deleteMaterial: function(materialID) {
+        //             console.log("in delete material" + materialID)
+        //         },
+        //         downloadMaterial: function(materialID) {
+        //             console.log("in download material" + materialID)
+        //         },
+        //         addSection: function() {
+        //             console.log("in add section")
+        //         },
+        //         addMaterial: function() {
+        //             console.log("in add material")
+        //         },
+        //         viewResult: function() {
+        //             console.log("in view result")
+        //             // to set course, class, section to storage
+        //             // e.preventDefault();
+        //             // localStorage.setItem("chosenCourse", courseID);
+        //             //window.location.replace("course.php");
+        //         },
+        //         editQuiz: function() {
+        //             console.log("in edit quiz")
+        //             // to set course, class, section to storage
+        //             // e.preventDefault();
+        //             // localStorage.setItem("chosenCourse", courseID);
+        //             //window.location.replace("course.php");
+        //         }
+        //     }
+        // })
+
+        // Vue.component('section-item', {
+        //     props: ['sectionitem'],
+        //     template: `
+        //     <li @click="deleteSection($event, sectionitem.sectionID)">
+        //         <div @click="selectSection(sectionitem.sectionID)">
+        //             <div class="color-darkgrey">Chapter {{ sectionitem.sectionID }}</div>
+        //             <p>{{ sectionitem.sectionName }}</p>
+        //         </div>
+        //     </li>
+        //     `,
+        //     methods: {
+        //         selectSection: function(sectionID) {
+        //             console.log("in select section")
+        //             trainerClass.selectedItemDetails.sectionID = sectionID
+        //             trainerClass.sectionMaterials = []
+                    
+        //             // Insert function to get section materials based on courseID, classID, sectionID
+        //             // Append to sectionMaterials
+                    
+        //             // REMINDER: need to add the download thing
+        //             trainerClass.sectionMaterials.push(
+        //                 {"materialID": 1, "docType": "doc", "materialName": "This is a Document"},
+        //                 {"materialID": 2, "docType": "video", "materialName": "This is a Video"},
+        //                 {"materialID": 3, "docType": "link", "materialName": "This is a Link"}
+        //             )
+
+        //             // Insert function quizName courseID, classID, sectionID
+        //             // Append to trainerClass.selectedItemDetails.quizName
+
+        //             trainerClass.selectedItemDetails.quizName = "Test quiz"
+        //         },
+        //         deleteSection: function(event, sectionID) {
+        //             if (event.target.tagName != "LI") {
+        //                 return
+        //             } else {
+        //                 console.log('delete tis')
+        //                 // insert function to delete this section
+        //             }
+        //         }
+        //     }
+        // })
+
+        
+    </script>
+</body>
+
+</html>
