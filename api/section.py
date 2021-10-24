@@ -1,4 +1,7 @@
 from main import db
+from sqlalchemy import *
+from sqlalchemy.orm import relationship
+from sqlalchemy import ForeignKeyConstraint
 
 
 class Section(db.Model):

@@ -4,22 +4,21 @@ from sqlalchemy.orm import relationship
 from sqlalchemy import ForeignKeyConstraint
 
 
-class Question(db.Model):
-    __tablename__ = 'questions'
+class Score(db.Model):
+    __tablename__ = 'scores'
 
+    secStudentID = db.Column(db.Integer, primary_key=True)
     secCourseID = db.Column(db.Integer, primary_key=True)
     secClassID = db.Column(db.String(30), nullable=False)
     sectionID = db.Column(db.String(30))
-    question = db.Column(db.String(255))
-    other = db.Column(db.String(255))
+    scorePercentage = db.Column(db.Integer)
 
 
-    def __init__(self, secCourseID, secClassID, sectionID, question, answer, other):
+    def __init__(self, secCourseID, secClassID, sectionID, scorePercentage):
         self.secCourseID = secCourseID
         self.secClassID = secClassID
         self.sectionID = sectionID
-        self.question = question
-        self.other = other
+        self.scorePercentage = scorePercentage
 
 
     def json(self):
@@ -27,8 +26,5 @@ class Question(db.Model):
             "secCourseID" : self.secCourseID,
             "secClassID": self.secClassID,
             "sectionID" : self.sectionID,
-            "question": self.question,
-            "other": self.other
+            "scorePercentage": self.scorePercentage
         }
-
-    def compute_score(self):
