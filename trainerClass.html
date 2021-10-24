@@ -20,9 +20,14 @@
     <div id="nav-placeholder"></div>
     <div class="container" id="trainerClass">
         <nav class="mt-2" style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
-            <ol class="breadcrumb">
+            <ol v-if="sectionItems.length == 0" class="breadcrumb">
                 <li class="breadcrumb-item"><a href="#">Home</a></li>
                 <li class="breadcrumb-item"><a href="#" class="current">My Classes</a></li>
+            </ol>
+            <ol v-else class="breadcrumb">
+                <li class="breadcrumb-item"><a href="#">Home</a></li>
+                <li class="breadcrumb-item"><a href="#">My Classes</a></li>
+                <li class="breadcrumb-item"><a href="#" class="current">Class Materials</a></li>
             </ol>
         </nav>
         <div class="row">
@@ -93,8 +98,8 @@
                     <hr>
                     <div class="d-flex bd-highlight">
                         <div class="me-auto p-2 bd-highlight" style="font-size: 1.3em;">{{ selectedItemDetails.quizName }}</div>
-                        <div class="p-2 bd-highlight"><a @click="viewResult()" class="btn btn-default btn-md active" role="button" aria-pressed="true">View Results</a></div>
-                        <div class="p-2 bd-highlight"><a @click="editQuiz()" class="btn btn-default btn-md active" role="button" aria-pressed="true">Edit</a></div>
+                        <div class="p-2 bd-highlight"><a @click="viewResult($event, selectedItemDetails.courseID, selectedItemDetails.classID, selectedItemDetails.sectionID)" class="btn btn-default btn-md active" role="button" aria-pressed="true">View Results</a></div>
+                        <div class="p-2 bd-highlight"><a @click="editQuiz($event, selectedItemDetails.courseID, selectedItemDetails.classID, selectedItemDetails.sectionID)" class="btn btn-default btn-md active" role="button" aria-pressed="true">Edit</a></div>
                     </div>
                 </div>
             </div>
@@ -187,31 +192,31 @@
                         {"sectionID": 3, "sectionName": "Test Section 3"}
                     )
                 },
-                deleteMaterial: function(materialID) {
-                    console.log("in delete material" + materialID)
-                },
                 downloadMaterial: function(materialID) {
-                    console.log("in download material" + materialID)
+                    console.log("Download Material Function! Not Implemented Fully")
                 },
                 addSection: function() {
-                    console.log("in add section")
+                    console.log("Add Section Function! Not Implemented Fully")
                 },
                 addMaterial: function() {
-                    console.log("in add material")
+                    console.log("Add Material Function! Not Implemented Fully")
                 },
-                viewResult: function() {
-                    console.log("in view result")
-                    // to set course, class, section to storage
-                    // e.preventDefault();
-                    // localStorage.setItem("chosenCourse", courseID);
-                    //window.location.replace("course.php");
+                deleteMaterial: function(materialID) {
+                    console.log("Delete Material Function! Not Implemented Fully")
                 },
-                editQuiz: function() {
-                    console.log("in edit quiz")
-                    // to set course, class, section to storage
-                    // e.preventDefault();
-                    // localStorage.setItem("chosenCourse", courseID);
-                    //window.location.replace("course.php");
+                viewResult: function(e, courseID, classID, sectionID) {
+                    e.preventDefault();
+                    localStorage.setItem("trainerCourse", courseID);
+                    localStorage.setItem("trainerClass", classID);
+                    localStorage.setItem("trainerSection", sectionID);
+                    window.location.replace("quizResults.html");
+                },
+                editQuiz: function(e, courseID, classID, sectionID) {
+                    e.preventDefault();
+                    localStorage.setItem("trainerCourse", courseID);
+                    localStorage.setItem("trainerClass", classID);
+                    localStorage.setItem("trainerSection", sectionID);
+                    window.location.replace("quizEdit.html");
                 }
             }
         })
@@ -251,8 +256,7 @@
                     if (event.target.tagName != "LI") {
                         return
                     } else {
-                        console.log('delete tis')
-                        // insert function to delete this section
+                        console.log("Delete Section Function! Not Implemented Fully")
                     }
                 }
             }
