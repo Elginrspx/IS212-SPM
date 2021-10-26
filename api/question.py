@@ -1,33 +1,13 @@
 from main import db
-<<<<<<< Updated upstream
-=======
 from sqlalchemy import *
 from sqlalchemy.orm import relationship
 from sqlalchemy import ForeignKeyConstraint
 from section import Section
->>>>>>> Stashed changes
 
 
 class Question(db.Model):
     __tablename__ = 'questions'
 
-<<<<<<< Updated upstream
-    secCourseID = db.Column(db.Integer, primary_key=True)
-    secClassID = db.Column(db.String(30), nullable=False)
-    sectionID = db.Column(db.String(30))
-    question = db.Column(db.String(255))
-    answer = db.Column(db.String(255))
-    other = db.Column(db.String(255))
-
-
-    def __init__(self, secCourseID, secClassID, sectionID, question, answer, other):
-        self.secCourseID = secCourseID
-        self.secClassID = secClassID
-        self.sectionID = sectionID
-        self.question = question
-        self.answer = answer
-        self.other = other
-=======
     qnCourseID = db.Column(db.String(30), primary_key=True)
     qnClassID = db.Column(db.Integer, nullable=False, primary_key=True)
     qnSectionID = db.Column(db.String(30), nullable=False, primary_key=True)
@@ -48,7 +28,6 @@ class Question(db.Model):
         self.question = question
         self.answer = answer
         self.choices = choices
->>>>>>> Stashed changes
 
 
     def json(self):
@@ -58,10 +37,6 @@ class Question(db.Model):
             "qnSectionID" : self.qnSectionID,
             "question": self.question,
             "answer": self.answer,
-<<<<<<< Updated upstream
-            "other": self.other
-        }
-=======
             "choices": self.choices
         }
 
@@ -82,4 +57,3 @@ class Question(db.Model):
         except Exception as e:
             return 404, "Questions not available" + str(e)
 
->>>>>>> Stashed changes
