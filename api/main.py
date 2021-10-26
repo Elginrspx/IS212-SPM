@@ -20,6 +20,7 @@ from prerequisite import *
 from registration import *
 from student import *
 from question import *
+from studentScore import *
 
 
 #COURSES TDD
@@ -205,7 +206,8 @@ def register_class():
     regCourseID = data['regCourseID']
     regClassID = data['regClassID']
     regStudentID = data['regStudentID']
-    code, dataa = Registration.register_class(regCourseID, regClassID, regStudentID)
+    regStatus = data['regStatus']
+    code, dataa = Registration.register_class(regCourseID, regClassID, regStudentID, regStatus)
     return jsonify({"code": code,"data": dataa})
 
 
@@ -253,7 +255,7 @@ def all_reg():
 @app.route("/assignRegistration", methods=['PUT'])
 def assign_registration():
     data = request.get_json()
-    code, dataa = Registration.assign_registration(data['courseID'], data['classID'], data['studentID'], data['regStatus'])
+    code, dataa = Registration.assign_registration(data['courseID'], data['classID'], data['studentID'])
     return jsonify(
         {
             "code": code,
@@ -325,8 +327,20 @@ def get_all_students():
 #used by studentQuiz.html
 @app.route("/questions/<string:qnCourseID>/<string:qnClassID>/<string:qnSectionID>")
 def get_questions(qnCourseID, qnClassID, qnSectionID):
-    print("work")
     code, data = Question.get_questions(qnCourseID, qnClassID, qnSectionID)
+    return jsonify(
+        {
+            "code": code,
+            "data": data
+        }
+    )
+
+@app.route("/submitQuiz/<string:qnCourseID>/<string:qnClassID>/<string:qnSectionID>", methods=['POST'])
+def submit_quiz(qnCourseID, qnClassID, qnSectionID):
+    data = request.get_json()
+    studentID = data['student']
+    score = Question.compute_score(data['data'], qnCourseID, qnClassID, qnSectionID)
+    code, data = Score.create_score(studentID,qnCourseID, qnClassID, qnSectionID,score)
     return jsonify(
         {
             "code": code,

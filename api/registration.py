@@ -30,3 +30,30 @@ class Registration(db.Model):
         "regClassID": self.regClassID, 
         "regStatus": self.regStatus
         }
+    
+    def register_cLass(regCourseID, regClassID, regStudentID, regStatus):
+        try:
+            registration = Registration.query.filter_by(regCourseID = regCourseID, regClassID =regClassID, regStudentID = regStudentID).first()
+            registration.regStatus = regStatus
+            db.session.commit()
+            return 201, registration.json()
+        # don't have existing
+        except Exception as e:
+            try:
+                register = Registration(regCourseID, regClassID, regStudentID, regStatus)
+                db.session.add(register)
+                db.session.commit()
+                return 201, register.json()
+            except Exception as e:
+                return 500, "Could not update registration. " + str(e)
+
+
+
+
+
+
+    def assign_registration(regCourseID, regClassID, regStudentID):
+        registration = Registration.query.filter_by(regCourseID = regCourseID, regClassID =regClassID, regStudentID = regStudentID).first()
+        registration.regStatus = "accepted"
+        db.session.commit()
+        return 201, registration.json()
