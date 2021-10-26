@@ -2,7 +2,7 @@ import unittest
 import flask_testing 
 import json
 from unittest import mock
-from app import app, db, Course, Class, Prerequisite, Student, Completed, Registration
+from main import app, db, Course, Class, Prerequisite, Student, Completed, Registration
 
 
 class TestApp(flask_testing.TestCase):

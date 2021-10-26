@@ -1,5 +1,7 @@
 from main import db
-
+from sqlalchemy import *
+from sqlalchemy.orm import relationship
+from sqlalchemy import ForeignKeyConstraint
 
 
 class Completed(db.Model):
@@ -21,3 +23,11 @@ class Completed(db.Model):
         "ccStudentID": self.ccStudentID, 
         "completedCName": self.completedCName
         }
+    
+    def get_completed_by_student(ccStudentID):
+        try:
+            courseList = Completed.query.filter_by(ccStudentID=ccStudentID).all()
+            if len(courseList):
+                return 200, [course.json() for course in courseList]
+        except Exception as e:
+            return 404, "There are no courses found." + str(e)

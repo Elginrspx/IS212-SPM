@@ -170,14 +170,18 @@ a.current {
   content: "";
   width: 20px;
   height: 20px;
-  background: url("../images/check.svg");
+  background: url("../images/minus.svg");
   position: absolute;
   left: -10px;
   top: 0px;
 }
 
 .timelineWrapper li.select:before {
-  background: url("../images/search.svg");
+  background: url("../images/plus.svg");
+}
+
+.timelineWrapper li:focus {
+  color:red
 }
 
 /*#endregion */
@@ -210,4 +214,12 @@ a.current {
 table {
   table-layout: fixed;
   word-wrap: break-word;
+}
+
+.quizTable {
+  color: #a0a0a0;
+}
+
+.quizTable th {
+    border-bottom: 1px #a0a0a0 solid;
 }

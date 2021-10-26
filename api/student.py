@@ -1,4 +1,7 @@
 from main import db
+from sqlalchemy import *
+from sqlalchemy.orm import relationship
+from sqlalchemy import ForeignKeyConstraint
 
 
 class Student(db.Model):
@@ -21,3 +24,11 @@ class Student(db.Model):
             "studentName": self.studentName,
             "sPosition" : self.sPosition,
         }
+
+    def get_all():
+        try:
+            studentList = Student.query.all()
+            if len(studentList):
+                return 200, [student.json() for student in studentList]
+        except Exception as e:
+            return 404, "There are no students. " + str(e)
