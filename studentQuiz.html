@@ -33,9 +33,9 @@
         </div>
         <div class="row mt-5" id="quizQuestions">
                       <!-- {{ item.message }} -->
-                      <div class="col-12" style="margin-bottom: 1cm;" v-for='item in items' :key="item.question">
+                      <div class="col-12" style="margin-bottom: 1cm;" v-for='question in questions'>
                         <div class="p-3" style="border: 1px solid #dedede; border-radius: 10px;">
-                            <p style="font-size:1.5em;">{{ item.question }}</p>
+                            <p style="font-size:1.5em;">{{ question }}</p>
                             <hr>
                             <table class="table table-borderless table-sm">
                                 <thead>
@@ -175,8 +175,16 @@
         .then(response=>response.json())
         .then(data=>{
             result = data.data;
-            console.log(result)
-            this.classDetails.push(result)
+            // console.log(result)
+            for (i in result){
+                // console.log(result[i]["question"])
+                this.questions.push(result[i]["question"])
+                temp1 = result[i]["choices"]
+                temp2 = temp1.split(",")
+                this.options.push(temp2)
+            console.log(this.questions)
+            console.log(this.options)
+            }
         })
     }
 
