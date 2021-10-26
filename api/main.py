@@ -20,6 +20,7 @@ from prerequisite import *
 from registration import *
 from student import *
 from question import *
+from studentScore import *
 
 
 #COURSES TDD
@@ -248,19 +249,9 @@ def register_class():
     regCourseID = data['regCourseID']
     regClassID = data['regClassID']
     regStudentID = data['regStudentID']
-    if (Registration.query.filter_by(regCourseID=regCourseID, regClassID = regClassID, regStudentID = regStudentID).all()):
-        return jsonify({"code": 400,"message": "The student has already made a registration for this class"}), 400
- 
-    
-    registration = Registration(**data)
- 
-    try:
-        db.session.add(registration)
-        db.session.commit()
-    except Exception as e:
-        return jsonify({"code": 500, "message": "An error occurred creating the assignment." + str(e)}), 500
- 
-    return jsonify({"code": 201, "data": registration.json()}), 201
+    regStatus = data['regStatus']
+    code, dataa = Registration.register_class(regCourseID, regClassID, regStudentID, regStatus)
+    return jsonify({"code": code,"data": dataa})
 
 
 #GET list of course ID & name of those with enrolled students
@@ -305,28 +296,14 @@ def all_reg():
 #used by adminCourseApplication
 @app.route("/assignRegistration", methods=['PUT'])
 def assign_registration():
-    try:
-        
-        print("check")
-        data = request.get_json()
-        registration = Registration.query.filter_by(regCourseID = data['courseID'], regClassID = data['classID'], regStudentID = data['studentID']).first()
-        if data['regStatus'] == "accepted":
-            print(registration)
-            registration.regStatus = data['regStatus']
-            db.session.commit()
-        return jsonify(
-            {
-                "code": 200,
-                "data": registration.json()
-            }
-        ), 200
-    except Exception as e:
-        return jsonify(
-            {
-                "code": 500,
-                "message": "An error occurred while updating the user. " + str(e)
-            }
-        ), 500
+    data = request.get_json()
+    code, dataa = Registration.assign_registration(data['courseID'], data['classID'], data['studentID'])
+    return jsonify(
+        {
+            "code": code,
+            "data": dataa
+        }
+    )
 
 
 # GET all eligible courses by user
@@ -406,8 +383,20 @@ def get_all_students():
 #used by studentQuiz.html
 @app.route("/questions/<string:qnCourseID>/<string:qnClassID>/<string:qnSectionID>")
 def get_questions(qnCourseID, qnClassID, qnSectionID):
-    print("work")
     code, data = Question.get_questions(qnCourseID, qnClassID, qnSectionID)
+    return jsonify(
+        {
+            "code": code,
+            "data": data
+        }
+    )
+
+@app.route("/submitQuiz/<string:qnCourseID>/<string:qnClassID>/<string:qnSectionID>", methods=['POST'])
+def submit_quiz(qnCourseID, qnClassID, qnSectionID):
+    data = request.get_json()
+    studentID = data['student']
+    score = Question.compute_score(data['data'], qnCourseID, qnClassID, qnSectionID)
+    code, data = Score.create_score(studentID,qnCourseID, qnClassID, qnSectionID,score)
     return jsonify(
         {
             "code": code,
