@@ -193,16 +193,16 @@
                     )
                 },
                 downloadMaterial: function(materialID) {
-                    console.log("Download Material Function! Not Implemented Fully")
+                    console.log("Download Material Function! Not Implemented Yet")
                 },
                 addSection: function() {
-                    console.log("Add Section Function! Not Implemented Fully")
+                    console.log("Add Section Function! Not Implemented Yet")
                 },
                 addMaterial: function() {
-                    console.log("Add Material Function! Not Implemented Fully")
+                    console.log("Add Material Function! Not Implemented Yet")
                 },
                 deleteMaterial: function(materialID) {
-                    console.log("Delete Material Function! Not Implemented Fully")
+                    console.log("Delete Material Function! Not Implemented Yet")
                 },
                 viewResult: function(e, courseID, classID, sectionID) {
                     e.preventDefault();
@@ -216,7 +216,7 @@
                     localStorage.setItem("trainerCourse", courseID);
                     localStorage.setItem("trainerClass", classID);
                     localStorage.setItem("trainerSection", sectionID);
-                    window.location.replace("quizEdit.html");
+                    window.location.replace("trainerQuiz.html");
                 }
             }
         })
@@ -256,7 +256,7 @@
                     if (event.target.tagName != "LI") {
                         return
                     } else {
-                        console.log("Delete Section Function! Not Implemented Fully")
+                        console.log("Delete Section Function! Not Implemented Yet")
                     }
                 }
             }
