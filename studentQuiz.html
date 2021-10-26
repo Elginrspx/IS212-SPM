@@ -9,6 +9,7 @@
     <div id="nav-placeholder"></div>
     <div id="header-placeholder"></div>
     <script src="//code.jquery.com/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
     <script>
     $.get("includes/navbar.html", function(data){
         $("#nav-placeholder").replaceWith(data);
@@ -30,9 +31,16 @@
                 <p class="title">Quiz 3 Chapter 3 Printing Software</p>
             </div>
         </div>
-        <div class="row mt-5">
+        <div class="row mt-5" id="quizResults">
+            <tbody v-for="quizQuestion in quizQuestions">
+                <ul id="quizQuestions">
+                    <li v-for="item in items" :key="item.message">
+                      {{ item.message }}
+                    </li>
+                  </ul>
+            </tbody>
         <!-- First question -->
-            <div class="col-12" style="margin-bottom: 1cm;">
+            <!-- <div class="col-12" style="margin-bottom: 1cm;"> -->
                 <div class="p-3" style="border: 1px solid #dedede; border-radius: 10px;">
                     <p style="font-size:1.5em;">What tool should you use to open the battery compartment of the 3D printer?</p>
                     <hr>
@@ -125,7 +133,21 @@
     $.get("includes/footer.html", function(data){
         $("#footer-placeholder").replaceWith(data);
      });
-     </script>
+
+
+
+    // Trying to do vue 
+    const example1 = new Vue({
+    el: '#quizQuestions',
+    data: {
+    items: [
+      { question: 'What tool should you use to open the battery compartment of the 3D printer?' , choices : "Wrench,Screwdriver,Hammer,Crowbar" , answer:"Crowbar"},
+      { question: 'What is the average time required for a standard 3D printing to print a 12cm by 12cm by 12cm cube?',choices : "12 minutes,24 minutes,30 minutes, 18minutes", answer:"24 minutes"  }
+    ]
+  }
+})
+    
+    </script>
     <script>
         /* FOR YINGHUI
         Need you to get me the data in the following format. You can take a look at Figma and see if you understand what I mean
