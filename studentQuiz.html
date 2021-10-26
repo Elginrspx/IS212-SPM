@@ -32,37 +32,39 @@
             </div>
         </div>
         <div class="row mt-5" id="quizQuestions">
-                      <!-- {{ item.message }} -->
-                      <div class="col-12" style="margin-bottom: 1cm;" v-for='question in questions'>
-                        <div class="p-3" style="border: 1px solid #dedede; border-radius: 10px;">
-                            <p style="font-size:1.5em;">{{ question }}</p>
-                            <hr>
-                            <table class="table table-borderless table-sm">
-                                <thead>
-                                    <tr>
-                                        <th style="width:7.5%"></th>
-                                        <th style="width:7.5%"></th>
-                                        <th style="width:77.5%"></th>
-                                        <th style="width:7.5%"></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <form id="qn1">
-                                        <input type="radio" id="html" name="qn1" value="Wrench">
-                                        <label for="html">Wrench</label><br><br>
-                                        <input type="radio" id="css" name="qn1" value="Screwdriver">
-                                        <label for="css">Screwdriver</label><br><br>
-                                        <input type="radio" id="javascript" name="qn1" value="Hammer">
-                                        <label for="javascript">Hammer</label> <br><br>
-                                        <input type="radio" id="javascript" name="qn1" value="Crowbar">
-                                        <label for="javascript">Crowbar</label>
-                                      </form>
-                                </tbody>
-                            </table>
-                    </div>
-                    </div>
-                <br>
-            </tbody>
+            <div class="col-12" style="margin-bottom: 1cm;" v-for='question in questions'>
+                <div class="p-3" style="border: 1px solid #dedede; border-radius: 10px;">
+                    <p style="font-size:1.5em;">{{ question }}</p>
+                    <hr>
+                    <table class="table table-borderless table-sm">
+                        <thead>
+                            <tr>
+                                <th style="width:7.5%"></th>
+                                <th style="width:7.5%"></th>
+                                <th style="width:77.5%"></th>
+                                <th style="width:7.5%"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <form>
+                                <div v-for='(item, index) in options'>
+                                    <!-- <p>{{item}}</p> -->
+
+                                    <div v-for='(item2,index2) in item.length'>
+                                        <p>{{item[index2]}}</p>
+                                        <!-- <input type="radio" id="html" name="qn1" value={{ item2 }}>
+                                        <label for="html">{{ item2 }}</label><br><br> -->
+                                    </div>
+                                    
+                                </div>
+                                <!-- <div v-for >{{options}}</div> -->
+                                
+                            </form>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        <br>
         <!-- First question -->
             <!-- <div class="col-12" style="margin-bottom: 1cm;"> -->
                 <div class="p-3" style="border: 1px solid #dedede; border-radius: 10px;">
@@ -168,22 +170,28 @@
     el: '#quizQuestions',
     data: {
         questions: [],
-        options : []
+        options : [],
+        isMultiple: []
     },
     created:function() {
         fetch(getQuizURL)
         .then(response=>response.json())
         .then(data=>{
             result = data.data;
-            // console.log(result)
+            console.log(result)
             for (i in result){
+                temp3={}
                 // console.log(result[i]["question"])
                 this.questions.push(result[i]["question"])
                 temp1 = result[i]["choices"]
                 temp2 = temp1.split(",")
                 this.options.push(temp2)
-            console.log(this.questions)
+                this.isMultiple.push(result[i]["isMultiple"])
             console.log(this.options)
+            // console.log(this.questions)
+            // for (i in this.options) {
+            //     console.log(this.options[i])
+            // }
             }
         })
     }
