@@ -157,18 +157,29 @@
     $.get("includes/footer.html", function(data){
         $("#footer-placeholder").replaceWith(data);
      });
-
+    var courseID = 1
+    var classID = 3
+    var sectionID = "Chapter2"
+    var getQuizURL = "http://localhost:2222/questions/" + courseID + "/" + classID + "/" + sectionID
 
 
     // Trying to do vue 
     const example1 = new Vue({
     el: '#quizQuestions',
     data: {
-    items: [
-      { question: 'What tool should you use to open the battery compartment of the 3D printer?' , choices : "Wrench,Screwdriver,Hammer,Crowbar"},
-      { question: 'What is the average time required for a standard 3D printing to print a 12cm by 12cm by 12cm cube?',choices : "12 minutes,24 minutes,30 minutes, 18minutes"}
-    ]
-  }
+        questions: [],
+        options : []
+    },
+    created:function() {
+        fetch(getQuizURL)
+        .then(response=>response.json())
+        .then(data=>{
+            result = data.data;
+            console.log(result)
+            this.classDetails.push(result)
+        })
+    }
+
 })
     
     </script>

@@ -7,15 +7,8 @@ class Registration(db.Model):
     __tablename__ = 'registrations'
 
     regStudentID = db.Column(db.Integer, primary_key=True)
-<<<<<<< Updated upstream
-    # regCourseID = db.Column(db.String(30), db.ForeignKey('classes.clsCourseID', ondelete="CASCADE", onupdate="CASCADE"), primary_key=True)
-    # regClassID = db.Column(db.Integer,db.ForeignKey('classes.classID', ondelete="CASCADE", onupdate="CASCADE"), primary_key=True)
-    regCourseID = db.Column(db.String(30),nullable=False, primary_key = True)
-    regClassID = db.Column(db.Integer,nullable=False, primary_key = True)
-=======
     regCourseID = db.Column(db.String(30), nullable=False, primary_key = True)
     regClassID = db.Column(db.Integer, nullable=False, primary_key = True)
->>>>>>> Stashed changes
     regStatus = db.Column(db.String(30), nullable=False)
     # user = relationship('User', backref='child')
     __table_args__ = (ForeignKeyConstraint([regCourseID, regClassID],
