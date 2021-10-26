@@ -25,6 +25,14 @@ class Student(db.Model):
             "sPosition" : self.sPosition,
         }
 
+    def get_student_details(id):
+        try:
+            student = Student.query.filter_by(studentID = id).first()
+            if student:
+                return 200, student.json()
+        except Exception as e:
+            return 404, "There are no students. " + str(e)
+            
     def get_all():
         try:
             studentList = Student.query.all()

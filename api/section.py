@@ -33,3 +33,8 @@ class Section(db.Model):
             "sectionID" : self.sectionID,
             "noOfQns": self.noOfQns
         }
+
+    def get_no_qns(secCourseID, secClassID, sectionID):
+        noQns = db.session.query(Section.noOfQns).filter(Section.secCourseID== secCourseID, Section.secClassID == secClassID, Section.sectionID == sectionID).first()
+        data = noQns[0]
+        return 200, data
