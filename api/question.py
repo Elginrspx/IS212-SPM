@@ -45,11 +45,12 @@ class Question(db.Model):
 
     def get_questions(qnCourseID, qnClassID, qnSectionID):
         try:
-            questions = db.session.query(Question.question, Question.choices, Question.isMultiple).filter(qnCourseID==Question.qnCourseID, qnClassID == Question.qnClassID, qnSectionID == Question.qnSectionID).all()
+            questions = db.session.query(Question.question, Question.choices, Question.isMultiple, Question.answer).filter(qnCourseID==Question.qnCourseID, qnClassID == Question.qnClassID, qnSectionID == Question.qnSectionID).all()
             if questions:
                 questionList = []
                 for questionSet in questions:
                     questionData = {}
+                    questionData["answer"] = questionSet[3]
                     questionData["question"] = questionSet[0]
                     questionData["choices"] = questionSet[1]
                     questionData["isMultiple"] = questionSet[2]
@@ -71,4 +72,22 @@ class Question(db.Model):
                         break
         score_percentage = score/maxscore
         return score_percentage
+
+    def create_question(data):
+        try:
+            Question.query.filter_by(qnCourseID = data['qnCourseID'], qnClassID =data['qnClassID'], qnSectionID = data['qnSectionID']).delete()
+            db.session.commit()
+            
+        #     return 201, registration.json()
+        # # don't have existing
+        except Exception as e:
+            return
+        #     try:
+        #         register = Registration(regCourseID, regClassID, regStudentID, regStatus)
+        #         db.session.add(register)
+        #         db.session.commit()
+        #         return 201, register.json()
+        #     except Exception as e:
+        #         return 500, "Could not update registration. " + str(e)
+        
 
