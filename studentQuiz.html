@@ -31,13 +31,37 @@
                 <p class="title">Quiz 3 Chapter 3 Printing Software</p>
             </div>
         </div>
-        <div class="row mt-5" id="quizResults">
-            <tbody v-for="quizQuestion in quizQuestions">
-                <ul id="quizQuestions">
-                    <li v-for="item in items" :key="item.message">
-                      {{ item.message }}
-                    </li>
-                  </ul>
+        <div class="row mt-5" id="quizQuestions">
+                      <!-- {{ item.message }} -->
+                      <div class="col-12" style="margin-bottom: 1cm;" v-for='item in items' :key="item.question">
+                        <div class="p-3" style="border: 1px solid #dedede; border-radius: 10px;">
+                            <p style="font-size:1.5em;">{{ item.question }}</p>
+                            <hr>
+                            <table class="table table-borderless table-sm">
+                                <thead>
+                                    <tr>
+                                        <th style="width:7.5%"></th>
+                                        <th style="width:7.5%"></th>
+                                        <th style="width:77.5%"></th>
+                                        <th style="width:7.5%"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <form id="qn1">
+                                        <input type="radio" id="html" name="qn1" value="Wrench">
+                                        <label for="html">Wrench</label><br><br>
+                                        <input type="radio" id="css" name="qn1" value="Screwdriver">
+                                        <label for="css">Screwdriver</label><br><br>
+                                        <input type="radio" id="javascript" name="qn1" value="Hammer">
+                                        <label for="javascript">Hammer</label> <br><br>
+                                        <input type="radio" id="javascript" name="qn1" value="Crowbar">
+                                        <label for="javascript">Crowbar</label>
+                                      </form>
+                                </tbody>
+                            </table>
+                    </div>
+                    </div>
+                <br>
             </tbody>
         <!-- First question -->
             <!-- <div class="col-12" style="margin-bottom: 1cm;"> -->
@@ -141,8 +165,8 @@
     el: '#quizQuestions',
     data: {
     items: [
-      { question: 'What tool should you use to open the battery compartment of the 3D printer?' , choices : "Wrench,Screwdriver,Hammer,Crowbar" , answer:"Crowbar"},
-      { question: 'What is the average time required for a standard 3D printing to print a 12cm by 12cm by 12cm cube?',choices : "12 minutes,24 minutes,30 minutes, 18minutes", answer:"24 minutes"  }
+      { question: 'What tool should you use to open the battery compartment of the 3D printer?' , choices : "Wrench,Screwdriver,Hammer,Crowbar"},
+      { question: 'What is the average time required for a standard 3D printing to print a 12cm by 12cm by 12cm cube?',choices : "12 minutes,24 minutes,30 minutes, 18minutes"}
     ]
   }
 })
