@@ -2,22 +2,28 @@ from main import db
 from sqlalchemy import *
 from sqlalchemy.orm import relationship
 from sqlalchemy import ForeignKeyConstraint
+from section import Section
 
 
 class Score(db.Model):
     __tablename__ = 'scores'
 
-    scoreStudentID = db.Column(db.Integer, primary_key=True)
-    scoreCourseID = db.Column(db.Integer, primary_key=True)
-    scoreClassID = db.Column(db.String(30), nullable=False)
+    scoreStudentID = db.Column(db.String(30), primary_key=True)
+    scoreCourseID = db.Column(db.String(30), primary_key=True)
+    scoreClassID = db.Column(db.Integer, nullable=False)
     scoreSectionID = db.Column(db.String(30))
     scorePercentage = db.Column(db.Integer)
 
+    __table_args__ = (ForeignKeyConstraint([scoreCourseID, scoreClassID, scoreSectionID],
+                                           [Section.secCourseID, Section.secClassID, Section.sectionID]),
+                      {})
+    sectionScore = db.relationship(
+    'Section', primaryjoin='and_(Section.secClassID == Score.scoreClassID, Section.secCourseID == Score.scoreCourseID, Section.sectionID == Score.scoreSectionID)', backref='scores')
 
     def __init__(self, scoreStudentID, scoreCourseID, scoreClassID, scoreSectionID, scorePercentage):
         self.scoreStudentID = scoreStudentID
         self.scoreCourseID = scoreCourseID
-        self.secClassID = scoreClassID
+        self.scoreClassID = scoreClassID
         self.scoreSectionID = scoreSectionID
         self.scorePercentage = scorePercentage
 
