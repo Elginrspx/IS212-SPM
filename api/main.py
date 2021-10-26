@@ -19,10 +19,7 @@ from completed import *
 from prerequisite import *
 from registration import *
 from student import *
-
-
-db.create_all()
-
+from question import *
 
 
 #COURSES TDD
@@ -404,7 +401,19 @@ def get_all_students():
             }
         ), 404
 
-
+#QUESTION TDD
+#GET all questions for a quiz
+#used by studentQuiz.html
+@app.route("/questions/<string:qnCourseID>/<string:qnClassID>/<string:qnSectionID>")
+def get_questions(qnCourseID, qnClassID, qnSectionID):
+    print("work")
+    code, data = Question.get_questions(qnCourseID, qnClassID, qnSectionID)
+    return jsonify(
+        {
+            "code": code,
+            "data": data
+        }
+    )
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=2222, debug=True)
