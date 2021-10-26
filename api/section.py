@@ -1,11 +1,8 @@
 from main import db
-<<<<<<< Updated upstream
-=======
 from sqlalchemy import *
 from sqlalchemy.orm import relationship
 from sqlalchemy import ForeignKeyConstraint
 from classs import Class
->>>>>>> Stashed changes
 
 
 class Section(db.Model):
