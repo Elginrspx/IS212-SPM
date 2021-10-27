@@ -81,7 +81,7 @@
                 </div>
                 </div>
             </div>
-            <input type="submit" @click="sendAnswers()" style=" background-color: rgb(252, 140, 3); border-radius: 5px; width: 90px; margin-left: 87.5%;" value="Submit">
+            <input type="submit" @click="sendAnswers()" style=" background-color: rgb(252, 140, 3); border-radius: 5px; width: 90px; margin-left: 87.5%;" value="Submit" href="studentViewScore.html">
             </div>
         <br>
     </div>
@@ -94,7 +94,7 @@
      });
     var courseID = 1
     var classID = 3
-    var sectionID = "Chapter2"
+    var sectionID = 2
     var getQuizURL = "http://localhost:2222/questions/" + courseID + "/" + classID + "/" + sectionID
     var submitQuizURL = "http://localhost:2222/submitQuiz/" + courseID + "/" + classID + "/" + sectionID
     var submitData = {}
@@ -109,29 +109,17 @@
         options : [],
         isMultiple: []
     },
+    
     created:function() {
         fetch(getQuizURL)
         .then(response=>response.json())
         .then(data=>{
             result = data.data 
-            //simulating with dummy data
-            // result = [
-            //     {
-            //         "answer": "12 minutes,24 minutes",
-            //         "ismultiple": "true",
-            //         "choices": "12 minutes,24 minutes,36 minutes",
-            //         "question": "What is the average time required for a standard 3D printing to print a 12cm by 12cm by 12cm cube?"
-            //     }, 
-            //     {
-            //         "answer": "True",
-            //         "ismultiple": "false",
-            //         "choices": "True,False",
-            //         "question": "The battery compartment is the most fragile part of the 3D printer."
-            //     }]
+            
             for (record of result) {
                 quizData = {}
                 quizData.question = record.question
-                quizData.isMultiple = record.ismultiple == "true" ? true : false
+                quizData.isMultiple = record.isMultiple == "true" ? true : false
                 allquestions.push([quizData.question,quizData.isMultiple])
                 quizData.options = []
                 choices = record.choices.split(",")
@@ -153,7 +141,6 @@
     methods: {
         sendAnswers:function() {
             event.preventDefault();
-            alert("submit form")
             for (qn in allquestions){
                 if(allquestions[qn][1] == false){
                     qnAndans.push({"qn":allquestions[qn][0],"ans":document.querySelector(`input[name="${allquestions[qn][0]}"]:checked`).value})
@@ -179,6 +166,7 @@
                             .then(response => response.json())
                             .then(data => {
                             })
+            window.location.href = 'studentViewScore.html';
                 }
     }
 
