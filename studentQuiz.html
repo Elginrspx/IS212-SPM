@@ -32,7 +32,7 @@
             </div>
         </div>
         <div class="row mt-5" id="quizQuestions">
-            <div class="col-12" style="margin-bottom: 1cm;" v-for="(quizQuestion, quizIdx) in quizQuestions">
+            <div class="col-12" style="margin-bottom: 1cm;" v-for="(quizQuestion, quizIdx) in quiz">
                 <div v-if = 'quizQuestion.isMultiple === false'>
                 <div class="p-3" style="border: 1px solid #dedede; border-radius: 10px; margin-bottom: 1cm;">
                     <p style="font-size:1.5em;">{{ quizQuestion.question }}</p>
@@ -48,15 +48,16 @@
                         </thead>
                             <form>
                                 <div v-for="(option, optionIdx) in quizQuestion.options">
-                                        <input type="radio" v-bind:name = 'quizQuestion.question' v-bind:value="option.isCorrect">
+                                        <input type="radio" v-bind:name = 'quizQuestion.question' v-bind:value="option.text">
                                         <label>{{option.text}}</label>
                                 </div>
                             </form>
-                            </div>
                     </table>
+                </div> 
                 </div>
-            <div class="col-12" style="margin-bottom: 1cm;" v-for="(quizQuestion, quizIdx) in quizQuestions" style="margin-bottom: 50cm;">
-                <div v-if = 'quizQuestion.isMultiple === true'>
+            <!-- <div class="col-12" style="margin-bottom: 1cm;" v-for="(quizQuestion, quizIdx) in quiz" style="margin-bottom: 50cm;"> -->
+                <div v-else> 
+                <div class="col-12" style="margin-bottom: 1cm;"  style="margin-bottom: 50cm;">
                     <div class="p-3" style="border: 1px solid #dedede; border-radius: 10px; margin-bottom: 1cm;">
                     <p style="font-size:1.5em;">{{ quizQuestion.question }}</p>
                     <hr>
@@ -71,26 +72,21 @@
                             </thead>
                                 <form>
                                     <div v-for="(option, optionIdx) in quizQuestion.options">
-                                        <input type="checkbox"  v-bind:name = 'quizQuestion.question' v-bind:value="option.isCorrect">
+                                        <input type="checkbox"  v-bind:name = 'quizQuestion.question' v-bind:value="option.text">
                                         <label >{{option.text}}</label>
                                 </div>
                                 </form>
+                        </table>
                     </div>
-                    </div>
+                </div>
                 </div>
             </div>
             </div>
         <br>
-       
-                    </table>
-            </div>
-            </div>
+    </div>
     <!-- Div below is the end of the column -->
-    </div>
-    </div>
-    </div>
     <div>
-    <input type="submit" style=" background-color: rgb(252, 140, 3); border-radius: 5px; width: 90px; margin-left: 1030px;" value="Submit">
+    <input type="submit" onclick="sendAnswers()" style=" background-color: rgb(252, 140, 3); border-radius: 5px; width: 90px; margin-left: 87.5%;" value="Submit">
     <div id="footer-placeholder"></div>
     <script>
     $.get("includes/footer.html", function(data){
@@ -100,13 +96,15 @@
     var classID = 3
     var sectionID = "Chapter2"
     var getQuizURL = "http://localhost:2222/questions/" + courseID + "/" + classID + "/" + sectionID
-
-
+    var submitQuizURL = "http://localhost:2222/submitQuiz/" + courseID + "/" + classID + "/" + sectionID
+    var submitData = {}
+    submitData["student"] = courseID
+    var allquestions = []
     // Trying to do vue 
     const example1 = new Vue({
     el: '#quizQuestions',
     data: {
-        quizQuestions: [],
+        quiz:[],
         options : [],
         isMultiple: []
     },
@@ -150,6 +148,7 @@
                 quizData = {}
                 quizData.question = record.question
                 quizData.isMultiple = record.ismultiple == "true" ? true : false
+                allquestions.push([quizData.question,quizData.isMultiple])
                 quizData.options = []
                 choices = record.choices.split(",")
                 answer = record.answer.split(",")
@@ -163,14 +162,44 @@
                     }
                     quizData.options.push(option)
                 }
-                this.quizQuestions.push(quizData)
+                this.quiz.push(quizData)
                 }
-            console.log(quizQuestions)
         })
     }
 
 })
-    
+    // Function to send form inputs  
+    var qnAndans = [] 
+    function sendAnswers(){
+        event.preventDefault();
+        for (qn in allquestions){
+            if(allquestions[qn][1] == false){
+                qnAndans.push({"qn":allquestions[qn][0],"ans":document.querySelector(`input[name="${allquestions[qn][0]}"]:checked`).value})
+            }
+            else{
+                var temp = ""
+                $(`input[name="${allquestions[qn][0]}"]:checked`).each(function() {
+                    temp += this.value +","
+                    });
+                temp = temp.substring(0,temp.length -1)
+                qnAndans.push({"qn":allquestions[qn][0],"ans":temp})
+            }
+        }
+        submitData["data"] = qnAndans
+        let jsonData = JSON.stringify(submitData);
+        console.log(jsonData)
+                    fetch(submitQuizURL, {
+                            method: "POST",
+                            headers: {
+                                "Content-type": "application/json"
+                            },
+                            body: jsonData
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            this.isSubmit = true;
+                        })
+                }
     </script>
     <script>
         /* FOR YINGHUI
