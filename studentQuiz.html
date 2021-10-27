@@ -32,9 +32,10 @@
             </div>
         </div>
         <div class="row mt-5" id="quizQuestions">
-            <div class="col-12" style="margin-bottom: 1cm;" v-for='question in questions'>
-                <div class="p-3" style="border: 1px solid #dedede; border-radius: 10px;">
-                    <p style="font-size:1.5em;">{{ question }}</p>
+            <div class="col-12" style="margin-bottom: 1cm;" v-for="(quizQuestion, quizIdx) in quizQuestions">
+                <div v-if = 'quizQuestion.isMultiple === false'>
+                <div class="p-3" style="border: 1px solid #dedede; border-radius: 10px; margin-bottom: 1cm;">
+                    <p style="font-size:1.5em;">{{ quizQuestion.question }}</p>
                     <hr>
                     <table class="table table-borderless table-sm">
                         <thead>
@@ -45,107 +46,42 @@
                                 <th style="width:7.5%"></th>
                             </tr>
                         </thead>
-                        <tbody>
                             <form>
-                                <div v-for='(item, index) in options'>
-                                    <!-- <p>{{item}}</p> -->
-
-                                    <div v-for='(item2,index2) in item.length'>
-                                        <p>{{item[index2]}}</p>
-                                        <!-- <input type="radio" id="html" name="qn1" value={{ item2 }}>
-                                        <label for="html">{{ item2 }}</label><br><br> -->
-                                    </div>
-                                    
+                                <div v-for="(option, optionIdx) in quizQuestion.options">
+                                        <input type="radio" v-bind:name = 'quizQuestion.question' v-bind:value="option.isCorrect">
+                                        <label>{{option.text}}</label>
                                 </div>
-                                <!-- <div v-for >{{options}}</div> -->
-                                
                             </form>
-                        </tbody>
+                            </div>
                     </table>
                 </div>
-            </div>
-        <br>
-        <!-- First question -->
-            <!-- <div class="col-12" style="margin-bottom: 1cm;"> -->
-                <div class="p-3" style="border: 1px solid #dedede; border-radius: 10px;">
-                    <p style="font-size:1.5em;">What tool should you use to open the battery compartment of the 3D printer?</p>
+            <div class="col-12" style="margin-bottom: 1cm;" v-for="(quizQuestion, quizIdx) in quizQuestions" style="margin-bottom: 50cm;">
+                <div v-if = 'quizQuestion.isMultiple === true'>
+                    <div class="p-3" style="border: 1px solid #dedede; border-radius: 10px; margin-bottom: 1cm;">
+                    <p style="font-size:1.5em;">{{ quizQuestion.question }}</p>
                     <hr>
-                    <table class="table table-borderless table-sm">
-                        <thead>
-                            <tr>
-                                <th style="width:7.5%"></th>
-                                <th style="width:7.5%"></th>
-                                <th style="width:77.5%"></th>
-                                <th style="width:7.5%"></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <form id="qn1">
-                                <input type="radio" id="html" name="qn1" value="Wrench">
-                                <label for="html">Wrench</label><br><br>
-                                <input type="radio" id="css" name="qn1" value="Screwdriver">
-                                <label for="css">Screwdriver</label><br><br>
-                                <input type="radio" id="javascript" name="qn1" value="Hammer">
-                                <label for="javascript">Hammer</label> <br><br>
-                                <input type="radio" id="javascript" name="qn1" value="Crowbar">
-                                <label for="javascript">Crowbar</label>
-                              </form>
-                        </tbody>
-                    </table>
+                        <table class="table table-borderless table-sm">
+                            <thead>
+                                <tr>
+                                    <th style="width:7.5%"></th>
+                                    <th style="width:7.5%"></th>
+                                    <th style="width:77.5%"></th>
+                                    <th style="width:7.5%"></th>
+                                </tr>
+                            </thead>
+                                <form>
+                                    <div v-for="(option, optionIdx) in quizQuestion.options">
+                                        <input type="checkbox"  v-bind:name = 'quizQuestion.question' v-bind:value="option.isCorrect">
+                                        <label >{{option.text}}</label>
+                                </div>
+                                </form>
+                    </div>
+                    </div>
+                </div>
             </div>
             </div>
         <br>
-        <!-- Second question -->
-        <div class="col-12" style="margin-bottom: 1cm;">
-            <div class="p-3" style="border: 1px solid #dedede; border-radius: 10px;">
-                <p style="font-size:1.5em;">What is the average time required for a standard 3D printing to print a 12cm by 12cm by 12cm cube?</p>
-                <hr>
-                <table class="table table-borderless table-sm">
-                    <thead>
-                        <tr>
-                            <th style="width:7.5%"></th>
-                            <th style="width:7.5%"></th>
-                            <th style="width:77.5%"></th>
-                            <th style="width:7.5%"></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <form id="qn2">
-                            <input type="radio" id="html" name="qn2" value="12">
-                            <label for="html">12 minutes</label><br><br>
-                            <input type="radio" id="css" name="qn2" value="24">
-                            <label for="css">24 minutes</label><br><br>
-                            <input type="radio" id="javascript" name="qn2" value="30">
-                            <label for="javascript">30 minutes</label> <br><br>
-                            <input type="radio" id="javascript" name="qn2" value="18">
-                            <label for="javascript">18 minutes</label>
-                          </form>
-                    </tbody>
-                </table>
-        </div>
-        </div>
-            <!-- Third question -->
-            <div class="col-12">
-                <div class="p-3" style="border: 1px solid #dedede; border-radius: 10px;">
-                    <p style="font-size:1.5em;">The battery compartment is the most fragile part of the 3D printer.</p>
-                    <hr>
-                    <table class="table table-borderless table-sm">
-                        <thead>
-                            <tr>
-                                <th style="width:7.5%"></th>
-                                <th style="width:7.5%"></th>
-                                <th style="width:77.5%"></th>
-                                <th style="width:7.5%"></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <form id="qn3">
-                                <input type="radio" id="html" name="qn3" value="True">
-                                <label for="html">True</label><br><br>
-                                <input type="radio" id="css" name="qn3" value="False">
-                                <label for="css">False</label><br><br>
-                              </form>
-                        </tbody>
+       
                     </table>
             </div>
             <input type="submit" style="margin-top: 1cm; margin-left: 28cm; background-color: rgb(252, 140, 3); border-radius: 5px;" value="Submit">
@@ -169,7 +105,7 @@
     const example1 = new Vue({
     el: '#quizQuestions',
     data: {
-        questions: [],
+        quizQuestions: [],
         options : [],
         isMultiple: []
     },
@@ -177,22 +113,42 @@
         fetch(getQuizURL)
         .then(response=>response.json())
         .then(data=>{
-            result = data.data;
-            console.log(result)
-            for (i in result){
-                temp3={}
-                // console.log(result[i]["question"])
-                this.questions.push(result[i]["question"])
-                temp1 = result[i]["choices"]
-                temp2 = temp1.split(",")
-                this.options.push(temp2)
-                this.isMultiple.push(result[i]["isMultiple"])
-            console.log(this.options)
-            // console.log(this.questions)
-            // for (i in this.options) {
-            //     console.log(this.options[i])
-            // }
-            }
+            // result = data.data 
+
+            //simulating with dummy data
+            result = [
+                {
+                    "answer": "12 minutes,24 minutes",
+                    "ismultiple": "true",
+                    "choices": "12 minutes,24 minutes,36 minutes",
+                    "question": "What is the average time required for a standard 3D printing to print a 12cm by 12cm by 12cm cube?"
+                },
+                {
+                    "answer": "True",
+                    "ismultiple": "false",
+                    "choices": "True,False",
+                    "question": "The battery compartment is the most fragile part of the 3D printer."
+                }]
+            for (record of result) {
+                quizData = {}
+                quizData.question = record.question
+                quizData.isMultiple = record.ismultiple == "true" ? true : false
+                quizData.options = []
+                choices = record.choices.split(",")
+                answer = record.answer.split(",")
+                for (choice of choices) {
+                    option = {}
+                    option.text = choice
+                    if (answer.includes(choice)) {
+                        option.isCorrect = true
+                    } else {
+                        option.isCorrect = false
+                    }
+                    quizData.options.push(option)
+                }
+                this.quizQuestions.push(quizData)
+                }
+            console.log(quizQuestions)
         })
     }
 
