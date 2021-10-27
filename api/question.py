@@ -73,21 +73,24 @@ class Question(db.Model):
         score_percentage = score/maxscore
         return score_percentage
 
+        
+
     def create_question(data):
+        data = data['data']
+        data2 = data[0]
         try:
-            Question.query.filter_by(qnCourseID = data['qnCourseID'], qnClassID =data['qnClassID'], qnSectionID = data['qnSectionID']).delete()
+            check = Question.query.filter_by(qnCourseID = data2['qnCourseID'], qnClassID =data2['qnClassID'], qnSectionID = data2['qnSectionID']).all()
+            for entries in check:
+                db.session.delete(entries)
             db.session.commit()
-            
-        #     return 201, registration.json()
-        # # don't have existing
         except Exception as e:
-            return
-        #     try:
-        #         register = Registration(regCourseID, regClassID, regStudentID, regStatus)
-        #         db.session.add(register)
-        #         db.session.commit()
-        #         return 201, register.json()
-        #     except Exception as e:
-        #         return 500, "Could not update registration. " + str(e)
+            print("Could not delete qns. "+ str(e))
+        # print(data)
+        for qn in data:
+            question = Question(qn["qnCourseID"], qn["qnClassID"], qn["qnSectionID"], qn["question"], qn["answer"], qn["choices"], qn["isMultiple"])
+            db.session.add(question)
+        db.session.commit()
+        return 201, len(data)
+
         
 
