@@ -30,29 +30,39 @@
         <div class="row">
             <p class="title">Chapter {{ sectionID }} Quiz Results - {{ course[0].courseName }}</p>
         </div>
-        <div class="row">
-            <input v-on:keyup="searchQuiz" v-model="quizInput" class="form-control" type="text" placeholder="Search..." aria-label="Name" />
+        <div v-if="quizResults.length != 0">
+            <div class="row">
+                <input v-on:keyup="searchQuiz" v-model="quizInput" class="form-control" type="text" placeholder="Search..." aria-label="Name" />
+            </div>
+            <div class="row mt-3">
+                <table class="table table-borderless table-sm quizTable">
+                    <thead>
+                        <tr>
+                            <th style="width:55%">Name</th>
+                            <th style="width:15%">Marks</th>
+                            <th style="width:15%">Grade</th>
+                            <th style="width:15%">No. of Attempts</th>
+                        </tr>
+                    </thead>
+                    <tbody v-for="quizSearchResult in quizSearchResults">
+                        <tr>
+                            <td>{{ quizSearchResult.studentName }}</td>
+                            <td>{{ quizSearchResult.score }}/{{ quizSearchResult.totalScore }}</td>
+                            <td v-if="quizSearchResult.status == 'Pass'"><p style="color:green;">{{ quizSearchResult.status }}</p></td>
+                            <td v-else><p style="color:red;">{{ quizSearchResult.status }}</p></td>
+                            <td>{{ quizSearchResult.noAttempts }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
-        <div class="row mt-3">
-            <table class="table table-borderless table-sm quizTable">
-                <thead>
-                    <tr>
-                        <th style="width:55%">Name</th>
-                        <th style="width:15%">Marks</th>
-                        <th style="width:15%">Grade</th>
-                        <th style="width:15%">No. of Attempts</th>
-                    </tr>
-                </thead>
-                <tbody v-for="quizSearchResult in quizSearchResults">
-                    <tr>
-                        <td>{{ quizSearchResult.studentName }}</td>
-                        <td>{{ quizSearchResult.score }}/{{ quizSearchResult.totalScore }}</td>
-                        <td v-if="quizSearchResult.status == 'Pass'"><p style="color:green;">{{ quizSearchResult.status }}</p></td>
-                        <td v-else><p style="color:red;">{{ quizSearchResult.status }}</p></td>
-                        <td>{{ quizSearchResult.noAttempts }}</td>
-                    </tr>
-                </tbody>
-            </table>
+        <div v-else>
+            <div class="row">
+                <input v-on:keyup="searchQuiz" v-model="quizInput" class="form-control" type="text" placeholder="Search..." aria-label="Name" disabled/>
+            </div>
+            <div class="text-center p-3">
+                There is no results for this quiz!
+            </div>
         </div>
         <div class="float-end">
             <a href="trainerClass.html" class="btn btn-default btn-md active" role="button" aria-pressed="true">Back</a>
@@ -71,40 +81,38 @@
         var courseID = localStorage.getItem("trainerCourse");
         var classID = localStorage.getItem("trainerClass");
         var sectionID = localStorage.getItem("trainerSection");
-        console.log(courseID,classID,sectionID)
 
         // Initialise URLs
-        //var getCourseURL = "http://localhost:2222/courses/" + courseID
-        //var getQuizResultsURL = "http://localhost:2222/courses/" + courseID ???
+        var getCoursesURL = "http://localhost:2222/courses/" + courseID
+        var getScoresURL = "http://localhost:2222/getScores/" + courseID + "/" + classID + "/" + sectionID
 
         var quizResults = new Vue({
             el: '#quizResults',
             data: {
-                course: [
-                    {"courseID": 1, "courseName": "Introduction to 3D Printing"}
-                ],
+                course: [],
                 quizResults: [],
                 quizInput: "",
                 quizSearchResults: [],
                 sectionID: sectionID
             },
             created: function() {
-                // Get Courses
-                // fetch(getCoursesURL)
-                //     .then(response => response.json())
-                //     .then(data => {
-                //         result = data.data.courses;
+                //Get Courses
+                fetch(getCoursesURL)
+                    .then(response => response.json())
+                    .then(data => {
+                        this.course.push(data.data.course);
+                    })
 
-                //         for (record of result) {
-                //             this.courses.push(record);
-                //         }
-                //     })
-                this.quizResults = [
-                    {"studentName": "Justin Bieber", "score": 7, "totalScore": 10, "status": "Pass", "noAttempts": 2},
-                    {"studentName": "Selena Gomez", "score": 5, "totalScore": 10, "status": "Fail", "noAttempts": 1},
-                    {"studentName": "Hilary Duff", "score": 9, "totalScore": 10, "status": "Pass", "noAttempts": 3},
-                    {"studentName": "Ariana Grande", "score": 4, "totalScore": 10, "status": "Fail", "noAttempts": 2}
-                ]
+                //Get Scores
+                fetch(getScoresURL)
+                    .then(response => response.json())
+                    .then(data => {
+                        result = data.data
+
+                        for (record of result) {
+                            this.quizResults.push(record)
+                        }
+                    })
                 this.quizSearchResults = this.quizResults
             },
             methods: {

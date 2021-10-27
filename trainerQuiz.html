@@ -83,89 +83,58 @@
         var courseID = localStorage.getItem("trainerCourse");
         var classID = localStorage.getItem("trainerClass");
         var sectionID = localStorage.getItem("trainerSection");
-        console.log(courseID,classID,sectionID)
 
         // Initialise URLs
-        //var getClassesURL = "http://localhost:2222/classes/1/2"
+        var getCoursesURL = "http://localhost:2222/courses/" + courseID
+        var getQuestionsURL = "http://localhost:2222/questions/" + courseID + "/" + classID + "/" + sectionID
+        var saveQuizURL = "http://localhost:2222/createQuiz"
 
         // Get Class by Trainer
         var trainerQuiz = new Vue({
             el: '#trainerQuiz',
             data: {
-                course: [
-                    {"courseID": 1, "courseName": "Introduction to 3D Printing"}
-                ],
+                course: [],
                 sectionID: sectionID,
-                quizQuestions: [
-                    // {
-                    //     "question": "What is the average time required for a standard 3D printing to print a 12cm by 12cm by 12cm cube?",
-                    //     "isMultiple": true,
-                    //     "options": [
-                    //         {"text": "12 minutes", "isCorrect": true},
-                    //         {"text": "24 minutes", "isCorrect": true},
-                    //         {"text": "36 minutes", "isCorrect": false}
-                    //     ]
-                    // },
-                    // {
-                    //     "question": "The battery compartment is the most fragile part of the 3D printer.",
-                    //     "isMultiple": false,
-                    //     "options": [
-                    //         {"text": "True", "isCorrect": false},
-                    //         {"text": "False", "isCorrect": true}
-                    //     ]
-                    // }
-                ]
+                quizQuestions: []
             },
             created: function() {
-                // fetch(getRegistrationCoursesURL)
-                //     .then(response => response.json())
-                //     .then(data => {
-                //         // Get Course List that has registrations
-                //         result = data.courseList;
+                //Get Courses
+                fetch(getCoursesURL)
+                    .then(response => response.json())
+                    .then(data => {
+                        this.course.push(data.data.course);
+                    })
 
-                //         for (record of result) {
-                //             this.courseList.push(record);
-                //         }
-                //     })
+                //Get Scores
+                fetch(getQuestionsURL)
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data)
+                        result = data.data
 
-                // Above fetch function should get data in the below format
+                        for (record of result) {
+                            quizData = {}
+                            quizData.question = record.question
+                            quizData.isMultiple = record.isMultiple == "true" ? true : false
+                            quizData.options = []
 
-                result = [
-                {
-                    "answer": "12 minutes,24 minutes",
-                    "ismultiple": "true",
-                    "choices": "12 minutes,24 minutes,36 minutes",
-                    "question": "What is the average time required for a standard 3D printing to print a 12cm by 12cm by 12cm cube?"
-                },
-                {
-                    "answer": "True",
-                    "ismultiple": "false",
-                    "choices": "True,False",
-                    "question": "The battery compartment is the most fragile part of the 3D printer."
-                }]
-                
-                for (record of result) {
-                    quizData = {}
-                    quizData.question = record.question
-                    quizData.isMultiple = record.ismultiple == "true" ? true : false
-                    quizData.options = []
+                            choices = record.choices.split(",")
+                            answer = record.answer.split(",")
 
-                    choices = record.choices.split(",")
-                    answer = record.answer.split(",")
+                            for (choice of choices) {
+                                option = {}
+                                option.text = choice
 
-                    for (choice of choices) {
-                        option = {}
-                        option.text = choice
-
-                        if (answer.includes(choice)) {
-                            option.isCorrect = true
-                        } else {
-                            option.isCorrect = false
+                                if (answer.includes(choice)) {
+                                    option.isCorrect = true
+                                } else {
+                                    option.isCorrect = false
+                                }
+                                quizData.options.push(option)
+                            }
+                            this.quizQuestions.push(quizData)
                         }
-                        quizData.options.push(option)
-                    }
-                    this.quizQuestions.push(quizData)
-                }
+                    })
             },
             methods: {
                 removeQuestion: function(quizIdx) {
@@ -189,6 +158,7 @@
                         alert("Please enter a question!")
                         return
                     }
+                    quizQuestionArray = []
                     for (quizQuestion of this.quizQuestions) {
                         countChecked = 0
 
@@ -211,8 +181,11 @@
 
                         // All Validations has passed
                         saveData = {}
+                        saveData.qnCourseID = courseID
+                        saveData.qnClassID = classID
+                        saveData.qnSectionID = sectionID
                         saveData.question = quizQuestion.question
-                        saveData.ismultiple = quizQuestion.isMultiple ? "true" : "false"
+                        saveData.isMultiple = quizQuestion.isMultiple ? "true" : "false"
                         
                         saveData.choices = ""
                         saveData.answer = ""
@@ -225,14 +198,24 @@
                         }
 
                         // trim off ending ","
-
                         saveData.choices = saveData.choices.slice(0, -1)
                         saveData.answer = saveData.answer.slice(0, -1)
 
-                        // look at console to see data structure
-                        console.log(saveData)
+                        quizQuestionArray.push(saveData)
                     }
-                    //insert quiz save function here
+                    console.log(quizQuestionArray)
+                    fetch(saveQuizURL, {
+                            method: "POST",
+                            headers: {
+                                "Content-type": "application/json"
+                            },
+                            body: quizQuestionArray
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            result = data;
+                            console.log(result)
+                        })
                 }
             }
         })
