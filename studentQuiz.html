@@ -81,12 +81,12 @@
                 </div>
                 </div>
             </div>
+            <input type="submit" @click="sendAnswers()" style=" background-color: rgb(252, 140, 3); border-radius: 5px; width: 90px; margin-left: 87.5%;" value="Submit">
             </div>
         <br>
     </div>
     <!-- Div below is the end of the column -->
     <div>
-    <input type="submit" onclick="sendAnswers()" style=" background-color: rgb(252, 140, 3); border-radius: 5px; width: 90px; margin-left: 87.5%;" value="Submit">
     <div id="footer-placeholder"></div>
     <script>
     $.get("includes/footer.html", function(data){
@@ -100,6 +100,7 @@
     var submitData = {}
     submitData["student"] = courseID
     var allquestions = []
+    var qnAndans = [] 
     // Trying to do vue 
     const example1 = new Vue({
     el: '#quizQuestions',
@@ -112,38 +113,21 @@
         fetch(getQuizURL)
         .then(response=>response.json())
         .then(data=>{
-            // result = data.data 
-
+            result = data.data 
             //simulating with dummy data
-            result = [
-                {
-                    "answer": "12 minutes,24 minutes",
-                    "ismultiple": "true",
-                    "choices": "12 minutes,24 minutes,36 minutes",
-                    "question": "What is the average time required for a standard 3D printing to print a 12cm by 12cm by 12cm cube?"
-                }, {
-                    "answer": "Brinjal",
-                    "ismultiple": "true",
-                    "choices": "Tofu,Truffle,Brinjal",
-                    "question": "What is Joel's favourite food?"
-                }, {
-                    "answer": "SMU,Jurong West",
-                    "ismultiple": "true",
-                    "choices": "Paya Lebar,Jurong East,Jurong West,SMU,Jurong Point,Changi",
-                    "question": "Where does Joel stay?"
-                },
-                {
-                    "answer": "Briefs",
-                    "ismultiple": "false",
-                    "choices": "Briefs,Boxers",
-                    "question": "What is Joel's prefered choice of undergarment?"
-                },
-                {
-                    "answer": "True",
-                    "ismultiple": "false",
-                    "choices": "True,False",
-                    "question": "The battery compartment is the most fragile part of the 3D printer."
-                }]
+            // result = [
+            //     {
+            //         "answer": "12 minutes,24 minutes",
+            //         "ismultiple": "true",
+            //         "choices": "12 minutes,24 minutes,36 minutes",
+            //         "question": "What is the average time required for a standard 3D printing to print a 12cm by 12cm by 12cm cube?"
+            //     }, 
+            //     {
+            //         "answer": "True",
+            //         "ismultiple": "false",
+            //         "choices": "True,False",
+            //         "question": "The battery compartment is the most fragile part of the 3D printer."
+            //     }]
             for (record of result) {
                 quizData = {}
                 quizData.question = record.question
@@ -165,41 +149,40 @@
                 this.quiz.push(quizData)
                 }
         })
+    },
+    methods: {
+        sendAnswers:function() {
+            event.preventDefault();
+            alert("submit form")
+            for (qn in allquestions){
+                if(allquestions[qn][1] == false){
+                    qnAndans.push({"qn":allquestions[qn][0],"ans":document.querySelector(`input[name="${allquestions[qn][0]}"]:checked`).value})
+                }
+                else{
+                    var temp = ""
+                    $(`input[name="${allquestions[qn][0]}"]:checked`).each(function() {
+                        temp += this.value +","
+                        });
+                    temp = temp.substring(0,temp.length -1)
+                    qnAndans.push({"qn":allquestions[qn][0],"ans":temp})
+                }
+            }
+            submitData["data"] = qnAndans
+            let jsonData = JSON.stringify(submitData);
+                        fetch(submitQuizURL, {
+                                method: "POST",
+                                headers: {
+                                    "Content-type": "application/json"
+                                },
+                                body: jsonData
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                            })
+                }
     }
 
 })
-    // Function to send form inputs  
-    var qnAndans = [] 
-    function sendAnswers(){
-        event.preventDefault();
-        for (qn in allquestions){
-            if(allquestions[qn][1] == false){
-                qnAndans.push({"qn":allquestions[qn][0],"ans":document.querySelector(`input[name="${allquestions[qn][0]}"]:checked`).value})
-            }
-            else{
-                var temp = ""
-                $(`input[name="${allquestions[qn][0]}"]:checked`).each(function() {
-                    temp += this.value +","
-                    });
-                temp = temp.substring(0,temp.length -1)
-                qnAndans.push({"qn":allquestions[qn][0],"ans":temp})
-            }
-        }
-        submitData["data"] = qnAndans
-        let jsonData = JSON.stringify(submitData);
-        console.log(jsonData)
-                    fetch(submitQuizURL, {
-                            method: "POST",
-                            headers: {
-                                "Content-type": "application/json"
-                            },
-                            body: jsonData
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            this.isSubmit = true;
-                        })
-                }
     </script>
     <script>
         /* FOR YINGHUI
