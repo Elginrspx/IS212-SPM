@@ -109,7 +109,6 @@
                 fetch(getQuestionsURL)
                     .then(response => response.json())
                     .then(data => {
-                        console.log(data)
                         result = data.data
 
                         for (record of result) {
@@ -203,19 +202,22 @@
 
                         quizQuestionArray.push(saveData)
                     }
-                    console.log(quizQuestionArray)
-                    fetch(saveQuizURL, {
-                            method: "POST",
-                            headers: {
-                                "Content-type": "application/json"
-                            },
-                            body: quizQuestionArray
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            result = data;
-                            console.log(result)
-                        })
+
+                    var submitData = {}
+                    submitData["data"] = quizQuestionArray
+                    let jsonData = JSON.stringify(submitData);
+                        fetch(saveQuizURL, {
+                                method: "POST",
+                                headers: {
+                                    "Content-type": "application/json"
+                                },
+                                body: jsonData
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                            })
+                    alert("Quiz saved successfully!")
+                    window.location.replace("trainerClass.html");
                 }
             }
         })
