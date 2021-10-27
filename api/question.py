@@ -45,11 +45,12 @@ class Question(db.Model):
 
     def get_questions(qnCourseID, qnClassID, qnSectionID):
         try:
-            questions = db.session.query(Question.question, Question.choices, Question.isMultiple).filter(qnCourseID==Question.qnCourseID, qnClassID == Question.qnClassID, qnSectionID == Question.qnSectionID).all()
+            questions = db.session.query(Question.question, Question.choices, Question.isMultiple, Question.answer).filter(qnCourseID==Question.qnCourseID, qnClassID == Question.qnClassID, qnSectionID == Question.qnSectionID).all()
             if questions:
                 questionList = []
                 for questionSet in questions:
                     questionData = {}
+                    questionData["answer"] = questionSet[3]
                     questionData["question"] = questionSet[0]
                     questionData["choices"] = questionSet[1]
                     questionData["isMultiple"] = questionSet[2]
@@ -71,4 +72,25 @@ class Question(db.Model):
                         break
         score_percentage = score/maxscore
         return score_percentage
+
+        
+
+    def create_question(data):
+        data = data['data']
+        data2 = data[0]
+        try:
+            check = Question.query.filter_by(qnCourseID = data2['qnCourseID'], qnClassID =data2['qnClassID'], qnSectionID = data2['qnSectionID']).all()
+            for entries in check:
+                db.session.delete(entries)
+            db.session.commit()
+        except Exception as e:
+            print("Could not delete qns. "+ str(e))
+        # print(data)
+        for qn in data:
+            question = Question(qn["qnCourseID"], qn["qnClassID"], qn["qnSectionID"], qn["question"], qn["answer"], qn["choices"], qn["isMultiple"])
+            db.session.add(question)
+        db.session.commit()
+        return 201, len(data)
+
+        
 
