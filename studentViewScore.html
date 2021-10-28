@@ -64,7 +64,8 @@
     var courseID = 1
     var classID = 3
     var sectionID = 2
-    var getQuizURL = "http://localhost:2222/questions/" + courseID + "/" + classID + "/" + sectionID 
+    var studentID = 1
+    var getResultsURL = "http://localhost:2222/studentScore"
     const example1 = new Vue({
     el: '#displayScore',
     data: {
@@ -77,31 +78,32 @@
     },
     
     created:function() {
-        // alert("created")
-        fetch(getQuizURL)
-        .then(response=>response.json())
-        .then(data=>{
-            // result = data.data 
-            this.result = {
-                "data": {
-                    "status": "Fail",
-                    "totalScore" : 2,
-                    "maxScore" : 10
-                }
-            }
-            this.status = this.result["data"]["status"]
-            this.percentage = String(this.result.data["totalScore"]) +"/" + String(this.result.data["maxScore"])
-            console.log(this.status)
-            console.log(this.percentage)
+        submitData = {
+            "studentID": studentID,
+            "courseID": courseID,
+            "classID": classID,
+            "sectionID": sectionID
+        }
+        let jsonData = JSON.stringify(submitData);
+        fetch(getResultsURL, {
+                method: "POST",
+                headers: {
+                    "Content-type": "application/json"
+                },
+                body: jsonData
+            })
+            .then(response => response.json())
+            .then(data => {
+            result = data
+            this.status = result["data"]["status"]
+            this.percentage = String(result.data["totalScore"]) +"/" + String(result.data["maxScore"])
             if (this.seeResults["status"] == "Fail"){
                 this.seeResults["check"] = false
             }
             else{
                 this.seeResults["check"] = true
             }
-
-            console.log(this.seeResults)
-        })
+            })
     },
     methods: {
         returnToQuizzes:function() {
