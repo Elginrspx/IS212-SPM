@@ -1,4 +1,7 @@
 from main import db
+from sqlalchemy import *
+from sqlalchemy.orm import relationship
+from sqlalchemy import ForeignKeyConstraint
 
 
 class Prerequisite(db.Model):
@@ -19,3 +22,11 @@ class Prerequisite(db.Model):
             "prereqCourseID" : self.prereqCourseID,
             "prereqName" : self.prereqName
         }
+    
+    def get_prereqs(prereqCourseID):
+        try:
+            prereqCourseList = Prerequisite.query.filter_by(prereqCourseID = prereqCourseID).all()
+            if len(prereqCourseList):
+                return 200, [course.json() for course in prereqCourseList]
+        except Exception as e:
+            return 404, "No courses found. " + str(e)

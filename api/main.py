@@ -6,9 +6,10 @@ from sqlalchemy.orm import relationship
 from flask_cors import CORS
 from os import environ
 import json
+import math
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:3306/systemdb'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root@localhost:3306/systemdb'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
@@ -19,10 +20,8 @@ from completed import *
 from prerequisite import *
 from registration import *
 from student import *
-
-
-db.create_all()
-
+from question import *
+from studentScore import *
 
 
 #COURSES TDD
@@ -31,46 +30,29 @@ db.create_all()
 #used by adminCourseAssignment, home
 @app.route("/courses")
 def get_all_courses():
-    try:
-        courseList = Course.query.all()
-        
-        if len(courseList):
-            print(courseList)
-            print("meep")
-            return jsonify(
-                {
-                    "code": 200,
-                    "data": {
-                        "courses": [course.json() for course in courseList]
-                    }
-                }
-            )
-    except Exception as e:
-        return jsonify(
-            {
-                "code": 404,
-                "message": "There are no courses." + str(e)
+    code, data = Course.get_all_courses()
+    return jsonify(
+        {
+            "code": code,
+            "data": {
+                "courses": data
             }
-        ), 404
+        }
+    )
 
 # GET Course Details By courseID 
 #used by class, course, enrollClass
 @app.route("/courses/<string:courseID>")
 def get_course_details(courseID):
-    try: 
-        course = Course.query.filter_by(courseID=courseID).first()
-        if course:
-            return jsonify(
+    code, data = Course.get_course_details(courseID)
+    return jsonify(
                 {
-                    "code":200,
+                    "code":code,
                     "data": {
-                        "course" : course.json()
+                        "course" : data
                         }
                 }
             )
-    except Exception as e:
-        return jsonify({"message": "Course is not found." + str(e)}), 404
-
 
 
 #CLASSES TDD
@@ -79,39 +61,32 @@ def get_course_details(courseID):
 #used by AdminCourseAssignment
 @app.route("/classList/<string:courseID>")
 def get_course_classes(courseID):
-    try:
-        classList = Class.query.filter_by(clsCourseID=courseID).all()
-        if classList:
-            return jsonify(
+    code, data = Class.get_course_classes(courseID)
+    return jsonify(
                 {
-                    "code":200,
+                    "code":code,
                     "data": {
-                        "classes": [classs.json() for classs in classList]
+                        "course" : data
                         }
                 }
             )
-    except Exception as e:
-        return jsonify({"message": "Class is not found." + str(e)}), 404
 
 # GET Class Details by Course-Class 
 #used by class, enrollclass
 @app.route("/classes/<string:courseID>/<string:classID>")
 def get_class_details(courseID, classID):
-    try: 
-        classes = Class.query.filter_by(clsCourseID=courseID, classID = classID).first()
-        if classes:
-            return jsonify(
+    code, data = Class.get_course_classes(courseID)
+    return jsonify(
                 {
-                    "code":200,
+                    "code":code,
                     "data": {
-                        "class" : classes.json()
+                        "course" : data
                         }
-
                 }
             )
-    except Exception as e:
-        return jsonify({"message": "Class is not found." + str(e)}), 404
 
+
+#CHECK god give me the strength to do this, cos i can't tonight
 # GET all registrations with class and student table joined
 #used by course
 @app.route("/classInfo/<string:courseID>", methods=["GET"])
@@ -153,28 +128,15 @@ def all_class_info(courseID):
 #used by home
 @app.route("/completed/<string:ccStudentID>")
 def get_students_completed_courses(ccStudentID):
-    print(ccStudentID)
-    try:
-        courseList = Completed.query.filter_by(ccStudentID=ccStudentID).all()
-        
-        if len(courseList):
-            print(courseList)
-            print("meep")
-            return jsonify(
-                {
-                    "code": 200,
-                    "data": {
-                        "courses": [course.json() for course in courseList]
-                    }
-                }
-            )
-    except Exception as e:
-        return jsonify(
-            {
-                "code": 404,
-                "message": "There are no courses." + str(e)
+    code, data = Completed.get_completed_by_student(ccStudentID)
+    return jsonify(
+        {
+            "code": code,
+            "data": {
+                "courses": data
             }
-        ), 404
+        }
+    )
 
 
 #PREREQUISITES TDD
@@ -183,30 +145,23 @@ def get_students_completed_courses(ccStudentID):
 #used by home
 @app.route("/prereqs/<string:prereqCourseID>")
 def get_course_prereq(prereqCourseID):
-    try:
-        prereqCourseList = Prerequisite.query.filter_by(prereqCourseID = prereqCourseID).all()
-        if len(prereqCourseList):
-            return jsonify(
+    code, data = Prerequisite.get_prereqs(prereqCourseID)
+    return jsonify(
                 {
-                    "code": 200,
+                    "code": code,
                     "data": {
-                        "courses": [course.json() for course in prereqCourseList]
+                        "courses": data
                     }
                 }
             )
-    except Exception as e:
-        return jsonify(
-            {
-                "code": 404,
-                "message": "There are no courses." + str(e)
-            }
-        ), 404
+
 
 
 
 
 #REGISTRATION TDD
 
+#CHECK help lah, this one also so long. tolong do tmr
 # GET student registrations by course
 #used by adminCourseApplication
 @app.route("/registration/<string:courseID>")
@@ -242,6 +197,7 @@ def get_student_registration(courseID):
             }
         ), 404
 
+#how to do update, pls search, idk, oof
 # POST registration for courseClass
 #used by adminCourseAssignment, enrollClass
 @app.route("/registerClass", methods=['POST'])
@@ -251,21 +207,12 @@ def register_class():
     regCourseID = data['regCourseID']
     regClassID = data['regClassID']
     regStudentID = data['regStudentID']
-    if (Registration.query.filter_by(regCourseID=regCourseID, regClassID = regClassID, regStudentID = regStudentID).all()):
-        return jsonify({"code": 400,"message": "The student has already made a registration for this class"}), 400
- 
-    
-    registration = Registration(**data)
- 
-    try:
-        db.session.add(registration)
-        db.session.commit()
-    except Exception as e:
-        return jsonify({"code": 500, "message": "An error occurred creating the assignment." + str(e)}), 500
- 
-    return jsonify({"code": 201, "data": registration.json()}), 201
+    regStatus = data['regStatus']
+    code, dataa = Registration.register_class(regCourseID, regClassID, regStudentID, regStatus)
+    return jsonify({"code": code,"data": dataa})
 
 
+#CHECK idk how to do???
 #GET list of course ID & name of those with enrolled students
 #used by adminCourseApplication
 @app.route("/registrationCourses", methods=["GET"])
@@ -308,31 +255,17 @@ def all_reg():
 #used by adminCourseApplication
 @app.route("/assignRegistration", methods=['PUT'])
 def assign_registration():
-    try:
-        
-        print("check")
-        data = request.get_json()
-        registration = Registration.query.filter_by(regCourseID = data['courseID'], regClassID = data['classID'], regStudentID = data['studentID']).first()
-        if data['regStatus'] == "accepted":
-            print(registration)
-            registration.regStatus = data['regStatus']
-            db.session.commit()
-        return jsonify(
-            {
-                "code": 200,
-                "data": registration.json()
-            }
-        ), 200
-    except Exception as e:
-        return jsonify(
-            {
-                "code": 500,
-                "message": "An error occurred while updating the user. " + str(e)
-            }
-        ), 500
+    data = request.get_json()
+    code, dataa = Registration.assign_registration(data['courseID'], data['classID'], data['studentID'])
+    return jsonify(
+        {
+            "code": code,
+            "data": dataa
+        }
+    )
 
 
-# GET all eligible courses by user
+#CHECK GET all eligible courses by user
 #create four tables. 1)taken  2)all  3)eligible  4)prereqs
 #may be needed for sprint 4 adminCourseAssignment
 #COURSE integration
@@ -382,29 +315,87 @@ def get_eligible_courses(userID):
 #used by adminCourseAssignment
 @app.route("/students")
 def get_all_students():
-    try:
-        studentList = Student.query.all()
-        
-        if len(studentList):
-            print(studentList)
-            print("meep")
-            return jsonify(
-                {
-                    "code": 200,
-                    "data": {
-                        "students": [student.json() for student in studentList]
-                    }
-                }
-            )
-    except Exception as e:
-        return jsonify(
-            {
-                "code": 404,
-                "message": "There are no students." + str(e)
-            }
-        ), 404
+    code, data = Student.get_all()
+    return jsonify(
+        {
+            "code": code,
+            "data": data
+        }
+    )
 
+#QUESTION TDD
+#GET all questions for a quiz
+#used by studentQuiz.html
+@app.route("/questions/<string:qnCourseID>/<string:qnClassID>/<string:qnSectionID>")
+def get_questions(qnCourseID, qnClassID, qnSectionID):
+    code, data = Question.get_questions(qnCourseID, qnClassID, qnSectionID)
+    return jsonify(
+        {
+            "code": code,
+            "data": data
+        }
+    )
 
+#GET score for questions for a quiz
+#used by studentQuiz.html
+@app.route("/submitQuiz/<string:qnCourseID>/<string:qnClassID>/<string:qnSectionID>", methods=['POST'])
+def submit_quiz(qnCourseID, qnClassID, qnSectionID):
+    output = {}
+    data = request.get_json()
+    studentID = data['student']
+    score = Question.compute_score(data['data'], qnCourseID, qnClassID, qnSectionID)
+    code, data = Score.create_score(studentID,qnCourseID, qnClassID, qnSectionID,score)
+    code3, data3 = Section.get_no_qns(qnCourseID, qnClassID, qnSectionID)
+    if score>.8:
+        output['status'] = "Pass"
+    else:
+        output['status'] = "Fail"
+    output['totalScore'] = data3
+    return jsonify(
+        {
+            "code": code,
+            "data": output
+        }
+    )
+
+#Score, Student, Section tdd
+#get scores by section
+#used by quizResults.html
+@app.route("/getScores/<string:qnCourseID>/<string:qnClassID>/<string:qnSectionID>")
+def get_section_scores(qnCourseID, qnClassID, qnSectionID):
+    final = []
+    code, data = Score.get_scores_for_sections(qnCourseID, qnClassID, qnSectionID)
+    for student in data:
+        # get student name
+        temp = {}
+        id = student["studentID"]
+        code2, data2 = Student.get_student_details(id)
+        #get totalScore
+        code3, data3 = Section.get_no_qns(qnCourseID, qnClassID, qnSectionID)
+        temp["studentName"] = data2["studentName"]
+        temp["score"] = round(student["percentage"]*data3)
+        temp["totalScore"] = data3
+        temp["status"] = student["status"]
+        temp["noAttempts"] = student["noAttempts"]
+        final.append(temp)
+    return jsonify(
+        {
+            "code": code,
+            "data": final
+        }
+    )
+
+@app.route("/createQuiz", methods=['POST'])
+def create_quiz():
+    data = request.get_json()
+    code, count = Question.create_question(data)
+    code1, output = Section.update_no_of_qns(data, count)
+    return jsonify(
+        {
+            "code": code1,
+            "data": output
+        }
+    )
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=2222, debug=True)

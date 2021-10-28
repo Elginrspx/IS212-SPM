@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Trainer | Create quiz</title>
+</head>
+
+<body>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/stylesheet.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+    <div class="container" id="trainerQuiz">
+        <nav class="mt-2" style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="trainerClass.html">Home</a></li>
+                <li class="breadcrumb-item"><a href="trainerClass.html">My Classes</a></li>
+                <li class="breadcrumb-item"><a href="trainerClass.html">Class Materials</a></li>
+                <li class="breadcrumb-item"><a href="#" class="current">Quiz Creation</a></li>
+            </ol>
+        </nav>
+        <div class="row">
+            <div class="col">
+                <p class="title">Create Chapter {{ sectionID }} Quiz - {{ course[0].courseName }}</p>
+            </div>
+        </div>
+        <div class="row mt-3" v-for="(quizQuestion, quizIdx) in quizQuestions">
+            <div class="col-1 my-auto">
+                <img @click="removeQuestion(quizIdx)" src="images/minus.svg" style="width:30px; height:30px;">
+            </div>
+            <div class="col-11" style="border: 1px solid #dedede; border-radius: 10px;">
+                <div class="d-flex bd-highlight">
+                    <div class="p-2 flex-grow-1 bd-highlight">
+                        <input v-model:value="quizQuestion.question" class="form-control" type="text" placeholder="Type your question" >
+                    </div>
+                    <div class="p-2 bd-highlight">
+                        Allow Multiple Options
+                    </div>
+                    <div class="p-2 bd-highlight">
+                        <input type="checkbox" v-model="quizQuestion.isMultiple">
+                    </div>
+                </div>
+                <div v-for="(option, optionIdx) in quizQuestion.options">
+                    <br>
+                    <img @click="removeOption(quizIdx, optionIdx)" src="images/minus.svg" style="width:15px; height:15px;">
+                    <input type="radio">
+                    <input v-model:value="option.text" size="50" style="border:0" placeholder="Enter Option...">
+                    <input type="checkbox" v-model="option.isCorrect">
+                </div>
+                <br>
+                <div @click="addOption(quizIdx)">
+                    <img src="images/plus.svg" style="width:15px; height:15px;">&nbsp; Add option
+                </div>
+            </div>
+        </div>
+        <div class="row m-3">
+            <div class="col-12 text-center">
+                <img @click="addQuestion" src="images/plus.svg" style="width:30px; height:30px;">
+            </div>
+        </div>
+        <div class="float-end">
+            <a href="trainerClass.html" class="btn btn-default btn-md active" role="button" aria-pressed="true">Back</a>
+            <a @click="saveQuiz" class="btn btn-default btn-md active" role="button" aria-pressed="true">Save</a>
+        </div>
+    </div>
+    <script src="//code.jquery.com/jquery.min.js"></script>
+    <script>
+        $.get("includes/navbar.html", function(data){
+            $("#nav-placeholder").replaceWith(data);
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script>
+        var courseID = localStorage.getItem("trainerCourse");
+        var classID = localStorage.getItem("trainerClass");
+        var sectionID = localStorage.getItem("trainerSection");
+
+        // Initialise URLs
+        var getCoursesURL = "http://localhost:2222/courses/" + courseID
+        var getQuestionsURL = "http://localhost:2222/questions/" + courseID + "/" + classID + "/" + sectionID
+        var saveQuizURL = "http://localhost:2222/createQuiz"
+
+        // Get Class by Trainer
+        var trainerQuiz = new Vue({
+            el: '#trainerQuiz',
+            data: {
+                course: [],
+                sectionID: sectionID,
+                quizQuestions: []
+            },
+            created: function() {
+                //Get Courses
+                fetch(getCoursesURL)
+                    .then(response => response.json())
+                    .then(data => {
+                        this.course.push(data.data.course);
+                    })
+
+                //Get Scores
+                fetch(getQuestionsURL)
+                    .then(response => response.json())
+                    .then(data => {
+                        result = data.data
+
+                        for (record of result) {
+                            quizData = {}
+                            quizData.question = record.question
+                            quizData.isMultiple = record.isMultiple == "true" ? true : false
+                            quizData.options = []
+
+                            choices = record.choices.split(",")
+                            answer = record.answer.split(",")
+
+                            for (choice of choices) {
+                                option = {}
+                                option.text = choice
+
+                                if (answer.includes(choice)) {
+                                    option.isCorrect = true
+                                } else {
+                                    option.isCorrect = false
+                                }
+                                quizData.options.push(option)
+                            }
+                            this.quizQuestions.push(quizData)
+                        }
+                    })
+            },
+            methods: {
+                removeQuestion: function(quizIdx) {
+                    this.quizQuestions.splice(quizIdx, 1)
+                },
+
+                addQuestion: function() {
+                    this.quizQuestions.push({"question": "", "isMultiple": false, "options":[{"text": "", "isCorrect": false}]})
+                },
+
+                removeOption: function(quizIdx, optionIdx) {
+                    this.quizQuestions[quizIdx].options.splice(optionIdx, 1)
+                },
+
+                addOption: function(quizIdx) {
+                    this.quizQuestions[quizIdx].options.push({"text": "", "isCorrect": false})
+                },
+
+                saveQuiz: function() {
+                    if (this.quizQuestions.length == 0) {
+                        alert("Please enter a question!")
+                        return
+                    }
+                    quizQuestionArray = []
+                    for (quizQuestion of this.quizQuestions) {
+                        countChecked = 0
+
+                        for (option of quizQuestion.options) {
+                            if (option.isCorrect) {
+                                countChecked += 1
+                            }
+                        }
+
+                        if (countChecked == 0) {
+                            alert("One of the questions has no correct answers!")
+                            return
+                        } else if (quizQuestion.isMultiple && countChecked == 1) {
+                            alert("One of the question has multiple options, but only 1 correct answer is selected!")
+                            return
+                        } else if (!quizQuestion.isMultiple && countChecked > 1) {
+                            alert("One of the questions does not have multiple options, but have multiple answers!")
+                            return
+                        }
+
+                        // All Validations has passed
+                        saveData = {}
+                        saveData.qnCourseID = courseID
+                        saveData.qnClassID = classID
+                        saveData.qnSectionID = sectionID
+                        saveData.question = quizQuestion.question
+                        saveData.isMultiple = quizQuestion.isMultiple ? "true" : "false"
+                        
+                        saveData.choices = ""
+                        saveData.answer = ""
+                        for (option of quizQuestion.options) {
+                            saveData.choices += option.text + ","
+
+                            if (option.isCorrect) {
+                                saveData.answer += option.text + ","
+                            }
+                        }
+
+                        // trim off ending ","
+                        saveData.choices = saveData.choices.slice(0, -1)
+                        saveData.answer = saveData.answer.slice(0, -1)
+
+                        quizQuestionArray.push(saveData)
+                    }
+
+                    var submitData = {}
+                    submitData["data"] = quizQuestionArray
+                    let jsonData = JSON.stringify(submitData);
+                        fetch(saveQuizURL, {
+                                method: "POST",
+                                headers: {
+                                    "Content-type": "application/json"
+                                },
+                                body: jsonData
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                            })
+                    alert("Quiz saved successfully!")
+                    window.location.replace("trainerClass.html");
+                }
+            }
+        })
+    </script>
+</body>
+</html>
