@@ -32,96 +32,10 @@
             </div>
         </div>
         <div class="row mt-5">
-        <!-- First question -->
-            <div class="col-12" style="margin-bottom: 1cm;">
-                <div class="p-3" style="border: 1px solid #dedede; border-radius: 10px;">
-                    <p style="font-size:1.5em;">What tool should you use to open the battery compartment of the 3D printer?</p>
-                    <hr>
-                    <table class="table table-borderless table-sm">
-                        <thead>
-                            <tr>
-                                <th style="width:7.5%"></th>
-                                <th style="width:7.5%"></th>
-                                <th style="width:77.5%"></th>
-                                <th style="width:7.5%"></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <form id="qn1">
-                                <input type="radio" id="html" name="qn1" value="Wrench"> 
-                                <label for="html">Wrench</label>
-                                <br><br>
-                                <input type="radio" id="css" name="qn1" value="Screwdriver">
-                                <label for="css">Screwdriver</label><br><br>
-                                <input type="radio" id="javascript" name="qn1" value="Hammer" checked=True>
-                                <label for="javascript">Hammer</label> 
-                                <img src="images/wrong.jpg" width="24" height="18" style="margin-left: 1cm;">
-                                <br><br>
-                                <input type="radio" id="javascript" name="qn1" value="Crowbar">
-                                <label for="javascript">Crowbar</label>
-                              </form>
-                        </tbody>
-                    </table>
-            </div>
-            </div>
-        <br>
-        <!-- Second question -->
-        <div class="col-12" style="margin-bottom: 1cm;">
-            <div class="p-3" style="border: 1px solid #dedede; border-radius: 10px;">
-                <p style="font-size:1.5em;">What is the average time required for a standard 3D printing to print a 12cm by 12cm by 12cm cube?</p>
-                <hr>
-                <table class="table table-borderless table-sm">
-                    <thead>
-                        <tr>
-                            <th style="width:7.5%"></th>
-                            <th style="width:7.5%"></th>
-                            <th style="width:77.5%"></th>
-                            <th style="width:7.5%"></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <form id="qn2">
-                            <input type="radio" id="html" name="qn2" value="12">
-                            <label for="html">12 minutes</label><br><br>
-                            <input type="radio" id="css" name="qn2" value="24" checked=True>
-                            <label for="css">24 minutes</label>
-                            <img src="images/Vector.svg" style="margin-left: 1cm;">
-                            <br><br>
-                            <input type="radio" id="javascript" name="qn2" value="30">
-                            <label for="javascript">30 minutes</label> <br><br>
-                            <input type="radio" id="javascript" name="qn2" value="18">
-                            <label for="javascript">18 minutes</label>
-                          </form>
-                    </tbody>
-                </table>
-        </div>
-        </div>
+        
             <!-- Third question -->
             <div class="col-12">
-                <div class="p-3" style="border: 1px solid #dedede; border-radius: 10px;">
-                    <p style="font-size:1.5em;">The battery compartment is the most fragile part of the 3D printer.</p>
-                    <hr>
-                    <table class="table table-borderless table-sm">
-                        <thead>
-                            <tr>
-                                <th style="width:7.5%"></th>
-                                <th style="width:7.5%"></th>
-                                <th style="width:77.5%"></th>
-                                <th style="width:7.5%"></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <form id="qn3">
-                                <input type="radio" id="html" name="qn3" value="True">
-                                <label for="html">True</label><br><br>
-                                <input type="radio" id="css" name="qn3" value="False" checked=True>
-                                <label for="css">False</label>
-                                <img src="images/wrong.jpg" width="24" height="18" style="margin-left: 1cm;">
-                                <br><br>
-                              </form>
-                        </tbody>
-                    </table>
-            </div>
+
             <div style="margin-left: 27cm;">
             <a style="font-size: 20px; color:rgb(252, 140, 3)">Results 1/3</a>
             <br>
@@ -137,55 +51,79 @@
     $.get("includes/footer.html", function(data){
         $("#footer-placeholder").replaceWith(data);
      });
+    var courseID = 1
+    var classID = 3
+    var sectionID = 2
+    var getQuizURL = "http://localhost:2222/questions/" + courseID + "/" + classID + "/" + sectionID
+
+    const example1 = new Vue({
+    el: '#displayScore',
+    data: {
+        quiz:[],
+    },
+    
+    created:function() {
+        fetch(getQuizURL)
+        .then(response=>response.json())
+        .then(data=>{
+            result = data.data 
+            
+            for (record of result) {
+                quizData = {}
+                quizData.question = record.question
+                quizData.isMultiple = record.isMultiple == "true" ? true : false
+                allquestions.push([quizData.question,quizData.isMultiple])
+                quizData.options = []
+                choices = record.choices.split(",")
+                answer = record.answer.split(",")
+                for (choice of choices) {
+                    option = {}
+                    option.text = choice
+                    if (answer.includes(choice)) {
+                        option.isCorrect = true
+                    } else {
+                        option.isCorrect = false
+                    }
+                    quizData.options.push(option)
+                }
+                this.quiz.push(quizData)
+                }
+        })
+    },
+    methods: {
+        sendAnswers:function() {
+            event.preventDefault();
+            for (qn in allquestions){
+                if(allquestions[qn][1] == false){
+                    qnAndans.push({"qn":allquestions[qn][0],"ans":document.querySelector(`input[name="${allquestions[qn][0]}"]:checked`).value})
+                }
+                else{
+                    var temp = ""
+                    $(`input[name="${allquestions[qn][0]}"]:checked`).each(function() {
+                        temp += this.value +","
+                        });
+                    temp = temp.substring(0,temp.length -1)
+                    qnAndans.push({"qn":allquestions[qn][0],"ans":temp})
+                }
+            }
+            submitData["data"] = qnAndans
+            let jsonData = JSON.stringify(submitData);
+                        fetch(submitQuizURL, {
+                                method: "POST",
+                                headers: {
+                                    "Content-type": "application/json"
+                                },
+                                body: jsonData
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                            })
+            window.location.href = 'studentViewScore.html';
+                }
+    }
+
+})
      </script>
-    <script>
-        /* FOR YINGHUI
-        Need you to get me the data in the following format. You can take a look at Figma and see if you understand what I mean
-        
-        each -> will be one url call
-
-        For Select Course dropdown:
-        - Based on Trainer ID
-          -> get CourseID, Course Name and Class ID (i.e. Class Number)
-
-        - Based on Selected Course ID
-          -> get Section Name (and Order?)
-        
-        - Based on Selected Section:
-          -> get docType ("doc", "video", "link"), materialName?, isCompleted
-
-        -> Function to add Section for selected Course
-        -> Function to add material for selected Section of selected Course
-        
-        - Based on Selected Section
-          -> get quiz name
-
-
-        */
-        // // Initialise URLs
-        // var getClassesURL = "http://localhost:2222/classes/1/2"
-
-        // // Get Class by Trainer
-        // var trainerClass = new Vue({
-        //     el: '#trainerClass',
-        //     data: {
-        //         classes: []
-        //     },
-        //     created: function() {
-        //         // Get Courses
-        //         fetch(getClassesURL)
-        //             .then(response => response.json())
-        //             .then(data => {
-        //                 print(data)
-        //                 // result = data.data.classes;
-
-        //                 // for (record of result) {
-        //                 //     this.classes.push(record);
-        //                 // }
-        //             })
-        //     }
-        // })
-    </script>
 </body>
 
 </html>
