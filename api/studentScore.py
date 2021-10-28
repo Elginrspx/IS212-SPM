@@ -66,7 +66,7 @@ class Score(db.Model):
                     scoreData = {}
                     scoreData["studentID"] = scoreSet[0]
                     scoreData["percentage"] = scoreSet[1]
-                    if int(scoreSet[1]) > .8:
+                    if float(scoreSet[1]) > .8:
                         scoreData["status"] = "Pass"
                     else:
                         scoreData["status"] = "Fail"
@@ -76,4 +76,19 @@ class Score(db.Model):
                 return 200, scoreList
         except Exception as e:
             return 404, "Could not get scores. " + str(e)
+
+    def get_scores_by_student(data):
+        courseID = data['courseID']
+        classID = data['classID']
+        sectionID = data['sectionID']
+        studentID = data['studentID']
+        try:
+            studentScore = db.session.query(Score.scorePercentage).filter(Score.scoreCourseID==courseID, Score.scoreClassID==classID, Score.scoreSectionID==sectionID, Score.scoreStudentID == studentID).first()
+            print(studentScore[0])
+
+            return 200, studentScore[0]
+        except Exception as e:
+            return 404, "Could not get scores. " + str(e)
+
+
 

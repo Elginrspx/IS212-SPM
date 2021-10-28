@@ -9,7 +9,7 @@ import json
 import math
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root@localhost:3306/systemdb'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:3306/systemdb'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
@@ -396,6 +396,31 @@ def create_quiz():
             "data": output
         }
     )
+
+#GET a student's score by section 
+@app.route("/studentScore", methods=['POST'])
+def get_student_score():
+    output = {}
+    data = request.get_json()
+    code, percentage = Score.get_scores_by_student(data)
+    print(percentage)
+    percent = float(percentage)
+    code3, maxScore = Section.get_no_qns(data['courseID'], data['classID'], data['sectionID'])
+    if percent > .8:
+        output['status'] = "Pass"
+    else:
+        output['status'] = "Fail"
+    output['totalScore'] = round(percent*int(maxScore))
+    output['maxScore'] = maxScore
+    return jsonify(
+        {
+            "code": code,
+            "data": output
+        }
+    )
+
+
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=2222, debug=True)
