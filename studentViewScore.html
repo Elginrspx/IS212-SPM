@@ -33,21 +33,26 @@
             </div>
         </div>
         <div class="row mt-5" id = "displayScore">
-            <div v-if="seeResults.status != 'Fail'">
+            <div v-if="status == 'Fail'">
                 <div class="col-12">
-                    <a style="font-size: 20px; color:rgb(252, 140, 3)">{{ seeResults.percentage }}</a>
+                    <div style="float:left;font-size: 25px;">Your score:&nbsp;</div>
+                    <div style="font-size: 25px; color:rgb(252, 140, 3)">{{ percentage }}</div>
                     <br>
-                    <a style="font-size: 20px; color: green;">PASS</a>
+                    <div style="float:left;font-size: 25px;">Your grade:&nbsp;</div>
+                    <p style="font-size: 25px; color: red;">{{ status }}</p>
                 </div>
             </div>
             <div v-else>
-                <div class="col-12">
-                    <div>
-                        <a style="font-size: 20px; color:rgb(252, 140, 3)">{{ seeResults.percentage }}</a>
-                        <br>
-                        <a style="font-size: 20px; color: red;">FAIL</a>
-                    </div>
+                <div class="col-2">
+                    <div style="float:left;font-size: 25px;">Your score:&nbsp;</div>
+                    <div style="font-size: 25px; color:rgb(252, 140, 3);">{{ percentage }}</div>
+                    <br>
+                    <div style="float:left;font-size: 25px;">Your grade:&nbsp;</div>
+                    <div style="font-size: 25px; color: green;">{{ status }}</div>
                 </div>
+            </div>
+            <div>
+            <input type="submit" @click="returnToQuizzes()" style=" background-color: rgb(252, 140, 3); border-radius: 5px; width: 90px;" value="My Quizzes">
             </div>
         </div>
     </div>
@@ -64,13 +69,15 @@
     el: '#displayScore',
     data: {
         quiz:[],
-        percentage: 0,
+        percentage: "0",
         status: "",
         result: [],
-        seeResults: {}
+        seeResults: {},
+        check: true
     },
     
     created:function() {
+        // alert("created")
         fetch(getQuizURL)
         .then(response=>response.json())
         .then(data=>{
@@ -78,43 +85,28 @@
             this.result = {
                 "data": {
                     "status": "Fail",
-                    "totalScore" : 3,
-                    "maxScore" : 7
+                    "totalScore" : 2,
+                    "maxScore" : 10
                 }
             }
-            this.seeResults["status"] = this.result["data"]["status"]
-            this.seeResults["percentage"] = String(this.result.data["totalScore"]) +"/" + String(this.result.data["maxScore"])
+            this.status = this.result["data"]["status"]
+            this.percentage = String(this.result.data["totalScore"]) +"/" + String(this.result.data["maxScore"])
+            console.log(this.status)
+            console.log(this.percentage)
+            if (this.seeResults["status"] == "Fail"){
+                this.seeResults["check"] = false
+            }
+            else{
+                this.seeResults["check"] = true
+            }
+
             console.log(this.seeResults)
         })
     },
     methods: {
-        sendAnswers:function() {
-            for (qn in allquestions){
-                if(allquestions[qn][1] == false){
-                    qnAndans.push({"qn":allquestions[qn][0],"ans":document.querySelector(`input[name="${allquestions[qn][0]}"]:checked`).value})
-                }
-                else{
-                    var temp = ""
-                    $(`input[name="${allquestions[qn][0]}"]:checked`).each(function() {
-                        temp += this.value +","
-                        });
-                    temp = temp.substring(0,temp.length -1)
-                    qnAndans.push({"qn":allquestions[qn][0],"ans":temp})
-                }
-            }
-            submitData["data"] = qnAndans
-            let jsonData = JSON.stringify(submitData);
-                        fetch(submitQuizURL, {
-                                method: "POST",
-                                headers: {
-                                    "Content-type": "application/json"
-                                },
-                                body: jsonData
-                            })
-                            .then(response => response.json())
-                            .then(data => {
-                            })
-            // window.location.href = 'studentViewScore.html';
+        returnToQuizzes:function() {
+            // Might need to change cause as of now got no page to choose quiz
+            window.location.href = 'studentQuiz.html';
                 }
     }
 
