@@ -114,8 +114,7 @@
         fetch(getQuizURL)
         .then(response=>response.json())
         .then(data=>{
-            result = data.data 
-            
+            result = data.data
             for (record of result) {
                 quizData = {}
                 quizData.question = record.question
