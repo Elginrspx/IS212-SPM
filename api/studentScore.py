@@ -13,7 +13,7 @@ class Score(db.Model):
     scoreCourseID = db.Column(db.String(30), primary_key=True)
     scoreClassID = db.Column(db.Integer, nullable=False)
     scoreSectionID = db.Column(db.String(30))
-    scorePercentage = db.Column(db.Integer)
+    scorePercentage = db.Column(db.String(30))
     attempts = db.Column(db.Integer)
 
     __table_args__ = (ForeignKeyConstraint([scoreCourseID, scoreClassID, scoreSectionID],
