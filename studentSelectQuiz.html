@@ -47,6 +47,7 @@
                     <h1 class="color-darkgrey">Courses</h1>
                     <h1>{{ selectedItemDetails.courseName }}</h1>
                     <ul class="sessions">
+                        <!-- Pic is generated here -->
                         <section-item v-for="sectionitem in sectionItems" v-bind:sectionitem="sectionitem" v-bind:key="sectionitem.sectionID"></section-item>
                         <li class="select" @click="addSection()">
                         </li>
@@ -69,7 +70,6 @@
                         <tbody>
                             <tr v-for="sectionMaterial in sectionMaterials">
                                 <td @click="deleteMaterial(sectionMaterial.materialID)" class="text-center">
-                                    <!-- <img src="images/minus.svg" style="width:15px;height:15px;"> -->
                                 </td>
                                 <td v-if="sectionMaterial.docType == 'doc'" class="text-center"><img src="images/doc.svg" style="width:15px;height:15px;"></td>
                                 <td v-else-if="sectionMaterial.docType == 'video'" class="text-center"><img src="images/video.svg" style="width:15px;height:15px;"></td>
@@ -95,8 +95,8 @@
                     <hr>
                     <div class="d-flex bd-highlight">
                         <div class="me-auto p-2 bd-highlight" style="font-size: 1.3em;">{{ selectedItemDetails.quizName }}</div>
-                        <div class="p-2 bd-highlight"><a @click="viewResult($event, selectedItemDetails.courseID, selectedItemDetails.classID, selectedItemDetails.sectionID)" class="btn btn-default btn-md active" role="button" aria-pressed="true">View Results</a></div>
-                        <div class="p-2 bd-highlight"><a @click="editQuiz($event, selectedItemDetails.courseID, selectedItemDetails.classID, selectedItemDetails.sectionID)" class="btn btn-default btn-md active" role="button" aria-pressed="true">Edit</a></div>
+                        <div class="p-2 bd-highlight"><a @click="takeQuiz" class="btn btn-default btn-md active" role="button" aria-pressed="true">Take Quiz</a></div>
+                        <!-- <div class="p-2 bd-highlight"><a @click="editQuiz($event, selectedItemDetails.courseID, selectedItemDetails.classID, selectedItemDetails.sectionID)" class="btn btn-default btn-md active" role="button" aria-pressed="true">Edit</a></div> -->
                     </div>
                 </div>
             </div>
@@ -201,12 +201,8 @@
                 deleteMaterial: function(materialID) {
                     console.log("Delete Material Function! Not Implemented Yet")
                 },
-                viewResult: function(e, courseID, classID, sectionID) {
-                    e.preventDefault();
-                    localStorage.setItem("trainerCourse", courseID);
-                    localStorage.setItem("trainerClass", classID);
-                    localStorage.setItem("trainerSection", sectionID);
-                    window.location.replace("quizResults.html");
+                takeQuiz: function() {
+                    window.location.replace("studentQuiz.html");
                 },
                 editQuiz: function(e, courseID, classID, sectionID) {
                     e.preventDefault();
