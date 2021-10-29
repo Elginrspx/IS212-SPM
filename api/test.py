@@ -29,7 +29,7 @@ from student import Student
 #         db.session.commit()
 
 #         response = self.client.get('/queue/stevejob/3')
-#         print(response.json)
+#   ooh      print(response.json)
 
 class testUni(unittest.TestCase):
     def test_sample2(self):
