@@ -176,8 +176,14 @@ a.current {
   top: 0px;
 }
 
-.timelineWrapper li.select:before {
-  background: url("../images/plus.svg");
+.studentSelectQuiz li:before {
+  content: "";
+  width: 20px;
+  height: 20px;
+  background: url("../images/doc.svg");
+  position: absolute;
+  left: -10px;
+  top: 0px;
 }
 
 .timelineWrapper li:focus {
