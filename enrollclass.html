@@ -2,19 +2,29 @@
 <html lang="en">
 
 <head>
-    <?php include 'includes/header.php' ?>
     <title>Course | LMS</title>
 </head>
 
 <body>
-    <?php include 'includes/navbar.php' ?>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/stylesheet.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    
+    <div id="nav-placeholder"></div>
     <div class="container">
         <nav id="course" class="mt-2" style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="home.php">Courses</a></li>
-                <li class="breadcrumb-item"><a href="course.php">{{ courseName }}</a></li>
-                <li class="breadcrumb-item"><a href="course.php">Choose your preferred class</a></li>
+                <li class="breadcrumb-item"><a href="home.html">Courses</a></li>
+                <li class="breadcrumb-item"><a href="course.html">{{ courseName }}</a></li>
+                <li class="breadcrumb-item"><a href="course.html">Choose your preferred class</a></li>
                 <li class="breadcrumb-item"><a href="#" class="current">Enrollment Application Confirmation</a></li>
             </ol>
         </nav>
@@ -34,21 +44,27 @@
                             Submit Application
                         </button>
                         <br>
-                        <a href="course.php">Back</a>
+                        <a href="course.html">Back</a>
                     </div>
                     <div v-else class="card-body text-center">
                         <img src="images/check.svg" style="height: 30px;">
                         <h5 class="card-title color-orange">Your application has been successfully submitted!<br>
                             A confirmation email will be sent to you shortly.
                         </h5>
-                        <a href="home.php" class="btn btn-default btn-md active m-2" role="button" aria-pressed="true">Back to Home Page</a>
+                        <a href="home.html" class="btn btn-default btn-md active m-2" role="button" aria-pressed="true">Back to Home Page</a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <?php include 'includes/footer.php' ?>
-
+    <script src="//code.jquery.com/jquery.min.js"></script>
+    <script>
+        $.get("includes/navbar.html", function(data){
+            $("#nav-placeholder").replaceWith(data);
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>   
     <script>
         var courseID = localStorage.getItem("chosenCourse");
         var classID = localStorage.getItem("chosenClass");
@@ -88,7 +104,7 @@
                 fetch(getClassDetailsURL)
                     .then(response => response.json())
                     .then(data => {
-                        result = data.data.class;
+                        result = data.data.course;
 
                         this.classDetail.push(result)
                     })
