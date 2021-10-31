@@ -33,6 +33,14 @@ class Section(db.Model):
             "sectionID" : self.sectionID,
             "noOfQns": self.noOfQns
         }
+    
+    def get_all_sections():
+        try:
+            sectionList = Section.query.filter_by(clsSectionID=sectionID).all()
+            if sectionList:
+                return 200, [section.json() for section in sectionList]
+        except Exception as e:
+            return 404, "No sections found" + str(e)
 
     def get_no_qns(secCourseID, secClassID, sectionID):
         noQns = db.session.query(Section.noOfQns).filter(Section.secCourseID== secCourseID, Section.secClassID == secClassID, Section.sectionID == sectionID).first()
