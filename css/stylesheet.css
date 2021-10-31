@@ -170,17 +170,27 @@ a.current {
   content: "";
   width: 20px;
   height: 20px;
-  background: url("../images/minus.svg");
+  background: url("../images/doc.svg");
   position: absolute;
   left: -10px;
   top: 0px;
 }
 
-.studentSelectQuiz li:before {
+#completed li:before {
   content: "";
   width: 20px;
   height: 20px;
-  background: url("../images/doc.svg");
+  background: url("../images/plus.svg");
+  position: absolute;
+  left: -10px;
+  top: 0px;
+}
+
+#notcompleted li:before {
+  content: "";
+  width: 20px;
+  height: 20px;
+  background: url("../images/minus.svg");
   position: absolute;
   left: -10px;
   top: 0px;

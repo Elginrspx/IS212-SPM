@@ -43,14 +43,14 @@
         </div>
         <div class="row mt-5">
             <div v-if="sectionItems.length != 0" class="col-4">
-                <div class="timelineWrapper studentSelectQuiz">
+                <div class="timelineWrapper">
                     <h1 class="color-darkgrey">Courses</h1>
                     <h1>{{ selectedItemDetails.courseName }}</h1>
                     <ul class="sessions">
                         <!-- Pic is generated here -->
                         <section-item v-for="sectionitem in sectionItems" v-bind:sectionitem="sectionitem" v-bind:key="sectionitem.sectionID"></section-item>
-                        <!-- <li class="select" @click="addSection()">
-                        </li> -->
+                        <li class="select" @click="addSection()">
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -217,7 +217,7 @@
         Vue.component('section-item', {
             props: ['sectionitem'],
             template: `
-            <li @click="deleteSection($event, sectionitem.sectionID)" :name="sectionitem.sectionID">
+            <li @click="deleteSection($event, sectionitem.sectionID)">
                 <div @click="selectSection(sectionitem.sectionID)">
                     <div class="color-darkgrey">Chapter {{ sectionitem.sectionID }}</div>
                     <p>{{ sectionitem.sectionName }}</p>
