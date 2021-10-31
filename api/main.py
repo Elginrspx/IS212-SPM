@@ -335,10 +335,23 @@ def get_questions(qnCourseID, qnClassID, qnSectionID):
         }
     )
 
-
+#GET class+course by trainer
 @app.route("/getClassByTrainer/<string:trainer>")
 def get_trainer_classes(trainer):
     code, data = Class.get_classes_by_trainer(trainer)
+    for classes in data:
+        code, classes["courseName"] = Course.get_name_by_id(classes['courseID'])
+    return jsonify(
+        {
+            "code": code,
+            "data": data
+        }
+    )
+
+#GET class by student
+@app.route("/getClassByStudent/<string:student>")
+def get_student_classes(student):
+    code, data = Registration.get_student_accepted_courses(student)
     for classes in data:
         code, classes["courseName"] = Course.get_name_by_id(classes['courseID'])
     return jsonify(
