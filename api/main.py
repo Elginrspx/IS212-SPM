@@ -21,7 +21,7 @@ from registration import *
 from student import *
 from question import *
 from studentScore import *
-# from sectionMaterials import *
+from content import *
 
 #COURSES TDD
 
@@ -394,8 +394,28 @@ def get_student_score():
         }
     )
 
+#GET all section content
+@app.route("/getContent/<string:courseID>/<string:classID>/<string:sectionID>")
+def get_contents(courseID, classID, sectionID):
+    code, data = Content.get_section_content(courseID, classID, sectionID)
+    return jsonify(
+        {
+            "code": code,
+            "data": data
+        }
+    )
 
-
+#POST section content
+@app.route("/createContent", methods=["POST"])
+def create_content():
+    data = request.get_json()
+    code, message = Content.create_section_content(data)
+    return jsonify(
+        {
+            "code": code,
+            "data": message
+        }
+    )
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=2222, debug=True)
