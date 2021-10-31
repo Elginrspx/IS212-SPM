@@ -11,6 +11,7 @@ class Section(db.Model):
     secCourseID = db.Column(db.String(30), primary_key=True)
     secClassID = db.Column(db.Integer, nullable=False, primary_key=True)
     sectionID = db.Column(db.String(30), nullable=False, primary_key=True)
+    sectionName = db.Column(db.String(100), nullable=False)
     noOfQns = db.Column(db.Integer, nullable=False)
     
     __table_args__ = (ForeignKeyConstraint([secCourseID, secClassID],
@@ -19,26 +20,33 @@ class Section(db.Model):
     classSection = db.relationship(
     'Class', primaryjoin='and_(Class.classID == Section.secClassID, Class.clsCourseID == Section.secCourseID)', backref='sections')
 
-    def __init__(self, secCourseID, secClassID, sectionID, noOfQns):
+    def __init__(self, secCourseID, secClassID, sectionID, sectionName, noOfQns):
         self.secCourseID = secCourseID
         self.secClassID = secClassID
         self.sectionID = sectionID
+        self.sectionName = sectionName
         self.noOfQns = noOfQns
 
+    def json_section_info(self):
+        return {
+            "sectionID" : self.sectionID,
+            "sectionName": self.sectionName
+        }
 
     def json(self):
         return {
             "secCourseID" : self.secCourseID,
             "secClassID": self.secClassID,
             "sectionID" : self.sectionID,
+            "sectionName": self.sectionName,
             "noOfQns": self.noOfQns
         }
     
-    def get_all_sections():
+    def get_all_sections(courseID, classID):
         try:
-            sectionList = Section.query.filter_by(clsSectionID=sectionID).all()
+            sectionList = Section.query.filter_by(secCourseID=courseID, secClassID=classID).all()
             if sectionList:
-                return 200, [section.json() for section in sectionList]
+                return 200, [section.json_section_info() for section in sectionList]
         except Exception as e:
             return 404, "No sections found" + str(e)
 

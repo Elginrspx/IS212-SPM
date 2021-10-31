@@ -44,4 +44,12 @@ class Course(db.Model):
         except Exception as e:
             return 404, "There are no courses." + str(e)
 
+    def get_name_by_id(id):
+        try: 
+            course = db.session.query(Course.courseName).filter(Course.courseID== id).first()
+            data = course[0]
+            return 200, data
+        except Exception as e:
+            return 404, "Course not available"
+
 

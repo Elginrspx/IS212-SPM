@@ -121,9 +121,11 @@
         For Select Course dropdown:
         [FUNCTION] Based on Trainer ID
           -> get CourseID, Course Name and Class ID (i.e. Class Number)
+          "http://localhost:2222/getClassByTrainer/Tan" or "http://localhost:2222/getClassByTrainer/" + trainerName
 
         [FUNCTION] Based on Selected Course ID
           -> get Section Name(s)
+          "http://localhost:2222/getSections/1/3" or "http://localhost:2222/getSections/" + courseID + "/" + classID
         
         [FUNCTION] Based on Selected Section:
           -> get docType ("doc", "video", "link"), materialName?, isCompleted

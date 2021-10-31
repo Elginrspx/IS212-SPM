@@ -20,7 +20,8 @@ from prerequisite import *
 from registration import *
 from student import *
 from question import *
-from sectionMaterials import *
+from studentScore import *
+# from sectionMaterials import *
 
 #COURSES TDD
 
@@ -334,26 +335,27 @@ def get_questions(qnCourseID, qnClassID, qnSectionID):
         }
     )
 
-@app.route("/test/<string:trainer>")
-def test_getcourses(trainer):
-    help = Class.get_coursebyTrainerName(trainer)
-    courses = Course.get_course_name_by_ids(help)
+
+@app.route("/getClassByTrainer/<string:trainer>")
+def get_trainer_classes(trainer):
+    code, data = Class.get_classes_by_trainer(trainer)
+    for classes in data:
+        code, classes["courseName"] = Course.get_name_by_id(classes['courseID'])
     return jsonify(
         {
-            "code": help,
-            "data":courses
+            "code": code,
+            "data": data
         }
     )
 
-# GET all sections
-@app.route("/test/<string:sectionID>")
-def test_getsections(sectionID):
-    help = Section.get_all_sections(sectionID)
-    section = Section.get_all_sections(help)
+# GET all sections by course-class
+@app.route("/getSections/<string:courseID>/<string:classID>")
+def get_sections(courseID, classID):
+    code, data = Section.get_all_sections(courseID, classID)
     return jsonify(
         {
-            "code": help,
-            "data": section
+            "code": code,
+            "data": data
         }
     )
 
