@@ -6,7 +6,6 @@ from sqlalchemy.orm import relationship
 from flask_cors import CORS
 from os import environ
 import json
-import math
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root@localhost:3306/systemdb'
@@ -21,8 +20,7 @@ from prerequisite import *
 from registration import *
 from student import *
 from question import *
-from studentScore import *
-
+from sectionMaterials import *
 
 #COURSES TDD
 
@@ -207,8 +205,7 @@ def register_class():
     regCourseID = data['regCourseID']
     regClassID = data['regClassID']
     regStudentID = data['regStudentID']
-    regStatus = data['regStatus']
-    code, dataa = Registration.register_class(regCourseID, regClassID, regStudentID, regStatus)
+    code, dataa = Registration.register_class(regCourseID, regClassID, regStudentID)
     return jsonify({"code": code,"data": dataa})
 
 
@@ -256,7 +253,7 @@ def all_reg():
 @app.route("/assignRegistration", methods=['PUT'])
 def assign_registration():
     data = request.get_json()
-    code, dataa = Registration.assign_registration(data['courseID'], data['classID'], data['studentID'])
+    code, dataa = Registration.assign_registration(data['courseID'], data['classID'], data['studentID'], data['regStatus'])
     return jsonify(
         {
             "code": code,
@@ -328,6 +325,7 @@ def get_all_students():
 #used by studentQuiz.html
 @app.route("/questions/<string:qnCourseID>/<string:qnClassID>/<string:qnSectionID>")
 def get_questions(qnCourseID, qnClassID, qnSectionID):
+    print("work")
     code, data = Question.get_questions(qnCourseID, qnClassID, qnSectionID)
     return jsonify(
         {
@@ -336,64 +334,26 @@ def get_questions(qnCourseID, qnClassID, qnSectionID):
         }
     )
 
-#GET score for questions for a quiz
-#used by studentQuiz.html
-@app.route("/submitQuiz/<string:qnCourseID>/<string:qnClassID>/<string:qnSectionID>", methods=['POST'])
-def submit_quiz(qnCourseID, qnClassID, qnSectionID):
-    output = {}
-    data = request.get_json()
-    studentID = data['student']
-    score = Question.compute_score(data['data'], qnCourseID, qnClassID, qnSectionID)
-    code, data = Score.create_score(studentID,qnCourseID, qnClassID, qnSectionID,score)
-    code3, data3 = Section.get_no_qns(qnCourseID, qnClassID, qnSectionID)
-    if score>.8:
-        output['status'] = "Pass"
-    else:
-        output['status'] = "Fail"
-    output['totalScore'] = data3
+@app.route("/test/<string:trainer>")
+def test_getcourses(trainer):
+    help = Class.get_coursebyTrainerName(trainer)
+    courses = Course.get_course_name_by_ids(help)
     return jsonify(
         {
-            "code": code,
-            "data": output
+            "code": help,
+            "data":courses
         }
     )
 
-#Score, Student, Section tdd
-#get scores by section
-#used by quizResults.html
-@app.route("/getScores/<string:qnCourseID>/<string:qnClassID>/<string:qnSectionID>")
-def get_section_scores(qnCourseID, qnClassID, qnSectionID):
-    final = []
-    code, data = Score.get_scores_for_sections(qnCourseID, qnClassID, qnSectionID)
-    for student in data:
-        # get student name
-        temp = {}
-        id = student["studentID"]
-        code2, data2 = Student.get_student_details(id)
-        #get totalScore
-        code3, data3 = Section.get_no_qns(qnCourseID, qnClassID, qnSectionID)
-        temp["studentName"] = data2["studentName"]
-        temp["score"] = round(student["percentage"]*data3)
-        temp["totalScore"] = data3
-        temp["status"] = student["status"]
-        temp["noAttempts"] = student["noAttempts"]
-        final.append(temp)
+# GET all sections
+@app.route("/test/<string:sectionID>")
+def test_getsections(sectionID):
+    help = Section.get_all_sections(sectionID)
+    section = Section.get_all_sections(help)
     return jsonify(
         {
-            "code": code,
-            "data": final
-        }
-    )
-
-@app.route("/createQuiz", methods=['POST'])
-def create_quiz():
-    data = request.get_json()
-    code, count = Question.create_question(data)
-    code1, output = Section.update_no_of_qns(data, count)
-    return jsonify(
-        {
-            "code": code1,
-            "data": output
+            "code": help,
+            "data": section
         }
     )
 
