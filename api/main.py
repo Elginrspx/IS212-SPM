@@ -75,15 +75,15 @@ def get_course_classes(courseID):
 #used by class, enrollclass
 @app.route("/classes/<string:courseID>/<string:classID>")
 def get_class_details(courseID, classID):
-    code, data = Class.get_course_classes(courseID)
+    code, data = Class.get_class_details(courseID, classID)
     return jsonify(
-                {
-                    "code":code,
-                    "data": {
-                        "course" : data
-                        }
+        {
+            "code":code,
+            "data": {
+                "course" : data
                 }
-            )
+        }
+    )
 
 
 #CHECK god give me the strength to do this, cos i can't tonight

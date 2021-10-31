@@ -31,7 +31,7 @@ class Registration(db.Model):
         "regStatus": self.regStatus
         }
     
-    def register_cLass(regCourseID, regClassID, regStudentID, regStatus):
+    def register_class(regCourseID, regClassID, regStudentID, regStatus):
         try:
             registration = Registration.query.filter_by(regCourseID = regCourseID, regClassID =regClassID, regStudentID = regStudentID).first()
             registration.regStatus = regStatus
@@ -46,11 +46,6 @@ class Registration(db.Model):
                 return 201, register.json()
             except Exception as e:
                 return 500, "Could not update registration. " + str(e)
-
-
-
-
-
 
     def assign_registration(regCourseID, regClassID, regStudentID):
         registration = Registration.query.filter_by(regCourseID = regCourseID, regClassID =regClassID, regStudentID = regStudentID).first()

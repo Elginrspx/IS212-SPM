@@ -2,16 +2,27 @@
 <html lang="en">
 
 <head>
-    <?php include 'includes/header.php' ?>
     <title>Course | LMS</title>
 </head>
 
 <body>
-    <?php include 'includes/navbar.php' ?>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/stylesheet.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    
+    <div id="nav-placeholder"></div>
     <div class="container" id="assignment">
         <nav class="mt-2" style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="#">Admin</a></li>
+                <li class="breadcrumb-item"><a href="index.html">Admin</a></li>
                 <li class="breadcrumb-item"><a href="#" class="current">Course Assignment</a></li>
             </ol>
         </nav>
@@ -20,7 +31,7 @@
                 <p class="title">Course Assignment</p>
             </div>
         </div>
-        <div class="row bg-secondary">
+        <div class="row" style="background-color:lightgrey">
             <div class="col-11 p-2">
                 <div class="row">
                     <div class="col-4">
@@ -50,26 +61,22 @@
             <div class="col-11 p-2">
                 <div class="row">
                     <div class="col-4">
-                        <div v-if="studentInput.length">
-                            <table class="table table-hover">
-                                <tbody v-for="student in studentSearchList">
-                                    <tr>
-                                        <td @click="selectStudent(student.studentName, student.studentID)">{{ student.studentName }}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
+                        <table class="table table-borderless table-hover">
+                            <tbody v-for="student in studentSearchList">
+                                <tr>
+                                    <td @click="selectStudent(student.studentName, student.studentID)">{{ student.studentName }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                     <div class="col-4">
-                        <div v-if="courseInput.length">
-                            <table class="table table-hover">
-                                <tbody v-for="course in courseSearchList">
-                                    <tr>
-                                        <td @click="selectCourse(course.courseName, course.courseID)">{{ course.courseName }}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
+                        <table class="table table-borderless table-hover">
+                            <tbody v-for="course in courseSearchList">
+                                <tr>
+                                    <td @click="selectCourse(course.courseName, course.courseID)">{{ course.courseName }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                     <div class="col-4">
                     </div>
@@ -77,7 +84,14 @@
             </div>
         </div>
     </div>
-    <?php include 'includes/footer.php' ?>
+    <script src="//code.jquery.com/jquery.min.js"></script>
+    <script>
+        $.get("includes/navbar.html", function(data){
+            $("#nav-placeholder").replaceWith(data);
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
     <script>
         // Initialise URLs
         var getCoursesURL = "http://localhost:2222/courses"
@@ -112,17 +126,19 @@
                             this.courses.push(record);
                         }
                     })
+                    this.courseSearchList = this.courses
 
                 // Get Students
                 fetch(getStudentsURL)
                     .then(response => response.json())
                     .then(data => {
-                        result = data.data.students;
+                        result = data.data;
 
                         for (record of result) {
                             this.students.push(record);
                         }
                     })
+                    this.studentSearchList = this.students
             },
             methods: {
                 searchCourse: function() {
@@ -130,7 +146,7 @@
                     this.classes = [];
 
                     if (this.courseInput == "") {
-                        this.courseSearchList.push(this.courses)
+                        this.courseSearchList = this.courses
                         return
                     } else {
                         for (course of this.courses) {
@@ -150,7 +166,7 @@
                     fetch(getCourseClassListURL + courseID)
                         .then(response => response.json())
                         .then(data => {
-                            result = data.data.classes;
+                            result = data.data.course;
 
                             for (record of result) {
                                 this.classes.push(record);
@@ -161,6 +177,7 @@
                 searchStudent: function() {
                     this.studentSearchList = [];
                     if (this.studentInput == "") {
+                        this.studentSearchList = this.students
                         return
                     } else {
                         for (student of this.students) {
@@ -175,6 +192,7 @@
                     this.selectedStudent = studentID
                     this.studentSearchList = [];
                 },
+
                 forceAssign: function() {
                     alert("clicked")
                     let jsonData = JSON.stringify({
@@ -195,9 +213,7 @@
                             result = data;
                             console.log(result)
                         })
-
                 }
-
             }
         })
     </script>
