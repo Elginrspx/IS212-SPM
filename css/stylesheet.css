@@ -176,24 +176,8 @@ a.current {
   top: 0px;
 }
 
-#completed li:before {
-  content: "";
-  width: 20px;
-  height: 20px;
-  background: url("../images/plus.svg");
-  position: absolute;
-  left: -10px;
-  top: 0px;
-}
-
-#notcompleted li:before {
-  content: "";
-  width: 20px;
-  height: 20px;
+.timelineWrapper li.select:before {
   background: url("../images/minus.svg");
-  position: absolute;
-  left: -10px;
-  top: 0px;
 }
 
 .timelineWrapper li:focus {
