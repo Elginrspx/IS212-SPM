@@ -8,7 +8,7 @@ from os import environ
 import json
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root@localhost:3306/systemdb'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:3306/systemdb'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
@@ -22,6 +22,7 @@ from student import *
 from question import *
 from studentScore import *
 from content import *
+from progress import *
 
 #COURSES TDD
 
@@ -365,6 +366,19 @@ def get_student_classes(student):
 @app.route("/getSections/<string:courseID>/<string:classID>")
 def get_sections(courseID, classID):
     code, data = Section.get_all_sections(courseID, classID)
+    return jsonify(
+        {
+            "code": code,
+            "data": data
+        }
+    )
+
+#GET all sections by course-class with status (for student side)
+@app.route("/getStudentSection/<string:studentID>/<string:courseID>/<string:classID>")
+def get_student_section(studentID, courseID, classID):
+    code, data = Section.get_all_sections(courseID, classID)
+    for content in data:
+        code, content["completed"] = Progress.get_student_progress(studentID, courseID, classID, content['sectionID'])
     return jsonify(
         {
             "code": code,

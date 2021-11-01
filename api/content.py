@@ -64,27 +64,7 @@ class Content(db.Model):
         return 201, "Content created"
 
 
-# class Progress(db.Model):
-#     __tablename__ = 'progress'
 
-#     progCourseID = db.Column(db.String(30), primary_key=True)
-#     progClassID = db.Column(db.Integer, nullable=False, primary_key=True)
-#     progSectionID = db.Column(db.String(30), nullable=False, primary_key=True)
-#     progContentID = db.Column(db.String(255), primary_key=True)
-#     done = db.Column(db.String(5), nullable=False)
-
-#     __table_args__ = (ForeignKeyConstraint([progCourseID, progClassID, progSectionID, progContentID],
-#                     [Content.conCourseID, Content.conClassID, Content.conSectionID, Content.contentID]),
-#                       {})
-#     sectionContent = db.relationship(
-#     'Content', primaryjoin='and_(Content.conCourseID==Progress.progCourseID, Content.conClassID==Progress.progClassID, Content.conSectionID==Progress.progSectionID, Content.contentID==Progress.progContentID)', backref='progress')
-
-#     def __init__(self, progCourseID, progClassID, progSectionID, progContentID, done):
-#         self.progCourseID = progCourseID
-#         self.progClassID = progClassID
-#         self.progSectionID = progSectionID
-#         self.progContentID = progContentID
-#         self.done = done
 
 
 
