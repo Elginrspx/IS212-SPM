@@ -49,7 +49,7 @@
                     <ul class="sessions">
                         <!-- Pic is generated here -->
                         <section-item v-for="sectionitem in sectionItems" v-bind:sectionitem="sectionitem" v-bind:key="sectionitem.sectionID"></section-item>
-                        <not-completed v-for="notComplete in notCompleted" v-bind:notComplete="notComplete"  v-bind:key="notComplete.sectionID"></not-completed>
+                        <section-item v-for="notComplete in notCompleted" v-bind:notComplete="notComplete"  v-bind:key="notComplete.sectionID"></section-item>
                         <li class="select" @click="addSection()">
                         </li>
                     </ul>
@@ -185,9 +185,6 @@
                     console.log(this.sectionItems)
                     console.log(this.notCompleted)
                     })
-                    // Insert function to get section items based on courseID, classID
-                    // Append to sectionItems
-                    // console.log(this.notCompleted)
                 },
                 downloadMaterial: function(materialID) {
                     console.log("Download Material Function! Not Implemented Yet")
