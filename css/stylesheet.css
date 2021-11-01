@@ -228,11 +228,12 @@ a.current {
 
 .timelineWrapper2 li .completed:before {
   content: "";
-  width: 20px;
-  height: 20px;
-  background: url("../images/minus.svg");
+  width: 15.8px;
+  height: 15.8px;
+  background: url("../images/smallCircle.svg");
+  background-color: white;
   position: absolute;
-  left: -10px;
+  left: -9px;
   top: 0px;
 }
 
