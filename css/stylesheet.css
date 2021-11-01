@@ -170,16 +170,76 @@ a.current {
   content: "";
   width: 20px;
   height: 20px;
-  background: url("../images/smallCircle4.png");
+  background: url("../images/doc.svg");
   position: absolute;
   left: -10px;
   top: 0px;
 }
 
-.timelineWrapper li .notcompleted:before {
+/* for .timelineWrapper2 */
+.timelineWrapper2 ul,
+.timelineWrapper2 li {
+  list-style: none;
+  padding: 0;
+}
+
+.timelineWrapper2 {
+  border: 1px solid #dedede;
+  padding: 1.5rem;
+  border-radius: 10px;
+  font-family: cuprumBold;
+}
+
+.timelineWrapper2 h1 {
+  font-size: 1rem;
+  margin: 0rem;
+}
+
+.timelineWrapper2 p {
+  color: #4f4f4f;
+  line-height: 1.5;
+}
+
+.timelineWrapper2 .sessions {
+  margin-top: 2rem;
+  border-radius: 12px;
+  position: relative;
+}
+
+.timelineWrapper2 li {
+  padding-bottom: 1.5rem;
+  border-left: 1px dashed #abaaed;
+  position: relative;
+  padding-left: 30px;
+  margin-left: 20px;
+}
+.timelineWrapper2 li:last-child {
+  border: 0px;
+  padding-bottom: 0;
+}
+.timelineWrapper2 li:before {
   content: "";
   width: 20px;
-  height: 27px;
+  height: 20px;
+  position: absolute;
+  left: -10px;
+  top: 0px;
+}
+
+.timelineWrapper2 li .completed:before {
+  content: "";
+  width: 20px;
+  height: 20px;
+  background: url("../images/minus.svg");
+  position: absolute;
+  left: -10px;
+  top: 0px;
+}
+
+.timelineWrapper2 li .notcompleted:before {
+  content: "";
+  width: 20px;
+  height: 27px; 
   background: url("../images/lock.svg");
   position: absolute;
   left: -10px;

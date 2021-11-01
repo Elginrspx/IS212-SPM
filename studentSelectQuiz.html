@@ -42,16 +42,14 @@
             </select>
         </div>
         <div class="row mt-5">
-            <div v-if="sectionItems.length != 0" class="col-4">
-                <div class="timelineWrapper">
+            <div v-if="this.allSections.length != 0" class="col-4">
+                <div class="timelineWrapper2">
                     <h1 class="color-darkgrey">Courses</h1>
                     <h1>{{ selectedItemDetails.courseName }}</h1>
                     <ul class="sessions">
                         <!-- Pic is generated here -->
-                        <section-item v-for="sectionitem in sectionItems" v-bind:sectionitem="sectionitem" v-bind:key="sectionitem.sectionID"></section-item>
-                        <not-completed v-for="notcomplete in notCompleted" v-bind:notcomplete="notcomplete"  v-bind:key="notcomplete.sectionID"></not-completed>
-                        <li class="select" @click="addSection()">
-                        </li>
+                            <its-completed v-for="complete in completed" v-bind:complete="complete" v-bind:key="complete.sectionID"></its-completed>
+                            <not-completed v-for="notcomplete in notCompleted" v-bind:notcomplete="notcomplete"  v-bind:key="notcomplete.sectionID"></not-completed> 
                     </ul>
                 </div>
             </div>
@@ -124,6 +122,8 @@
                 sectionItems: [],
                 sectionMaterials: [],
                 notCompleted: [],
+                allSections: [],
+                completed: [],
                 selectedItemDetails: {
                     "courseID": 0,
                     "classID": 0,
@@ -145,6 +145,8 @@
                     this.sectionItems = []
                     this.sectionMaterials = []
                     this.notCompleted = []
+                    this.completed = []
+                    this.allSections = []
                     var temp = []
                     var courseClassElement = document.getElementById("courseClassDropdown")
 
@@ -167,12 +169,13 @@
                     this.allSections = data.data
                     for (section in this.allSections){
                         if (this.allSections[section]['completed']=="true"){
-                            this.sectionItems.push(this.allSections[section])
+                            this.completed.push(this.allSections[section])
                         }
                         else{
                             this.notCompleted.push(this.allSections[section])
                         }
                     }
+                    console.log(this.completed)
                     })
                 },
                 downloadMaterial: function(materialID) {
@@ -255,6 +258,49 @@
                         console.log("Delete Section Function! Not Implemented Yet")
                     }
                 }
+            }
+        })
+
+        Vue.component('its-completed', {
+            props: ['complete'],
+            template: `
+            <li class="completed">
+                <div @click="selectSection(complete.sectionID)">
+                    <div class="color-darkgrey completed">Chapter {{ complete.sectionID }}</div>
+                    <p>{{ complete.sectionName }}</p>
+                </div>
+            </li>
+            `,
+            methods: {
+                selectSection: function(sectionID) {
+                    console.log("in select section")
+                    trainerClass.selectedItemDetails.sectionID = sectionID
+                    console.log(trainerClass.selectedItemDetails.sectionID)
+                    trainerClass.sectionMaterials = []
+
+                    getContentURL = "http://localhost:2222/getContent/"
+                    getContentURL = getSectionURL + studentID + "/" +courseID + "/" + classID
+                    fetch(getContentURL)
+                    .then(response=>response.json())
+                    .then(data=>{
+                    this.allContent = data.data
+                    console.log(this.allContent)
+                    })
+                    // Insert function to get section materials based on courseID, classID, sectionID
+                    // Append to sectionMaterials
+                    
+                    // REMINDER: need to add the download thing
+                    trainerClass.sectionMaterials.push(
+                        {"materialID": 1, "docType": "doc", "materialName": "This is a Document"},
+                        {"materialID": 2, "docType": "video", "materialName": "This is a Video"},
+                        {"materialID": 3, "docType": "link", "materialName": "This is a Link"}
+                    )
+
+                    // Insert function quizName courseID, classID, sectionID
+                    // Append to trainerClass.selectedItemDetails.quizName
+
+                    trainerClass.selectedItemDetails.quizName = "Test quiz"
+                },
             }
         })
 
