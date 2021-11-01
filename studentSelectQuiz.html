@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Student Class | Course materials</title>
+</head>
+
+<body><!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/stylesheet.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    
+    <div id="nav-placeholder"></div>
+    <div class="container" id="trainerClass">
+        <nav class="mt-2" style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+            <ol v-if="sectionItems.length == 0" class="breadcrumb">
+                <li class="breadcrumb-item"><a href="#">Home</a></li>
+                <li class="breadcrumb-item"><a href="#" class="current">My Classes</a></li>
+            </ol>
+            <ol v-else class="breadcrumb">
+                <li class="breadcrumb-item"><a href="#">Home</a></li>
+                <li class="breadcrumb-item"><a href="#">My Classes</a></li>
+                <li class="breadcrumb-item"><a href="#" class="current">Class Materials</a></li>
+            </ol>
+        </nav>
+        <div class="row">
+            <div class="col">
+                <p class="title">My Classes</p>
+            </div>
+        </div>
+        <div class="row">
+            <select class="form-select" id="courseClassDropdown" @change="selectCourseClass">
+                <option selected>Select course...</option>
+                <option v-for="courseClassItem in courseClass" v-bind:value="[courseClassItem.courseID,courseClassItem.classID]">{{ courseClassItem.courseName }} [Class {{ courseClassItem.classID }}]</option>
+            </select>
+        </div>
+        <div class="row mt-5">
+            <div v-if="sectionItems.length != 0" class="col-4">
+                <div class="timelineWrapper">
+                    <h1 class="color-darkgrey">Courses</h1>
+                    <h1>{{ selectedItemDetails.courseName }}</h1>
+                    <ul class="sessions">
+                        <!-- Pic is generated here -->
+                        <section-item v-for="sectionitem in sectionItems" v-bind:sectionitem="sectionitem" v-bind:key="sectionitem.sectionID"></section-item>
+                        <not-completed v-for="notComplete in notCompleted" v-bind:notComplete="notComplete"  v-bind:key="notComplete.sectionID"></not-completed>
+                        <li class="select" @click="addSection()">
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div v-if="sectionMaterials.length != 0" class="col-8">
+                <div class="p-3" style="border: 1px solid #dedede; border-radius: 10px;">
+                    <p style="font-size:1.5em;">Course Materials</p>
+                    <hr>
+                    <table class="table table-borderless table-sm">
+                        <thead>
+                            <tr>
+                                <th style="width:7.5%"></th>
+                                <th style="width:7.5%"></th>
+                                <th style="width:77.5%"></th>
+                                <th style="width:7.5%"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="sectionMaterial in sectionMaterials">
+                                <td @click="deleteMaterial(sectionMaterial.materialID)" class="text-center">
+                                </td>
+                                <td v-if="sectionMaterial.docType == 'doc'" class="text-center"><img src="images/doc.svg" style="width:15px;height:15px;"></td>
+                                <td v-else-if="sectionMaterial.docType == 'video'" class="text-center"><img src="images/video.svg" style="width:15px;height:15px;"></td>
+                                <td v-else class="text-center"><img src="images/link.svg" style="width:15px;height:15px;"></td>
+                                <td>{{ sectionMaterial.materialName }}</td>
+                                <td @click="downloadMaterial(sectionMaterial.materialID)" class="text-center"><img src="images/download.svg" style="width:15px;height:15px;"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="table table-borderless table-sm">
+                        <thead>
+                            <tr>
+                                <th style="width:7.5%"></th>
+                                <th style="width:92.5%"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="p-3 mt-4" style="border: 1px solid #dedede; border-radius: 10px;">
+                    <p style="font-size:1.5em;">Quiz</p>
+                    <hr>
+                    <div class="d-flex bd-highlight">
+                        <div class="me-auto p-2 bd-highlight" style="font-size: 1.3em;">{{ selectedItemDetails.quizName }}</div>
+                        <div class="p-2 bd-highlight"><a @click="takeQuiz" class="btn btn-default btn-md active" role="button" aria-pressed="true">Take Quiz</a></div>
+                        <!-- <div class="p-2 bd-highlight"><a @click="editQuiz($event, selectedItemDetails.courseID, selectedItemDetails.classID, selectedItemDetails.sectionID)" class="btn btn-default btn-md active" role="button" aria-pressed="true">Edit</a></div> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    <script src="//code.jquery.com/jquery.min.js"></script>
+    <script>
+        $.get("includes/navbar.html", function(data){
+            $("#nav-placeholder").replaceWith(data);
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script>
+        var courseID = 1
+        var classID = 3
+        var studentID = 1
+        var getcourseURL = "http://localhost:2222/getClassByStudent/" + studentID
+        // Get Class by Trainer
+        var trainerClass = new Vue({
+            el: '#trainerClass',
+            data: {
+                courseClass: [],
+                sectionItems: [],
+                sectionMaterials: [],
+                notCompleted: [],
+                selectedItemDetails: {
+                    "courseID": 0,
+                    "classID": 0,
+                    "sectionID": 0,
+                    "courseName": "",
+                    "quizName": ""
+                }
+            },
+            created:function() {
+            fetch(getcourseURL)
+            .then(response=>response.json())
+            .then(data=>{
+                this.courseClass = data.data
+                // console.log(this.courseClass)
+            })
+            },
+
+            methods: {
+                selectCourseClass: function() {
+                    this.sectionItems = []
+                    this.sectionMaterials = []
+                    this.notCompleted = []
+                    var courseClassElement = document.getElementById("courseClassDropdown")
+
+                    // If user selects "Select course..." i.e. nothing
+                    if (courseClassElement.value == "Select course...") {
+                        return
+                    }
+
+                    [this.selectedItemDetails.courseID, this.selectedItemDetails.classID] = courseClassElement.value.split(",")
+                    var courseClassElementText = courseClassElement.options[courseClassElement.selectedIndex].text
+                    this.selectedItemDetails.courseName = courseClassElementText.split(" [")[0]
+                    
+                    // Insert function to get section items based on courseID, classID
+                    // Append to sectionItems
+                    
+                    this.sectionItems.push(
+                        {"sectionID": 1, "sectionName": "Test Section 1"},
+                        {"sectionID": 2, "sectionName": "Test Section 2"},
+                        {"sectionID": 3, "sectionName": "Test Section 3"},
+                        {"sectionID": 7, "sectionName": "Test Section 7"}
+                    ),
+
+                    this.notCompleted.push(
+                        {"sectionID": 4, "sectionName": "Test Section 4"},
+                        {"sectionID": 5, "sectionName": "Test Section 5"},
+                        {"sectionID": 6, "sectionName": "Test Section 6"}
+                    )
+                    // console.log(this.notCompleted)
+                },
+                downloadMaterial: function(materialID) {
+                    console.log("Download Material Function! Not Implemented Yet")
+                },
+                addSection: function() {
+                    console.log("Add Section Function! Not Implemented Yet")
+                },
+                addMaterial: function() {
+                    console.log("Add Material Function! Not Implemented Yet")
+                },
+                deleteMaterial: function(materialID) {
+                    console.log("Delete Material Function! Not Implemented Yet")
+                },
+                takeQuiz: function() {
+                    window.location.replace("studentQuiz.html");
+                },
+                editQuiz: function(e, courseID, classID, sectionID) {
+                    e.preventDefault();
+                    localStorage.setItem("trainerCourse", courseID);
+                    localStorage.setItem("trainerClass", classID);
+                    localStorage.setItem("trainerSection", sectionID);
+                    window.location.replace("trainerQuiz.html");
+                }
+            }
+        })
+        
+        Vue.component('section-item', {
+            props: ['sectionitem'],
+            template: `
+            <li @click="deleteSection($event, sectionitem.sectionID)">
+                <div @click="selectSection(sectionitem.sectionID)">
+                    <div class="color-darkgrey">Chapter {{ sectionitem.sectionID }}</div>
+                    <p>{{ sectionitem.sectionName }}</p>
+                </div>
+            </li>
+            `,
+            methods: {
+                selectSection: function(sectionID) {
+                    console.log("in select section")
+                    trainerClass.selectedItemDetails.sectionID = sectionID
+                    trainerClass.sectionMaterials = []
+                    
+                    // Insert function to get section materials based on courseID, classID, sectionID
+                    // Append to sectionMaterials
+                    
+                    // REMINDER: need to add the download thing
+                    trainerClass.sectionMaterials.push(
+                        {"materialID": 1, "docType": "doc", "materialName": "This is a Document"},
+                        {"materialID": 2, "docType": "video", "materialName": "This is a Video"},
+                        {"materialID": 3, "docType": "link", "materialName": "This is a Link"}
+                    )
+
+                    // Insert function quizName courseID, classID, sectionID
+                    // Append to trainerClass.selectedItemDetails.quizName
+
+                    trainerClass.selectedItemDetails.quizName = "Test quiz"
+                },
+                deleteSection: function(event, sectionID) {
+                    if (event.target.tagName != "LI") {
+                        return
+                    } else {
+                        console.log("Delete Section Function! Not Implemented Yet")
+                    }
+                }
+            }
+        })
+
+        Vue.component('not-completed', {
+            props: ['notComplete'],
+            template: `
+            <li >
+                <div>
+                    <div class="color-darkgrey">Chapter {{ notComplete.sectionID }}</div>
+                    <p>{{ notComplete.sectionName }}</p>
+                </div>
+            </li>
+            `
+            })
+        
+    </script>
+</body>
+
+</html>
