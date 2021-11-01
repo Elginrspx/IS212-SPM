@@ -170,10 +170,18 @@ a.current {
   content: "";
   width: 20px;
   height: 20px;
-  background: url("../images/doc.svg");
+  background: url("../images/minus.svg");
   position: absolute;
   left: -10px;
   top: 0px;
+}
+
+.timelineWrapper li.select:before {
+  background: url("../images/plus.svg");
+}
+
+.timelineWrapper li:focus {
+  color:red
 }
 
 /* for .timelineWrapper2 */
@@ -245,14 +253,6 @@ a.current {
   position: absolute;
   left: -10px;
   top: 0px;
-}
-
-.timelineWrapper li.select:before {
-  background: url("../images/minus.svg");
-}
-
-.timelineWrapper li:focus {
-  color:red
 }
 
 /*#endregion */
