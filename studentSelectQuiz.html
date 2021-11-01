@@ -49,7 +49,7 @@
                     <ul class="sessions">
                         <!-- Pic is generated here -->
                         <section-item v-for="sectionitem in sectionItems" v-bind:sectionitem="sectionitem" v-bind:key="sectionitem.sectionID"></section-item>
-                        <section-item v-for="notComplete in notCompleted" v-bind:notComplete="notComplete"  v-bind:key="notComplete.sectionID"></section-item>
+                        <not-completed v-for="notComplete in notCompleted" v-bind:notComplete="notComplete"  v-bind:key="notComplete.sectionID"></not-completed>
                         <li class="select" @click="addSection()">
                         </li>
                     </ul>
@@ -97,7 +97,6 @@
                     <div class="d-flex bd-highlight">
                         <div class="me-auto p-2 bd-highlight" style="font-size: 1.3em;">{{ selectedItemDetails.quizName }}</div>
                         <div class="p-2 bd-highlight"><a @click="takeQuiz" class="btn btn-default btn-md active" role="button" aria-pressed="true">Take Quiz</a></div>
-                        <!-- <div class="p-2 bd-highlight"><a @click="editQuiz($event, selectedItemDetails.courseID, selectedItemDetails.classID, selectedItemDetails.sectionID)" class="btn btn-default btn-md active" role="button" aria-pressed="true">Edit</a></div> -->
                     </div>
                 </div>
             </div>
@@ -138,7 +137,6 @@
             .then(response=>response.json())
             .then(data=>{
                 this.courseClass = data.data
-                // console.log(this.courseClass)
             })
             },
 
@@ -161,29 +159,20 @@
                     classID = this.selectedItemDetails.classID
                     courseID = this.selectedItemDetails.courseID
                     // console.log(this.selectedItemDetails.courseID)
-                    getSectionURL = "http://localhost:2222/getSections/"
-                    getSectionURL = getSectionURL + courseID + "/" + classID
+                    getSectionURL = "http://localhost:2222/getStudentSection/"
+                    getSectionURL = getSectionURL + studentID + "/" +courseID + "/" + classID
                     fetch(getSectionURL)
                     .then(response=>response.json())
                     .then(data=>{
                     this.allSections = data.data
-                    this.temp = [
-                        {"sectionID": 4, "sectionName": "Test Section 4", "completed": 'true'},
-                        {"sectionID": 5, "sectionName": "Test Section 5", "completed": 'true'},
-                        {"sectionID": 6, "sectionName": "Test Section 6", "completed": 'false'}
-                    ]
-                    // console.log(this.sectionItems)
-                    // iterating through to seperate completed and non-completed sections
-                    for (section in this.temp){
-                        if (this.temp[section]['completed']=="true"){
-                            this.sectionItems.push(this.temp[section])
+                    for (section in this.allSections){
+                        if (this.allSections[section]['completed']=="true"){
+                            this.sectionItems.push(this.allSections[section])
                         }
                         else{
-                            this.notCompleted.push(this.temp[section])
+                            this.notCompleted.push(this.allSections[section])
                         }
                     }
-                    console.log(this.sectionItems)
-                    console.log(this.notCompleted)
                     })
                 },
                 downloadMaterial: function(materialID) {
