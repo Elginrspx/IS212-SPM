@@ -121,12 +121,40 @@
         For Select Course dropdown:
         [FUNCTION] Based on Trainer ID
           -> get CourseID, Course Name and Class ID (i.e. Class Number)
+          "http://localhost:2222/getClassByTrainer/Tan" or "http://localhost:2222/getClassByTrainer/" + trainerName
 
         [FUNCTION] Based on Selected Course ID
           -> get Section Name(s)
+          "http://localhost:2222/getSections/1/3" or "http://localhost:2222/getSections/" + courseID + "/" + classID
         
         [FUNCTION] Based on Selected Section:
           -> get docType ("doc", "video", "link"), materialName?, isCompleted
+          "http://localhost:2222/getContent/1/3/1" or "http://localhost:2222/getContent/"+courseID+"/"+classID+"/"+sectionID
+
+        [FUNCTION] Based on Selected Section
+          -> create sectionMaterial
+          "http://localhost:2222/createContent" POST
+          data format:
+          [
+                {
+                    "courseID": 1, 
+                    "classID":3, 
+                    "sectionID":1, 
+                    "contentID":1, 
+                    "contentName": "Introduction Video", 
+                    "doctype": "video", 
+                    "link": "https://youtu.be/dQw4w9WgXcQ"
+                },
+                {
+                    "courseID": 1, 
+                    "classID":3, 
+                    "sectionID":1, 
+                    "contentID":2, 
+                    "contentName": "another video", 
+                    "doctype": "video", 
+                    "link": "https://youtu.be/dQw4w9WgXcQ"
+                }
+            ]
 
         [FUNCTION] Based on Selected Section
           -> get quiz name

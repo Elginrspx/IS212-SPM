@@ -52,3 +52,17 @@ class Registration(db.Model):
         registration.regStatus = "accepted"
         db.session.commit()
         return 201, registration.json()
+
+    def get_student_accepted_courses(regStudentID):
+        output = []
+        try:
+            classList = db.session.query(Registration.regCourseID, Registration.regClassID).filter(Registration.regStudentID==regStudentID, Registration.regStatus=="accepted").all()
+            for classes in classList:
+                tempDict = {}
+                tempDict['courseID'] = classes[0]
+                tempDict['classID'] = classes[1]
+                tempDict['courseName'] = ''
+                output.append(tempDict)
+            return 200, output
+        except Exception as e:
+            return 400, "no classes found" + str(e)

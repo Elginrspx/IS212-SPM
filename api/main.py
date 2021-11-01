@@ -6,7 +6,6 @@ from sqlalchemy.orm import relationship
 from flask_cors import CORS
 from os import environ
 import json
-import math
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root@localhost:3306/systemdb'
@@ -22,7 +21,7 @@ from registration import *
 from student import *
 from question import *
 from studentScore import *
-
+from content import *
 
 #COURSES TDD
 
@@ -207,8 +206,7 @@ def register_class():
     regCourseID = data['regCourseID']
     regClassID = data['regClassID']
     regStudentID = data['regStudentID']
-    regStatus = data['regStatus']
-    code, dataa = Registration.register_class(regCourseID, regClassID, regStudentID, regStatus)
+    code, dataa = Registration.register_class(regCourseID, regClassID, regStudentID)
     return jsonify({"code": code,"data": dataa})
 
 
@@ -256,7 +254,7 @@ def all_reg():
 @app.route("/assignRegistration", methods=['PUT'])
 def assign_registration():
     data = request.get_json()
-    code, dataa = Registration.assign_registration(data['courseID'], data['classID'], data['studentID'])
+    code, dataa = Registration.assign_registration(data['courseID'], data['classID'], data['studentID'], data['regStatus'])
     return jsonify(
         {
             "code": code,
@@ -328,6 +326,7 @@ def get_all_students():
 #used by studentQuiz.html
 @app.route("/questions/<string:qnCourseID>/<string:qnClassID>/<string:qnSectionID>")
 def get_questions(qnCourseID, qnClassID, qnSectionID):
+    print("work")
     code, data = Question.get_questions(qnCourseID, qnClassID, qnSectionID)
     return jsonify(
         {
@@ -336,64 +335,40 @@ def get_questions(qnCourseID, qnClassID, qnSectionID):
         }
     )
 
-#GET score for questions for a quiz
-#used by studentQuiz.html
-@app.route("/submitQuiz/<string:qnCourseID>/<string:qnClassID>/<string:qnSectionID>", methods=['POST'])
-def submit_quiz(qnCourseID, qnClassID, qnSectionID):
-    output = {}
-    data = request.get_json()
-    studentID = data['student']
-    score = Question.compute_score(data['data'], qnCourseID, qnClassID, qnSectionID)
-    code, data = Score.create_score(studentID,qnCourseID, qnClassID, qnSectionID,score)
-    code3, data3 = Section.get_no_qns(qnCourseID, qnClassID, qnSectionID)
-    if score>.8:
-        output['status'] = "Pass"
-    else:
-        output['status'] = "Fail"
-    output['totalScore'] = data3
+#GET class+course by trainer
+@app.route("/getClassByTrainer/<string:trainer>")
+def get_trainer_classes(trainer):
+    code, data = Class.get_classes_by_trainer(trainer)
+    for classes in data:
+        code, classes["courseName"] = Course.get_name_by_id(classes['courseID'])
     return jsonify(
         {
             "code": code,
-            "data": output
+            "data": data
         }
     )
 
-#Score, Student, Section tdd
-#get scores by section
-#used by quizResults.html
-@app.route("/getScores/<string:qnCourseID>/<string:qnClassID>/<string:qnSectionID>")
-def get_section_scores(qnCourseID, qnClassID, qnSectionID):
-    final = []
-    code, data = Score.get_scores_for_sections(qnCourseID, qnClassID, qnSectionID)
-    for student in data:
-        # get student name
-        temp = {}
-        id = student["studentID"]
-        code2, data2 = Student.get_student_details(id)
-        #get totalScore
-        code3, data3 = Section.get_no_qns(qnCourseID, qnClassID, qnSectionID)
-        temp["studentName"] = data2["studentName"]
-        temp["score"] = round(student["percentage"]*data3)
-        temp["totalScore"] = data3
-        temp["status"] = student["status"]
-        temp["noAttempts"] = student["noAttempts"]
-        final.append(temp)
+#GET class by student
+@app.route("/getClassByStudent/<string:student>")
+def get_student_classes(student):
+    code, data = Registration.get_student_accepted_courses(student)
+    for classes in data:
+        code, classes["courseName"] = Course.get_name_by_id(classes['courseID'])
     return jsonify(
         {
             "code": code,
-            "data": final
+            "data": data
         }
     )
 
-@app.route("/createQuiz", methods=['POST'])
-def create_quiz():
-    data = request.get_json()
-    code, count = Question.create_question(data)
-    code1, output = Section.update_no_of_qns(data, count)
+# GET all sections by course-class
+@app.route("/getSections/<string:courseID>/<string:classID>")
+def get_sections(courseID, classID):
+    code, data = Section.get_all_sections(courseID, classID)
     return jsonify(
         {
-            "code": code1,
-            "data": output
+            "code": code,
+            "data": data
         }
     )
 
@@ -419,8 +394,28 @@ def get_student_score():
         }
     )
 
+#GET all section content
+@app.route("/getContent/<string:courseID>/<string:classID>/<string:sectionID>")
+def get_contents(courseID, classID, sectionID):
+    code, data = Content.get_section_content(courseID, classID, sectionID)
+    return jsonify(
+        {
+            "code": code,
+            "data": data
+        }
+    )
 
-
+#POST section content
+@app.route("/createContent", methods=["POST"])
+def create_content():
+    data = request.get_json()
+    code, message = Content.create_section_content(data)
+    return jsonify(
+        {
+            "code": code,
+            "data": message
+        }
+    )
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=2222, debug=True)

@@ -30,13 +30,20 @@ class Class(db.Model):
 
     def json(self):
         return {
-        "clsCourseID": self.clsCourseID, 
-        "classID": self.classID, 
-        "clsTrainer": self.clsTrainer, 
-        "clsStartTime": self.clsStartTime, 
-        "clsEndTime": self.clsEndTime,
-        "clsLimit": self.clsLimit,
-        "regPeriod": self.regPeriod
+            "clsCourseID": self.clsCourseID, 
+            "classID": self.classID, 
+            "clsTrainer": self.clsTrainer, 
+            "clsStartTime": self.clsStartTime, 
+            "clsEndTime": self.clsEndTime,
+            "clsLimit": self.clsLimit,
+            "regPeriod": self.regPeriod
+        }
+
+    def json_for_trainer(self):
+        return {
+            "courseID": self.clsCourseID, 
+            "classID": self.classID, 
+            "courseName": ""
         }
     
     def get_course_classes(courseID):
@@ -52,5 +59,13 @@ class Class(db.Model):
             classes = Class.query.filter_by(clsCourseID=courseID, classID = classID).first()
             if classes:
                 return 200, classes.json()
+        except Exception as e:
+            return 404, "No classes found" + str(e)
+
+    def get_classes_by_trainer(trainer):
+        try: 
+            classes = Class.query.filter_by(clsTrainer=trainer).all()
+            if classes:
+                return 200, [classs.json_for_trainer() for classs in classes]
         except Exception as e:
             return 404, "No classes found" + str(e)
