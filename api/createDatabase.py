@@ -10,6 +10,7 @@ from section import Section
 from question import Question
 from studentScore import Score
 from content import Content
+from progress import Progress
 
 db.drop_all()
 db.create_all()
@@ -34,11 +35,21 @@ dummyCompleted = Completed("1","3D Printing Software v2.0")
 dummyQN1 = Question(1,3,"2", "Test question with multiple answers", "Answer 1,Answer 2", "Answer 1,Answer 2,Answer 3,Answer 4", "true")
 dummyQN2 = Question(1,3,"2", "How long it takes to fix a printer?", "1 Minute", "1 Minute,5 Minute, 10 Minute, 20 Minute", "false")
 dummyQN3 = Question(1,3,"2", "Sample True False Question", "True", "True,False", "false")
+dummyQN4 = Question(1,3,"1", "Test question with multiple answers", "Answer 1,Answer 2", "Answer 1,Answer 2,Answer 3,Answer 4", "true")
+dummyQN5 = Question(1,3,"1", "How long it takes to fix a printer?", "1 Minute", "1 Minute,5 Minute, 10 Minute, 20 Minute", "false")
+dummyQN6 = Question(1,3,"1", "Sample True False Question", "True", "True,False", "false")
+dummyQN7 = Question(1,3,"3", "Test question with multiple answers", "Answer 1,Answer 2", "Answer 1,Answer 2,Answer 3,Answer 4", "true")
+dummyQN8 = Question(1,3,"3", "How long it takes to fix a printer?", "1 Minute", "1 Minute,5 Minute, 10 Minute, 20 Minute", "false")
+dummyQN9 = Question(1,3,"3", "Sample True False Question", "True", "True,False", "false")
 dummyScore1 = Score(1,1,3,"2", ".80", 1)
 dummyScore2 = Score(2,1,3,"2", ".70", 3)
 dummyContent = Content(1, 3, 1, 1, "Introduction Video", "video", "https://youtu.be/dQw4w9WgXcQ")
 dummyContent2 = Content(1, 3, 2, 1, "Printer Tutorial", "document", "https://docs.google.com/document/d/1tlscRf-i1XFj_XfBA3L52arAm8UDNEJOnRgAPr8luMw/edit?usp=sharing")
 dummyContent3 = Content(1, 3, 3, 1, "Printer Slides", "powerpoint", "https://docs.google.com/presentation/d/1wF_C8ZO1Quk1LfP7IefjWeKjeZrhx5j50ZzjtbV0Ibo/edit?usp=sharing")
+dummyProgress1 = Progress(1, 1, 3, 1, "true")
+dummyProgress2 = Progress(1, 1, 3, 2, "false")
+dummyProgress3 = Progress(1, 1, 3, 3, "false")
+
 db.session.add(dummyCourse)
 db.session.add(dummyCourse2)
 db.session.add(dummyClass)
@@ -64,4 +75,7 @@ db.session.add(dummyScore2)
 db.session.add(dummyContent)
 db.session.add(dummyContent2)
 db.session.add(dummyContent3)
+db.session.add(dummyProgress1)
+db.session.add(dummyProgress2)
+db.session.add(dummyProgress3)
 db.session.commit()
