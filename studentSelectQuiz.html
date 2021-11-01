@@ -49,7 +49,7 @@
                     <ul class="sessions">
                         <!-- Pic is generated here -->
                         <section-item v-for="sectionitem in sectionItems" v-bind:sectionitem="sectionitem" v-bind:key="sectionitem.sectionID"></section-item>
-                        <not-completed v-for="notComplete in notCompleted" v-bind:notComplete="notComplete"  v-bind:key="notComplete.sectionID"></not-completed>
+                        <not-completed v-for="notcomplete in notCompleted" v-bind:notcomplete="notcomplete"  v-bind:key="notcomplete.sectionID"></not-completed>
                         <li class="select" @click="addSection()">
                         </li>
                     </ul>
@@ -214,8 +214,25 @@
                 selectSection: function(sectionID) {
                     console.log("in select section")
                     trainerClass.selectedItemDetails.sectionID = sectionID
+                    console.log(trainerClass.selectedItemDetails.sectionID)
                     trainerClass.sectionMaterials = []
-                    
+
+                    getContentURL = "http://localhost:2222/getContent/"
+                    getContentURL = getSectionURL + studentID + "/" +courseID + "/" + classID
+                    fetch(getContentURL)
+                    .then(response=>response.json())
+                    .then(data=>{
+                    this.allContent = data.data
+                    console.log(this.allContent)
+                    // for (section in this.allSections){
+                    //     if (this.allSections[section]['completed']=="true"){
+                    //         this.sectionItems.push(this.allSections[section])
+                    //     }
+                    //     else{
+                    //         this.notCompleted.push(this.allSections[section])
+                    //     }
+                    // }
+                    })
                     // Insert function to get section materials based on courseID, classID, sectionID
                     // Append to sectionMaterials
                     
@@ -242,12 +259,12 @@
         })
 
         Vue.component('not-completed', {
-            props: ['notComplete'],
+            props: ['notcomplete'],
             template: `
-            <li >
+            <li class='notcompleted'>
                 <div>
-                    <div class="color-darkgrey">Chapter {{ notComplete.sectionID }}</div>
-                    <p>{{ notComplete.sectionName }}</p>
+                    <div class="color-darkgrey notcompleted">Chapter {{ notcomplete.sectionID }}</div>
+                    <p>{{ notcomplete.sectionName }}</p>
                 </div>
             </li>
             `

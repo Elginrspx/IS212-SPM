@@ -170,7 +170,17 @@ a.current {
   content: "";
   width: 20px;
   height: 20px;
-  background: url("../images/doc.svg");
+  background: url("../images/smallCircle4.png");
+  position: absolute;
+  left: -10px;
+  top: 0px;
+}
+
+.timelineWrapper li .notcompleted:before {
+  content: "";
+  width: 20px;
+  height: 27px;
+  background: url("../images/lock.svg");
   position: absolute;
   left: -10px;
   top: 0px;
