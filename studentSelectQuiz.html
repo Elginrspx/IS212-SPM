@@ -68,13 +68,13 @@
                         </thead>
                         <tbody>
                             <tr v-for="sectionMaterial in sectionMaterials">
-                                <td @click="deleteMaterial(sectionMaterial.materialID)" class="text-center">
+                                <td class="text-center">
                                 </td>
-                                <td v-if="sectionMaterial.docType == 'doc'" class="text-center"><img src="images/doc.svg" style="width:15px;height:15px;"></td>
-                                <td v-else-if="sectionMaterial.docType == 'video'" class="text-center"><img src="images/video.svg" style="width:15px;height:15px;"></td>
+                                <td v-if="sectionMaterial.doctype == 'doc'" class="text-center"><img src="images/doc.svg" style="width:15px;height:15px;"></td>
+                                <td v-else-if="sectionMaterial.doctype == 'video'" class="text-center"><img src="images/video.svg" style="width:15px;height:15px;"></td>
                                 <td v-else class="text-center"><img src="images/link.svg" style="width:15px;height:15px;"></td>
-                                <td>{{ sectionMaterial.materialName }}</td>
-                                <td @click="downloadMaterial(sectionMaterial.materialID)" class="text-center"><img src="images/download.svg" style="width:15px;height:15px;"></td>
+                                <td>{{ sectionMaterial.name }}</td>
+                                <td class="text-center"><a :href="sectionMaterial.link" target="_blank">Link</a></td>
                             </tr>
                         </tbody>
                     </table>
@@ -157,10 +157,8 @@
                     [this.selectedItemDetails.courseID, this.selectedItemDetails.classID] = courseClassElement.value.split(",")
                     var courseClassElementText = courseClassElement.options[courseClassElement.selectedIndex].text
                     this.selectedItemDetails.courseName = courseClassElementText.split(" [")[0]
-                    // console.log(this.selectedItemDetails.classID)
                     classID = this.selectedItemDetails.classID
                     courseID = this.selectedItemDetails.courseID
-                    // console.log(this.selectedItemDetails.courseID)
                     getSectionURL = "http://localhost:2222/getStudentSection/"
                     getSectionURL = getSectionURL + studentID + "/" +courseID + "/" + classID
                     fetch(getSectionURL)
@@ -175,20 +173,7 @@
                             this.notCompleted.push(this.allSections[section])
                         }
                     }
-                    console.log(this.completed)
                     })
-                },
-                downloadMaterial: function(materialID) {
-                    console.log("Download Material Function! Not Implemented Yet")
-                },
-                addSection: function() {
-                    console.log("Add Section Function! Not Implemented Yet")
-                },
-                addMaterial: function() {
-                    console.log("Add Material Function! Not Implemented Yet")
-                },
-                deleteMaterial: function(materialID) {
-                    console.log("Delete Material Function! Not Implemented Yet")
                 },
                 takeQuiz: function() {
                     window.location.replace("studentQuiz.html");
@@ -203,69 +188,11 @@
             }
         })
         
-        Vue.component('section-item', {
-            props: ['sectionitem'],
-            template: `
-            <li @click="deleteSection($event, sectionitem.sectionID)">
-                <div @click="selectSection(sectionitem.sectionID)">
-                    <div class="color-darkgrey">Chapter {{ sectionitem.sectionID }}</div>
-                    <p>{{ sectionitem.sectionName }}</p>
-                </div>
-            </li>
-            `,
-            methods: {
-                selectSection: function(sectionID) {
-                    console.log("in select section")
-                    trainerClass.selectedItemDetails.sectionID = sectionID
-                    console.log(trainerClass.selectedItemDetails.sectionID)
-                    trainerClass.sectionMaterials = []
-
-                    getContentURL = "http://localhost:2222/getContent/"
-                    getContentURL = getSectionURL + studentID + "/" +courseID + "/" + classID
-                    fetch(getContentURL)
-                    .then(response=>response.json())
-                    .then(data=>{
-                    this.allContent = data.data
-                    console.log(this.allContent)
-                    // for (section in this.allSections){
-                    //     if (this.allSections[section]['completed']=="true"){
-                    //         this.sectionItems.push(this.allSections[section])
-                    //     }
-                    //     else{
-                    //         this.notCompleted.push(this.allSections[section])
-                    //     }
-                    // }
-                    })
-                    // Insert function to get section materials based on courseID, classID, sectionID
-                    // Append to sectionMaterials
-                    
-                    // REMINDER: need to add the download thing
-                    trainerClass.sectionMaterials.push(
-                        {"materialID": 1, "docType": "doc", "materialName": "This is a Document"},
-                        {"materialID": 2, "docType": "video", "materialName": "This is a Video"},
-                        {"materialID": 3, "docType": "link", "materialName": "This is a Link"}
-                    )
-
-                    // Insert function quizName courseID, classID, sectionID
-                    // Append to trainerClass.selectedItemDetails.quizName
-
-                    trainerClass.selectedItemDetails.quizName = "Test quiz"
-                },
-                deleteSection: function(event, sectionID) {
-                    if (event.target.tagName != "LI") {
-                        return
-                    } else {
-                        console.log("Delete Section Function! Not Implemented Yet")
-                    }
-                }
-            }
-        })
-
         Vue.component('its-completed', {
             props: ['complete'],
             template: `
-            <li class="completed">
-                <div @click="selectSection(complete.sectionID)">
+            <li class="completed" @click="selectSection(complete.sectionID)">
+                <div>
                     <div class="color-darkgrey completed">Chapter {{ complete.sectionID }}</div>
                     <p>{{ complete.sectionName }}</p>
                 </div>
@@ -273,32 +200,19 @@
             `,
             methods: {
                 selectSection: function(sectionID) {
-                    console.log("in select section")
                     trainerClass.selectedItemDetails.sectionID = sectionID
-                    console.log(trainerClass.selectedItemDetails.sectionID)
                     trainerClass.sectionMaterials = []
-
                     getContentURL = "http://localhost:2222/getContent/"
-                    getContentURL = getSectionURL + studentID + "/" +courseID + "/" + classID
+                    getContentURL = getContentURL + courseID + "/" + classID + "/" + trainerClass.selectedItemDetails.sectionID
                     fetch(getContentURL)
                     .then(response=>response.json())
                     .then(data=>{
                     this.allContent = data.data
                     console.log(this.allContent)
                     })
-                    // Insert function to get section materials based on courseID, classID, sectionID
-                    // Append to sectionMaterials
-                    
-                    // REMINDER: need to add the download thing
-                    trainerClass.sectionMaterials.push(
-                        {"materialID": 1, "docType": "doc", "materialName": "This is a Document"},
-                        {"materialID": 2, "docType": "video", "materialName": "This is a Video"},
-                        {"materialID": 3, "docType": "link", "materialName": "This is a Link"}
-                    )
-
-                    // Insert function quizName courseID, classID, sectionID
-                    // Append to trainerClass.selectedItemDetails.quizName
-
+                    for (content in this.allContent){
+                        trainerClass.sectionMaterials.push(this.allContent[content])
+                    }
                     trainerClass.selectedItemDetails.quizName = "Test quiz"
                 },
             }
