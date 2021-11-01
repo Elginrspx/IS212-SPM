@@ -336,6 +336,19 @@ def get_questions(qnCourseID, qnClassID, qnSectionID):
         }
     )
 
+#POST questions to create quiz
+@app.route("/createQuiz", methods=['POST'])
+def create_quiz():
+    data = request.get_json()
+    code, count = Question.create_question(data)
+    code1, output = Section.update_no_of_qns(data, count)
+    return jsonify(
+        {
+            "code": code1,
+            "data": output
+        }
+    )
+
 #GET class+course by trainer
 @app.route("/getClassByTrainer/<string:trainer>")
 def get_trainer_classes(trainer):
