@@ -147,32 +147,46 @@
                     this.sectionItems = []
                     this.sectionMaterials = []
                     this.notCompleted = []
+                    var temp = []
                     var courseClassElement = document.getElementById("courseClassDropdown")
 
                     // If user selects "Select course..." i.e. nothing
                     if (courseClassElement.value == "Select course...") {
                         return
                     }
-
                     [this.selectedItemDetails.courseID, this.selectedItemDetails.classID] = courseClassElement.value.split(",")
                     var courseClassElementText = courseClassElement.options[courseClassElement.selectedIndex].text
                     this.selectedItemDetails.courseName = courseClassElementText.split(" [")[0]
-                    
+                    // console.log(this.selectedItemDetails.classID)
+                    classID = this.selectedItemDetails.classID
+                    courseID = this.selectedItemDetails.courseID
+                    // console.log(this.selectedItemDetails.courseID)
+                    getSectionURL = "http://localhost:2222/getSections/"
+                    getSectionURL = getSectionURL + courseID + "/" + classID
+                    fetch(getSectionURL)
+                    .then(response=>response.json())
+                    .then(data=>{
+                    this.allSections = data.data
+                    this.temp = [
+                        {"sectionID": 4, "sectionName": "Test Section 4", "completed": 'true'},
+                        {"sectionID": 5, "sectionName": "Test Section 5", "completed": 'true'},
+                        {"sectionID": 6, "sectionName": "Test Section 6", "completed": 'false'}
+                    ]
+                    // console.log(this.sectionItems)
+                    // iterating through to seperate completed and non-completed sections
+                    for (section in this.temp){
+                        if (this.temp[section]['completed']=="true"){
+                            this.sectionItems.push(this.temp[section])
+                        }
+                        else{
+                            this.notCompleted.push(this.temp[section])
+                        }
+                    }
+                    console.log(this.sectionItems)
+                    console.log(this.notCompleted)
+                    })
                     // Insert function to get section items based on courseID, classID
                     // Append to sectionItems
-                    
-                    this.sectionItems.push(
-                        {"sectionID": 1, "sectionName": "Test Section 1"},
-                        {"sectionID": 2, "sectionName": "Test Section 2"},
-                        {"sectionID": 3, "sectionName": "Test Section 3"},
-                        {"sectionID": 7, "sectionName": "Test Section 7"}
-                    ),
-
-                    this.notCompleted.push(
-                        {"sectionID": 4, "sectionName": "Test Section 4"},
-                        {"sectionID": 5, "sectionName": "Test Section 5"},
-                        {"sectionID": 6, "sectionName": "Test Section 6"}
-                    )
                     // console.log(this.notCompleted)
                 },
                 downloadMaterial: function(materialID) {
