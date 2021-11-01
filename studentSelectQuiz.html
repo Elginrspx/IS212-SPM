@@ -49,6 +49,7 @@
                     <ul class="sessions">
                         <!-- Pic is generated here -->
                         <section-item v-for="sectionitem in sectionItems" v-bind:sectionitem="sectionitem" v-bind:key="sectionitem.sectionID"></section-item>
+                        <not-completed v-for="notComplete in notCompleted" v-bind:notComplete="notComplete"  v-bind:key="notComplete.sectionID"></not-completed>
                         <li class="select" @click="addSection()">
                         </li>
                     </ul>
@@ -156,6 +157,7 @@
                 ],
                 sectionItems: [],
                 sectionMaterials: [],
+                notCompleted: [],
                 selectedItemDetails: {
                     "courseID": 0,
                     "classID": 0,
@@ -168,7 +170,7 @@
                 selectCourseClass: function() {
                     this.sectionItems = []
                     this.sectionMaterials = []
-
+                    this.notCompleted = []
                     var courseClassElement = document.getElementById("courseClassDropdown")
 
                     // If user selects "Select course..." i.e. nothing
@@ -186,8 +188,16 @@
                     this.sectionItems.push(
                         {"sectionID": 1, "sectionName": "Test Section 1"},
                         {"sectionID": 2, "sectionName": "Test Section 2"},
-                        {"sectionID": 3, "sectionName": "Test Section 3"}
+                        {"sectionID": 3, "sectionName": "Test Section 3"},
+                        {"sectionID": 7, "sectionName": "Test Section 7"}
+                    ),
+
+                    this.notCompleted.push(
+                        {"sectionID": 4, "sectionName": "Test Section 4"},
+                        {"sectionID": 5, "sectionName": "Test Section 5"},
+                        {"sectionID": 6, "sectionName": "Test Section 6"}
                     )
+                    console.log(this.notCompleted)
                 },
                 downloadMaterial: function(materialID) {
                     console.log("Download Material Function! Not Implemented Yet")
@@ -213,7 +223,7 @@
                 }
             }
         })
-
+        
         Vue.component('section-item', {
             props: ['sectionitem'],
             template: `
@@ -255,6 +265,17 @@
             }
         })
 
+        Vue.component('not-completed', {
+            props: ['notComplete'],
+            template: `
+            <li >
+                <div>
+                    <div class="color-darkgrey">Chapter {{ notComplete.sectionID }}</div>
+                    <p>{{ notComplete.sectionName }}</p>
+                </div>
+            </li>
+            `
+            })
         
     </script>
 </body>
