@@ -99,7 +99,7 @@
                     <p style="font-size:1.5em;">Quiz</p>
                     <hr>
                     <div class="d-flex bd-highlight">
-                        <div class="me-auto p-2 bd-highlight" style="font-size: 1.3em;">Quiz</div>
+                        <div class="me-auto p-2 bd-highlight" style="font-size: 1.3em;">{{ selectedItemDetails.courseName }} Quiz</div>
                         <div class="p-2 bd-highlight"><a @click="viewResult($event, selectedItemDetails.courseID, selectedItemDetails.classID, selectedItemDetails.sectionID)" class="btn btn-default btn-md active" role="button" aria-pressed="true">View Results</a></div>
                         <div class="p-2 bd-highlight"><a @click="editQuiz($event, selectedItemDetails.courseID, selectedItemDetails.classID, selectedItemDetails.sectionID)" class="btn btn-default btn-md active" role="button" aria-pressed="true">Edit</a></div>
                     </div>
@@ -143,7 +143,7 @@
                     <p style="font-size:1.5em;">Quiz</p>
                     <hr>
                     <div class="d-flex bd-highlight">
-                        <div class="me-auto p-2 bd-highlight" style="font-size: 1.3em;">Quiz</div>
+                        <div class="me-auto p-2 bd-highlight" style="font-size: 1.3em;">{{ selectedItemDetails.courseName }} Quiz</div>
                         <div class="p-2 bd-highlight"><a @click="viewResult($event, selectedItemDetails.courseID, selectedItemDetails.classID, selectedItemDetails.sectionID)" class="btn btn-default btn-md active" role="button" aria-pressed="true">View Results</a></div>
                         <div class="p-2 bd-highlight"><a @click="editQuiz($event, selectedItemDetails.courseID, selectedItemDetails.classID, selectedItemDetails.sectionID)" class="btn btn-default btn-md active" role="button" aria-pressed="true">Edit</a></div>
                     </div>
