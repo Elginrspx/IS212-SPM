@@ -408,8 +408,10 @@ def get_student_score():
     print(percentage)
     percent = float(percentage)
     code3, maxScore = Section.get_no_qns(data['courseID'], data['classID'], data['sectionID'])
-    if percent > .8:
+    if percent >= .8:
         output['status'] = "Pass"
+        code, message = Progress.update_progress(data)
+        print(message)
     else:
         output['status'] = "Fail"
     output['totalScore'] = round(percent*int(maxScore))

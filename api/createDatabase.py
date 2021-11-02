@@ -43,7 +43,7 @@ dummyQN6 = Question(1,3,"1", "This quiz is simple", "False", "True,False", "fals
 dummyQN7 = Question(1,3,"3", "Maintenance require which tools", "Screwdriver,Wrench", "Screwdriver,Coffee,Spoon,Wrench", "true")
 dummyQN8 = Question(1,3,"3", "How many people does it take to fix a printer", "420", "1,2,3,420", "false")
 dummyQN9 = Question(1,3,"3", "Do you love SPM?", "True", "True,False", "false")
-dummyScore = Score(1,1,3,"2", ".80", 1)
+dummyScore = Score(1,1,3,"1", ".80", 1)
 dummyScore2 = Score(2,1,3,"2", ".70", 3)
 dummyContent = Content(1, 3, 1, 1, "Introduction Video", "vid", "https://youtu.be/dQw4w9WgXcQ")
 dummyContent2 = Content(1, 3, 2, 1, "Printer Tutorial", "doc", "https://docs.google.com/document/d/1tlscRf-i1XFj_XfBA3L52arAm8UDNEJOnRgAPr8luMw/edit?usp=sharing")

@@ -36,3 +36,14 @@ class Progress(db.Model):
         except Exception as e:
             return 400, "No content found. " + str(e)
         return
+
+    def update_progress(data):
+        try: 
+            data['sectionID'] += 1
+            toUpdate = Progress.query.filter_by(progStudentID = data['studentID'], progCourseID =  data['courseID'], progClassID = data['classID'], progSectionID = data['sectionID']).first()
+            toUpdate.done = "true"
+            db.session.commit()
+            return 201, "Updated Successfully"
+        except Exception as e:
+            return 500, "There was an error updating. " + str(e)
+        
