@@ -55,7 +55,7 @@
                     </ul>
                 </div>
             </div>
-            <div v-if="sectionMaterials.length != 0" class="col-8">
+            <div v-if="sectionMaterials.length != 0 && !noMaterial" class="col-8">
                 <div class="p-3" style="border: 1px solid #dedede; border-radius: 10px;">
                     <p style="font-size:1.5em;">Course Materials</p>
                     <hr>
@@ -70,12 +70,12 @@
                         </thead>
                         <tbody>
                             <tr v-for="sectionMaterial in sectionMaterials">
-                                <td @click="deleteMaterial(sectionMaterial.materialID)" class="text-center"><img src="images/minus.svg" style="width:15px;height:15px;"></td>
-                                <td v-if="sectionMaterial.docType == 'doc'" class="text-center"><img src="images/doc.svg" style="width:15px;height:15px;"></td>
-                                <td v-else-if="sectionMaterial.docType == 'video'" class="text-center"><img src="images/video.svg" style="width:15px;height:15px;"></td>
-                                <td v-else class="text-center"><img src="images/link.svg" style="width:15px;height:15px;"></td>
-                                <td>{{ sectionMaterial.materialName }}</td>
-                                <td @click="downloadMaterial(sectionMaterial.materialID)" class="text-center"><img src="images/download.svg" style="width:15px;height:15px;"></td>
+                                <td @click="deleteMaterial(sectionMaterial.contentID)" class="text-center"><img src="images/minus.svg" style="width:15px;height:15px;"></td>
+                                <td v-if="sectionMaterial.doctype == 'doc'" class="text-center"><img src="images/doc.svg" style="width:15px;height:15px;"></td>
+                                <td v-else-if="sectionMaterial.doctype == 'vid'" class="text-center"><img src="images/video.svg" style="width:15px;height:15px;"></td>
+                                <td v-else class="text-center"><img src="images/ppt.svg" style="width:15px;height:15px;"></td>
+                                <td>{{ sectionMaterial.name }}</td>
+                                <td @click="downloadMaterial(sectionMaterial.materialID)" class="text-center"><a v-bind:href="sectionMaterial.link"><img src="images/download.svg" style="width:15px;height:15px;"></a></td>
                             </tr>
                         </tbody>
                     </table>
@@ -98,7 +98,51 @@
                     <p style="font-size:1.5em;">Quiz</p>
                     <hr>
                     <div class="d-flex bd-highlight">
-                        <div class="me-auto p-2 bd-highlight" style="font-size: 1.3em;">{{ selectedItemDetails.quizName }}</div>
+                        <div class="me-auto p-2 bd-highlight" style="font-size: 1.3em;">Quiz</div>
+                        <div class="p-2 bd-highlight"><a @click="viewResult($event, selectedItemDetails.courseID, selectedItemDetails.classID, selectedItemDetails.sectionID)" class="btn btn-default btn-md active" role="button" aria-pressed="true">View Results</a></div>
+                        <div class="p-2 bd-highlight"><a @click="editQuiz($event, selectedItemDetails.courseID, selectedItemDetails.classID, selectedItemDetails.sectionID)" class="btn btn-default btn-md active" role="button" aria-pressed="true">Edit</a></div>
+                    </div>
+                </div>
+            </div>
+            <div v-else-if="sectionMaterials.length == 0 && noMaterial" class="col-8">
+                <div class="p-3" style="border: 1px solid #dedede; border-radius: 10px;">
+                    <p style="font-size:1.5em;">Course Materials</p>
+                    <hr>
+                    <table class="table table-borderless table-sm">
+                        <thead>
+                            <tr>
+                                <th style="width:7.5%"></th>
+                                <th style="width:7.5%"></th>
+                                <th style="width:77.5%"></th>
+                                <th style="width:7.5%"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                No material found!
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="table table-borderless table-sm">
+                        <thead>
+                            <tr>
+                                <th style="width:7.5%"></th>
+                                <th style="width:92.5%"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td @click="addMaterial()" class="text-center"><img src="images/plus.svg" style="width:15px;height:15px;"></td>
+                                <td class="color-darkgrey" style="text-decoration: underline;">Upload new file</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="p-3 mt-4" style="border: 1px solid #dedede; border-radius: 10px;">
+                    <p style="font-size:1.5em;">Quiz</p>
+                    <hr>
+                    <div class="d-flex bd-highlight">
+                        <div class="me-auto p-2 bd-highlight" style="font-size: 1.3em;">Quiz</div>
                         <div class="p-2 bd-highlight"><a @click="viewResult($event, selectedItemDetails.courseID, selectedItemDetails.classID, selectedItemDetails.sectionID)" class="btn btn-default btn-md active" role="button" aria-pressed="true">View Results</a></div>
                         <div class="p-2 bd-highlight"><a @click="editQuiz($event, selectedItemDetails.courseID, selectedItemDetails.classID, selectedItemDetails.sectionID)" class="btn btn-default btn-md active" role="button" aria-pressed="true">Edit</a></div>
                     </div>
@@ -116,71 +160,39 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
     <script>
-        /* FOR Edena Boss
-
-        For Select Course dropdown:
-        [FUNCTION] Based on Trainer ID
-          -> get CourseID, Course Name and Class ID (i.e. Class Number)
-          "http://localhost:2222/getClassByTrainer/Tan" or "http://localhost:2222/getClassByTrainer/" + trainerName
-
-        [FUNCTION] Based on Selected Course ID
-          -> get Section Name(s)
-          "http://localhost:2222/getSections/1/3" or "http://localhost:2222/getSections/" + courseID + "/" + classID
-        
-        [FUNCTION] Based on Selected Section:
-          -> get docType ("doc", "video", "link"), materialName?, isCompleted
-          "http://localhost:2222/getContent/1/3/1" or "http://localhost:2222/getContent/"+courseID+"/"+classID+"/"+sectionID
-
-        [FUNCTION] Based on Selected Section
-          -> create sectionMaterial
-          "http://localhost:2222/createContent" POST
-          data format:
-          [
-                {
-                    "courseID": 1, 
-                    "classID":3, 
-                    "sectionID":1, 
-                    "contentID":1, 
-                    "contentName": "Introduction Video", 
-                    "doctype": "video", 
-                    "link": "https://youtu.be/dQw4w9WgXcQ"
-                },
-                {
-                    "courseID": 1, 
-                    "classID":3, 
-                    "sectionID":1, 
-                    "contentID":2, 
-                    "contentName": "another video", 
-                    "doctype": "video", 
-                    "link": "https://youtu.be/dQw4w9WgXcQ"
-                }
-            ]
-
-        [FUNCTION] Based on Selected Section
-          -> get quiz name
-        */
+        var trainerName = "tan"
 
         // Initialise URLs
-        //var getClassesURL = "http://localhost:2222/classes/1/2"
+        var getTrainerURL = "http://localhost:2222/getClassByTrainer/" + trainerName
+        var getCourseSectionsURL = "http://localhost:2222/getSections/"
+        var getCourseSectionMaterialsURL = "http://localhost:2222/getContent/"
 
         // Get Class by Trainer
         var trainerClass = new Vue({
             el: '#trainerClass',
             data: {
-                courseClass: [
-                    {"courseID": 1, "classID": 3, "courseName": "3D Printing Test"},
-                    {"courseID": 2, "classID": 2, "courseName": "3D Manufacturing Test"},
-                    {"courseID": 3, "classID": 3, "courseName": "Introduction to Printing Test"}
-                ],
+                courseClass: [],
                 sectionItems: [],
                 sectionMaterials: [],
                 selectedItemDetails: {
                     "courseID": 0,
                     "classID": 0,
                     "sectionID": 0,
-                    "courseName": "",
-                    "quizName": ""
-                }
+                    "courseName": ""
+                },
+                noMaterial: false
+            },
+            created: function() {
+                fetch(getTrainerURL)
+                    .then(response => response.json())
+                    .then(data => {
+                        // Get Trainer
+                        result = data.data;
+
+                        for (record of result) {
+                            this.courseClass.push(record);
+                        }
+                    })
             },
             methods: {
                 selectCourseClass: function() {
@@ -194,18 +206,21 @@
                         return
                     }
 
+                    // Get Selected Course's CourseID and ClassID
                     [this.selectedItemDetails.courseID, this.selectedItemDetails.classID] = courseClassElement.value.split(",")
                     var courseClassElementText = courseClassElement.options[courseClassElement.selectedIndex].text
                     this.selectedItemDetails.courseName = courseClassElementText.split(" [")[0]
                     
-                    // Insert function to get section items based on courseID, classID
-                    // Append to sectionItems
-                    
-                    this.sectionItems.push(
-                        {"sectionID": 1, "sectionName": "Test Section 1"},
-                        {"sectionID": 2, "sectionName": "Test Section 2"},
-                        {"sectionID": 3, "sectionName": "Test Section 3"}
-                    )
+                    fetch(getCourseSectionsURL + this.selectedItemDetails.courseID + "/" + this.selectedItemDetails.classID)
+                        .then(response => response.json())
+                        .then(data => {
+                            // Get Course' Sections
+                            result = data.data;
+
+                            for (record of result) {
+                                this.sectionItems.push(record);
+                            }
+                        })
                 },
                 downloadMaterial: function(materialID) {
                     console.log("Download Material Function! Not Implemented Yet")
@@ -248,23 +263,24 @@
             `,
             methods: {
                 selectSection: function(sectionID) {
-                    console.log("in select section")
                     trainerClass.selectedItemDetails.sectionID = sectionID
                     trainerClass.sectionMaterials = []
+                    trainerClass.noMaterial = false
                     
-                    // Insert function to get section materials based on courseID, classID, sectionID
-                    // Append to sectionMaterials
-                    
-                    trainerClass.sectionMaterials.push(
-                        {"materialID": 1, "docType": "doc", "materialName": "This is a Document"},
-                        {"materialID": 2, "docType": "video", "materialName": "This is a Video"},
-                        {"materialID": 3, "docType": "link", "materialName": "This is a Link"}
-                    )
+                    fetch(getCourseSectionMaterialsURL + trainerClass.selectedItemDetails.courseID + "/" + trainerClass.selectedItemDetails.classID + "/" + trainerClass.selectedItemDetails.sectionID)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.data.length == 0) {
+                                trainerClass.noMaterial = true
+                            } else {
+                                // Get Course Section's Materials
+                                result = data.data;
 
-                    // Insert function quizName courseID, classID, sectionID
-                    // Append to trainerClass.selectedItemDetails.quizName
-
-                    trainerClass.selectedItemDetails.quizName = "Test quiz"
+                                for (record of result) {
+                                    trainerClass.sectionMaterials.push(record);
+                                }
+                            }
+                        })
                 },
                 deleteSection: function(event, sectionID) {
                     if (event.target.tagName != "LI") {
@@ -275,8 +291,6 @@
                 }
             }
         })
-
-        
     </script>
 </body>
 

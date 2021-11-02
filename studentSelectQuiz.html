@@ -42,16 +42,14 @@
             </select>
         </div>
         <div class="row mt-5">
-            <div v-if="sectionItems.length != 0" class="col-4">
-                <div class="timelineWrapper">
+            <div v-if="this.allSections.length != 0" class="col-4">
+                <div class="timelineWrapper2">
                     <h1 class="color-darkgrey">Courses</h1>
                     <h1>{{ selectedItemDetails.courseName }}</h1>
                     <ul class="sessions">
                         <!-- Pic is generated here -->
-                        <section-item v-for="sectionitem in sectionItems" v-bind:sectionitem="sectionitem" v-bind:key="sectionitem.sectionID"></section-item>
-                        <not-completed v-for="notComplete in notCompleted" v-bind:notComplete="notComplete"  v-bind:key="notComplete.sectionID"></not-completed>
-                        <li class="select" @click="addSection()">
-                        </li>
+                            <its-completed v-for="complete in completed" v-bind:complete="complete" v-bind:key="complete.sectionID"></its-completed>
+                            <not-completed v-for="notcomplete in notCompleted" v-bind:notcomplete="notcomplete"  v-bind:key="notcomplete.sectionID"></not-completed> 
                     </ul>
                 </div>
             </div>
@@ -70,13 +68,13 @@
                         </thead>
                         <tbody>
                             <tr v-for="sectionMaterial in sectionMaterials">
-                                <td @click="deleteMaterial(sectionMaterial.materialID)" class="text-center">
+                                <td class="text-center">
                                 </td>
-                                <td v-if="sectionMaterial.docType == 'doc'" class="text-center"><img src="images/doc.svg" style="width:15px;height:15px;"></td>
-                                <td v-else-if="sectionMaterial.docType == 'video'" class="text-center"><img src="images/video.svg" style="width:15px;height:15px;"></td>
+                                <td v-if="sectionMaterial.doctype == 'doc'" class="text-center"><img src="images/doc.svg" style="width:15px;height:15px;"></td>
+                                <td v-else-if="sectionMaterial.doctype == 'video'" class="text-center"><img src="images/video.svg" style="width:15px;height:15px;"></td>
                                 <td v-else class="text-center"><img src="images/link.svg" style="width:15px;height:15px;"></td>
-                                <td>{{ sectionMaterial.materialName }}</td>
-                                <td @click="downloadMaterial(sectionMaterial.materialID)" class="text-center"><img src="images/download.svg" style="width:15px;height:15px;"></td>
+                                <td>{{ sectionMaterial.name }}</td>
+                                <td class="text-center"><a :href="sectionMaterial.link" target="_blank">Link</a></td>
                             </tr>
                         </tbody>
                     </table>
@@ -97,7 +95,6 @@
                     <div class="d-flex bd-highlight">
                         <div class="me-auto p-2 bd-highlight" style="font-size: 1.3em;">{{ selectedItemDetails.quizName }}</div>
                         <div class="p-2 bd-highlight"><a @click="takeQuiz" class="btn btn-default btn-md active" role="button" aria-pressed="true">Take Quiz</a></div>
-                        <!-- <div class="p-2 bd-highlight"><a @click="editQuiz($event, selectedItemDetails.courseID, selectedItemDetails.classID, selectedItemDetails.sectionID)" class="btn btn-default btn-md active" role="button" aria-pressed="true">Edit</a></div> -->
                     </div>
                 </div>
             </div>
@@ -125,6 +122,8 @@
                 sectionItems: [],
                 sectionMaterials: [],
                 notCompleted: [],
+                allSections: [],
+                completed: [],
                 selectedItemDetails: {
                     "courseID": 0,
                     "classID": 0,
@@ -138,7 +137,6 @@
             .then(response=>response.json())
             .then(data=>{
                 this.courseClass = data.data
-                // console.log(this.courseClass)
             })
             },
 
@@ -147,45 +145,35 @@
                     this.sectionItems = []
                     this.sectionMaterials = []
                     this.notCompleted = []
+                    this.completed = []
+                    this.allSections = []
+                    var temp = []
                     var courseClassElement = document.getElementById("courseClassDropdown")
 
                     // If user selects "Select course..." i.e. nothing
                     if (courseClassElement.value == "Select course...") {
                         return
                     }
-
                     [this.selectedItemDetails.courseID, this.selectedItemDetails.classID] = courseClassElement.value.split(",")
                     var courseClassElementText = courseClassElement.options[courseClassElement.selectedIndex].text
                     this.selectedItemDetails.courseName = courseClassElementText.split(" [")[0]
-                    
-                    // Insert function to get section items based on courseID, classID
-                    // Append to sectionItems
-                    
-                    this.sectionItems.push(
-                        {"sectionID": 1, "sectionName": "Test Section 1"},
-                        {"sectionID": 2, "sectionName": "Test Section 2"},
-                        {"sectionID": 3, "sectionName": "Test Section 3"},
-                        {"sectionID": 7, "sectionName": "Test Section 7"}
-                    ),
-
-                    this.notCompleted.push(
-                        {"sectionID": 4, "sectionName": "Test Section 4"},
-                        {"sectionID": 5, "sectionName": "Test Section 5"},
-                        {"sectionID": 6, "sectionName": "Test Section 6"}
-                    )
-                    // console.log(this.notCompleted)
-                },
-                downloadMaterial: function(materialID) {
-                    console.log("Download Material Function! Not Implemented Yet")
-                },
-                addSection: function() {
-                    console.log("Add Section Function! Not Implemented Yet")
-                },
-                addMaterial: function() {
-                    console.log("Add Material Function! Not Implemented Yet")
-                },
-                deleteMaterial: function(materialID) {
-                    console.log("Delete Material Function! Not Implemented Yet")
+                    classID = this.selectedItemDetails.classID
+                    courseID = this.selectedItemDetails.courseID
+                    getSectionURL = "http://localhost:2222/getStudentSection/"
+                    getSectionURL = getSectionURL + studentID + "/" +courseID + "/" + classID
+                    fetch(getSectionURL)
+                    .then(response=>response.json())
+                    .then(data=>{
+                    this.allSections = data.data
+                    for (section in this.allSections){
+                        if (this.allSections[section]['completed']=="true"){
+                            this.completed.push(this.allSections[section])
+                        }
+                        else{
+                            this.notCompleted.push(this.allSections[section])
+                        }
+                    }
+                    })
                 },
                 takeQuiz: function() {
                     window.location.replace("studentQuiz.html");
@@ -200,54 +188,43 @@
             }
         })
         
-        Vue.component('section-item', {
-            props: ['sectionitem'],
+        Vue.component('its-completed', {
+            props: ['complete'],
             template: `
-            <li @click="deleteSection($event, sectionitem.sectionID)">
-                <div @click="selectSection(sectionitem.sectionID)">
-                    <div class="color-darkgrey">Chapter {{ sectionitem.sectionID }}</div>
-                    <p>{{ sectionitem.sectionName }}</p>
+            <li class="completed" @click="selectSection(complete.sectionID)">
+                <div>
+                    <div class="color-darkgrey completed">Chapter {{ complete.sectionID }}</div>
+                    <p>{{ complete.sectionName }}</p>
                 </div>
             </li>
             `,
             methods: {
                 selectSection: function(sectionID) {
-                    console.log("in select section")
                     trainerClass.selectedItemDetails.sectionID = sectionID
                     trainerClass.sectionMaterials = []
-                    
-                    // Insert function to get section materials based on courseID, classID, sectionID
-                    // Append to sectionMaterials
-                    
-                    // REMINDER: need to add the download thing
-                    trainerClass.sectionMaterials.push(
-                        {"materialID": 1, "docType": "doc", "materialName": "This is a Document"},
-                        {"materialID": 2, "docType": "video", "materialName": "This is a Video"},
-                        {"materialID": 3, "docType": "link", "materialName": "This is a Link"}
-                    )
-
-                    // Insert function quizName courseID, classID, sectionID
-                    // Append to trainerClass.selectedItemDetails.quizName
-
+                    getContentURL = "http://localhost:2222/getContent/"
+                    getContentURL = getContentURL + courseID + "/" + classID + "/" + trainerClass.selectedItemDetails.sectionID
+                    fetch(getContentURL)
+                    .then(response=>response.json())
+                    .then(data=>{
+                    this.allContent = data.data
+                    console.log(this.allContent)
+                    })
+                    for (content in this.allContent){
+                        trainerClass.sectionMaterials.push(this.allContent[content])
+                    }
                     trainerClass.selectedItemDetails.quizName = "Test quiz"
                 },
-                deleteSection: function(event, sectionID) {
-                    if (event.target.tagName != "LI") {
-                        return
-                    } else {
-                        console.log("Delete Section Function! Not Implemented Yet")
-                    }
-                }
             }
         })
 
         Vue.component('not-completed', {
-            props: ['notComplete'],
+            props: ['notcomplete'],
             template: `
-            <li >
+            <li class='notcompleted'>
                 <div>
-                    <div class="color-darkgrey">Chapter {{ notComplete.sectionID }}</div>
-                    <p>{{ notComplete.sectionName }}</p>
+                    <div class="color-darkgrey notcompleted">Chapter {{ notcomplete.sectionID }}</div>
+                    <p>{{ notcomplete.sectionName }}</p>
                 </div>
             </li>
             `
