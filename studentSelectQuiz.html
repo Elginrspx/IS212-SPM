@@ -160,6 +160,8 @@
                     this.selectedItemDetails.courseName = courseClassElementText.split(" [")[0]
                     classID = this.selectedItemDetails.classID
                     courseID = this.selectedItemDetails.courseID
+                    localStorage.setItem("courseID", courseID)
+                    localStorage.setItem("classID", classID)
                     getSectionURL = "http://localhost:2222/getStudentSection/"
                     getSectionURL = getSectionURL + studentID + "/" +courseID + "/" + classID
                     fetch(getSectionURL)
@@ -177,14 +179,8 @@
                     })
                 },
                 takeQuiz: function() {
+                    localStorage.setItem("studentID", studentID);
                     window.location.replace("studentQuiz.html");
-                },
-                editQuiz: function(e, courseID, classID, sectionID) {
-                    e.preventDefault();
-                    localStorage.setItem("trainerCourse", courseID);
-                    localStorage.setItem("trainerClass", classID);
-                    localStorage.setItem("trainerSection", sectionID);
-                    window.location.replace("trainerQuiz.html");
                 }
             }
         })
@@ -209,12 +205,12 @@
                     .then(response=>response.json())
                     .then(data=>{
                     this.allContent = data.data
-                    console.log(this.allContent)
                     })
                     for (content in this.allContent){
                         trainerClass.sectionMaterials.push(this.allContent[content])
                     }
-                    trainerClass.selectedItemDetails.quizName = "Test quiz"
+                    trainerClass.selectedItemDetails.quizName = trainerClass.selectedItemDetails.courseName + " Quiz"
+                    localStorage.setItem("sectionID", sectionID);
                 },
             }
         })

@@ -61,10 +61,10 @@
     $.get("includes/footer.html", function(data){
         $("#footer-placeholder").replaceWith(data);
      });
-    var courseID = 1
-    var classID = 3
-    var sectionID = 2
-    var studentID = 1
+     var courseID = localStorage.getItem("courseID")
+    var classID = localStorage.getItem("classID")
+    var sectionID = localStorage.getItem("sectionID")
+    var studentID = localStorage.getItem("studentID")
     var getResultsURL = "http://localhost:2222/studentScore"
     const example1 = new Vue({
     el: '#displayScore',
@@ -107,7 +107,6 @@
     },
     methods: {
         returnToQuizzes:function() {
-            // Might need to change cause as of now got no page to choose quiz
             window.location.href = 'studentSelectQuiz.html';
                 }
     }
