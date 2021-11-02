@@ -49,7 +49,7 @@ dummyContent = Content(1, 3, 1, 1, "Introduction Video", "vid", "https://youtu.b
 dummyContent2 = Content(1, 3, 2, 1, "Printer Tutorial", "doc", "https://docs.google.com/document/d/1tlscRf-i1XFj_XfBA3L52arAm8UDNEJOnRgAPr8luMw/edit?usp=sharing")
 dummyContent3 = Content(1, 3, 3, 1, "Printer Slides", "ppt", "https://docs.google.com/presentation/d/1wF_C8ZO1Quk1LfP7IefjWeKjeZrhx5j50ZzjtbV0Ibo/edit?usp=sharing")
 dummyProgress = Progress(1, 1, 3, 1, "true")
-dummyProgress2 = Progress(1, 1, 3, 2, "false")
+dummyProgress2 = Progress(1, 1, 3, 2, "true")
 dummyProgress3 = Progress(1, 1, 3, 3, "false")
 
 db.session.add(dummyCourse)
