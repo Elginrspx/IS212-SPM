@@ -469,5 +469,34 @@ def create_content():
         }
     )
 
+
+#Score, Student, Section tdd
+#get scores by section
+#used by quizResults.html
+@app.route("/getScores/<string:qnCourseID>/<string:qnClassID>/<string:qnSectionID>")
+def get_section_scores(qnCourseID, qnClassID, qnSectionID):
+    final = []
+    code, data = Score.get_scores_for_sections(qnCourseID, qnClassID, qnSectionID)
+    for student in data:
+        # get student name
+        temp = {}
+        id = student["studentID"]
+        code2, data2 = Student.get_student_details(id)
+        #get totalScore
+        code3, data3 = Section.get_no_qns(qnCourseID, qnClassID, qnSectionID)
+        temp["studentName"] = data2["studentName"]
+        temp["score"] = round(student["percentage"]*data3)
+        temp["totalScore"] = data3
+        temp["status"] = student["status"]
+        temp["noAttempts"] = student["noAttempts"]
+        final.append(temp)
+    return jsonify(
+        {
+            "code": code,
+            "data": final
+        }
+    )
+    
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=2222, debug=True)
