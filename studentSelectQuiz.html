@@ -202,13 +202,14 @@
                     getContentURL = "http://localhost:2222/getContent/"
                     getContentURL = getContentURL + courseID + "/" + classID + "/" + trainerClass.selectedItemDetails.sectionID
                     fetch(getContentURL)
-                    .then(response=>response.json())
-                    .then(data=>{
-                    this.allContent = data.data
+                        .then(response=>response.json())
+                        .then(data=>{
+                            result = data.data;
+
+                            for (record of result) {
+                                trainerClass.sectionMaterials.push(record)
+                            }
                     })
-                    for (content in this.allContent){
-                        trainerClass.sectionMaterials.push(this.allContent[content])
-                    }
                     trainerClass.selectedItemDetails.quizName = trainerClass.selectedItemDetails.courseName + " Quiz"
                     localStorage.setItem("sectionID", sectionID);
                 },
