@@ -92,9 +92,10 @@
     $.get("includes/footer.html", function(data){
         $("#footer-placeholder").replaceWith(data);
      });
-    var courseID = 1
-    var classID = 3
-    var sectionID = 2
+    var courseID = localStorage.getItem("courseID")
+    var classID = localStorage.getItem("classID")
+    var sectionID = localStorage.getItem("sectionID")
+    var studentID = localStorage.getItem("studentID")
     var getQuizURL = "http://localhost:2222/questions/" + courseID + "/" + classID + "/" + sectionID
     var submitQuizURL = "http://localhost:2222/submitQuiz/" + courseID + "/" + classID + "/" + sectionID
     var submitData = {}
@@ -140,6 +141,7 @@
     methods: {
         sendAnswers:function() {
             event.preventDefault();
+            var qnAndans = [] 
             for (qn in allquestions){
                 if(allquestions[qn][1] == false){
                     qnAndans.push({"qn":allquestions[qn][0],"ans":document.querySelector(`input[name="${allquestions[qn][0]}"]:checked`).value})
@@ -165,59 +167,11 @@
                             .then(response => response.json())
                             .then(data => {
                             })
-            window.location.href = 'studentViewScore.html';
+            // window.location.href = 'studentViewScore.html';
                 }
     }
 
 })
-    </script>
-    <script>
-        /* FOR YINGHUI
-        Need you to get me the data in the following format. You can take a look at Figma and see if you understand what I mean
-        
-        each -> will be one url call
-
-        For Select Course dropdown:
-        - Based on Trainer ID
-          -> get CourseID, Course Name and Class ID (i.e. Class Number)
-
-        - Based on Selected Course ID
-          -> get Section Name (and Order?)
-        
-        - Based on Selected Section:
-          -> get docType ("doc", "video", "link"), materialName?, isCompleted
-
-        -> Function to add Section for selected Course
-        -> Function to add material for selected Section of selected Course
-        
-        - Based on Selected Section
-          -> get quiz name
-
-
-        */
-        // // Initialise URLs
-        // var getClassesURL = "http://localhost:2222/classes/1/2"
-
-        // // Get Class by Trainer
-        // var trainerClass = new Vue({
-        //     el: '#trainerClass',
-        //     data: {
-        //         classes: []
-        //     },
-        //     created: function() {
-        //         // Get Courses
-        //         fetch(getClassesURL)
-        //             .then(response => response.json())
-        //             .then(data => {
-        //                 print(data)
-        //                 // result = data.data.classes;
-
-        //                 // for (record of result) {
-        //                 //     this.classes.push(record);
-        //                 // }
-        //             })
-        //     }
-        // })
     </script>
 </body>
 
