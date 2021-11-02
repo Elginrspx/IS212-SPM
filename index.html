@@ -24,7 +24,7 @@
             <h1 class="display-4">STAY AHEAD OF THE GAME<br>UPSKILL YOURSELF TODAY</h1>
         </div>
     </div>
-    <div class="container">
+    <div class="container" id="index">
       <div class="row m-3">
         <h1 class="title">Student</h1>
         <div class="col-sm-6">
@@ -32,7 +32,7 @@
             <div class="card-body">
               <h5 class="card-title">Student View Course</h5>
               <p class="card-text">For student to view courses and apply</p>
-              <a href="home.html" class="btn btn-default btn-md active" role="button" aria-pressed="true">View Courses</a>
+              <a @click="setStudent($event, '1')" class="btn btn-default btn-md active" role="button" aria-pressed="true">View Courses</a>
             </div>
           </div>
         </div>
@@ -63,9 +63,18 @@
         <div class="col-sm-6">
           <div class="card">
             <div class="card-body">
-              <h5 class="card-title">Trainer View Classes</h5>
-              <p class="card-text">For trainers to view and create materials</p>
-              <a href="trainerClass.html" class="btn btn-default btn-md active" role="button" aria-pressed="true">View Classes</a>
+              <h5 class="card-title">Trainer View Classes (Tan)</h5>
+              <p class="card-text">For trainers to view and create materials<br>- To login as Trainer Tan</p>
+              <a @click="setTrainer($event, 'Tan')" class="btn btn-default btn-md active" role="button" aria-pressed="true">View Classes</a>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Trainer View Classes (Lim)</h5>
+              <p class="card-text">For trainers to view and create materials<br>- To login as Trainer Lim</p>
+              <a @click="setTrainer($event, 'Lim')" class="btn btn-default btn-md active" role="button" aria-pressed="true">View Classes</a>
             </div>
           </div>
         </div>
@@ -79,6 +88,23 @@
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script>
+      var index = new Vue({
+          el: '#index',
+          methods: {
+              setTrainer: function(e, trainerName) {
+                e.preventDefault();
+                localStorage.setItem("trainerName", trainerName);
+                window.location.replace("trainerClass.html");
+              },
+              setStudent: function(e, studentID) {
+                e.preventDefault();
+                localStorage.setItem("userID", studentID);
+                window.location.replace("home.html");
+              }
+          }
+      })
+    </script>
 </body>
 
 </html>
