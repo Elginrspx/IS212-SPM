@@ -349,6 +349,29 @@ def create_quiz():
         }
     )
 
+#POST info to get score for questions for a quiz
+#used by studentQuiz.html
+@app.route("/submitQuiz/<string:qnCourseID>/<string:qnClassID>/<string:qnSectionID>", methods=['POST'])
+def submit_quiz(qnCourseID, qnClassID, qnSectionID):
+    output = {}
+    data = request.get_json()
+    studentID = data['student']
+    score = Question.compute_score(data['data'], qnCourseID, qnClassID, qnSectionID)
+    code, data = Score.create_score(studentID,qnCourseID, qnClassID, qnSectionID,score)
+    code3, data3 = Section.get_no_qns(qnCourseID, qnClassID, qnSectionID)
+    if score>.8:
+        output['status'] = "Pass"
+    else:
+        output['status'] = "Fail"
+    output['totalScore'] = data3
+    return jsonify(
+        {
+            "code": code,
+            "data": output
+        }
+    )
+
+
 #GET class+course by trainer
 @app.route("/getClassByTrainer/<string:trainer>")
 def get_trainer_classes(trainer):
