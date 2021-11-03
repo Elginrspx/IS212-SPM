@@ -33,13 +33,13 @@ test:
   only:
     - external_pull_requests
 
-# always-run:
-#   script: echo 'this should always run'
+always-run:
+  script: echo 'this should always run'
 
-on-pull-requests:
-  script: echo 'this should run on pull requests'
-  only:
-    - external_pull_requests
+# on-pull-requests:
+#   script: echo 'this should run on pull requests'
+#   only:
+#     - external_pull_requests
 
 except-pull-requests:
   script: echo 'this should not run on pull requests'
