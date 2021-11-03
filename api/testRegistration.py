@@ -43,23 +43,23 @@ class testRegistration(TestApp):
         code, data = Registration.assign_registration(1,3,1)
         self.assertEqual(data['regStatus'], "accepted")
 
-    def test_get_student_accepted_courses(self):
-        code, data = Registration.get_student_accepted_courses(2)
-        self.assertEqual(data[0]['courseID'], '1')
-        self.assertEqual(data[0]['classID'], 3)
-        self.assertEqual(data[0]['courseName'], '')
+    # def test_get_student_accepted_courses(self):
+    #     code, data = Registration.get_student_accepted_courses(2)
+    #     self.assertEqual(data[0]['courseID'], '1')
+    #     self.assertEqual(data[0]['classID'], 3)
+    #     self.assertEqual(data[0]['courseName'], '')
 
-    def test_get_no_accepted(self):
-        code, data = Registration.get_no_accepted(1,3)
-        self.assertEqual(data, 1)
+    # def test_get_no_accepted(self):
+    #     code, data = Registration.get_no_accepted(1,3)
+    #     self.assertEqual(data, 1)
 
-    def test_get_student_reg(self):
-        code, data = Registration.get_student_reg(1)
-        self.assertEqual(data, [{"regCourseID":'1', "regClassID":3, "studentName":'','clsLimit':45, 'studentID':1, 'taken': 1}])
+    # def test_get_student_reg(self):
+    #     code, data = Registration.get_student_reg(1)
+    #     self.assertEqual(data, [{"regCourseID":'1', "regClassID":3, "studentName":'','clsLimit':45, 'studentID':1, 'taken': 1}])
 
-    def test_get_enrolled_course(self):
-        code, data = Registration.get_enrolled_courseID()
-        self.assertEqual(data, [{'regCourseID':'1', 'courseName':''},{'regCourseID':'2', 'courseName':''}])
+    # def test_get_enrolled_course(self):
+    #     code, data = Registration.get_enrolled_courseID()
+    #     self.assertEqual(data, [{'regCourseID':'1', 'courseName':''},{'regCourseID':'2', 'courseName':''}])
 
 
 
