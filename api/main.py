@@ -485,7 +485,7 @@ def get_section_scores(qnCourseID, qnClassID, qnSectionID):
         #get totalScore
         code3, data3 = Section.get_no_qns(qnCourseID, qnClassID, qnSectionID)
         temp["studentName"] = data2["studentName"]
-        temp["score"] = round(student["percentage"]*data3)
+        temp["score"] = round(float(student["percentage"])*data3)
         temp["totalScore"] = data3
         temp["status"] = student["status"]
         temp["noAttempts"] = student["noAttempts"]
