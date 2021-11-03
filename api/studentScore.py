@@ -11,8 +11,8 @@ class Score(db.Model):
 
     scoreStudentID = db.Column(db.String(30), primary_key=True)
     scoreCourseID = db.Column(db.String(30), primary_key=True)
-    scoreClassID = db.Column(db.Integer, nullable=False)
-    scoreSectionID = db.Column(db.String(30))
+    scoreClassID = db.Column(db.Integer, nullable=False, primary_key=True)
+    scoreSectionID = db.Column(db.String(30), primary_key=True)
     scorePercentage = db.Column(db.String(30))
     attempts = db.Column(db.Integer)
 
@@ -50,7 +50,7 @@ class Score(db.Model):
         # don't have existing
         except Exception as e:
             try:
-                score = studentScore(studentID, courseID, classID, sectionID, score, 1)
+                score = Score(studentID, courseID, classID, sectionID, score, 1)
                 db.session.add(score)
                 db.session.commit()
                 return 201, score.json()

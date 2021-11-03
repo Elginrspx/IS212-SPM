@@ -39,7 +39,7 @@ class Progress(db.Model):
 
     def update_progress(data):
         try: 
-            data['sectionID'] += 1
+            data['sectionID'] = int(data['sectionID']) + 1
             toUpdate = Progress.query.filter_by(progStudentID = data['studentID'], progCourseID =  data['courseID'], progClassID = data['classID'], progSectionID = data['sectionID']).first()
             toUpdate.done = "true"
             db.session.commit()
