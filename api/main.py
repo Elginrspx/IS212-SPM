@@ -8,7 +8,7 @@ from os import environ
 import json
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root@localhost:3306/systemdb'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:3306/systemdb'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
@@ -141,12 +141,16 @@ def get_course_prereq(prereqCourseID):
 @app.route("/registration/<string:courseID>")
 def get_student_registration(courseID):
     code, data = Registration.get_student_reg(courseID)
+    print(data)
     for entry in data:
-        entry['studentName'] = Student.get_name_by_id(entry['studentID'])
+        code, entry['studentName'] = Student.get_name_by_id(entry['studentID'])
     return jsonify(
         {
             "code": code,
-            "data": data
+            "data": {
+                "registrations": data
+            }
+
         }
     )
 
@@ -156,11 +160,10 @@ def get_student_registration(courseID):
 @app.route("/registerClass", methods=['POST'])
 def register_class():
     data = request.get_json()
-    print(data['regCourseID'])
     regCourseID = data['regCourseID']
     regClassID = data['regClassID']
     regStudentID = data['regStudentID']
-    code, dataa = Registration.register_class(regCourseID, regClassID, regStudentID)
+    code, dataa = Registration.register_class(regCourseID, regClassID, regStudentID, data['regStatus'])
     return jsonify({"code": code,"data": dataa})
 
 
@@ -184,7 +187,7 @@ def all_reg():
 @app.route("/assignRegistration", methods=['PUT'])
 def assign_registration():
     data = request.get_json()
-    code, dataa = Registration.assign_registration(data['courseID'], data['classID'], data['studentID'], data['regStatus'])
+    code, dataa = Registration.assign_registration(data['courseID'], data['classID'], data['studentID'])
     return jsonify(
         {
             "code": code,

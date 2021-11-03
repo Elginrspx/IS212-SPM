@@ -69,6 +69,7 @@ class Class(db.Model):
                 return 200, [classs.json_for_trainer() for classs in classes]
         except Exception as e:
             return 404, "No classes found" + str(e)
+            
     def prepare_class_details_by_course(courseID):
         try:
             classList = db.session.query(Class.clsCourseID, Class.classID, Class.clsTrainer, Class.clsStartTime, Class.clsEndTime, Class.clsLimit, Class.regPeriod).filter(Class.clsCourseID==courseID).all()

@@ -87,10 +87,10 @@ class Registration(db.Model):
                 data["studentName"] = ""
                 data['clsLimit'] = each[2]
                 data['studentID'] = each[3]
-                data['taken'] = Registration.get_no_accepted(data['courseID'], data["regClassID"])
+                code, data['taken'] = Registration.get_no_accepted(data['regCourseID'], data["regClassID"])
                 real.append(data)
                 data = {}
-                return 200, real
+            return 200, real
         except Exception as e:
             return 404, "There are no student registrations." + str(e)
     
