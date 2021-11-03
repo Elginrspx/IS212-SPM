@@ -69,3 +69,25 @@ class Class(db.Model):
                 return 200, [classs.json_for_trainer() for classs in classes]
         except Exception as e:
             return 404, "No classes found" + str(e)
+    def prepare_class_details_by_course(courseID):
+        try:
+            classList = db.session.query(Class.clsCourseID, Class.classID, Class.clsTrainer, Class.clsStartTime, Class.clsEndTime, Class.clsLimit, Class.regPeriod).filter(Class.clsCourseID==courseID).all()
+            if classList:
+                real = []
+                data = {}
+                for each in classList:
+                    print(each[0])
+                    data["clsCourseID"] = each[0]
+                    data["classID"] = each[1]
+                    data["clsTrainer"] = each[2]
+                    data["clsStartTime"] = each[3]
+                    data["clsEndTime"] = each[4]
+                    data["clsLimit"] = each[5]
+                    data["regPeriod"] = each[6]
+                    data["noAccepted"] = 0
+                    real.append(data)
+                    data = {}
+                return 200, real
+        except Exception as e:
+            return 400, "Couldn't find classes. " + str(e)
+

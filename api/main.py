@@ -86,41 +86,16 @@ def get_class_details(courseID, classID):
     )
 
 
-#CHECK god give me the strength to do this, cos i can't tonight
 # GET all registrations with class and student table joined
 #used by course
 @app.route("/classInfo/<string:courseID>", methods=["GET"])
 def all_class_info(courseID):
-    try:
-        # test = db.session.query(func.count('*').group_by(Registration.regCourseID, Registration.regClassID), Registration.regCourseID, Registration.regClassID, Student.studentName).join(Class, and_(Class.classID == Registration.regClassID, Class.clsCourseID == Registration.regCourseID)).join(Student, Student.studentID == Registration.regStudentID).all()
-        classList = db.session.query(Class.clsCourseID, Class.classID, Class.clsTrainer, Class.clsStartTime, Class.clsEndTime, Class.clsLimit, Class.regPeriod).filter(Class.clsCourseID==courseID).all()
-        # Class.query.filter_by(clsCourseID=courseID).all()        # print(test)
-
-        # ape ini idgi 
-        if classList:
-            real = []
-            data = {}
-            print(classList)
-            for each in classList:
-                print(each[0])
-                # print(db.session.query(Course.courseName).filter(Course.courseID == each[0]).first()[0])
-                data["clsCourseID"] = each[0]
-                data["classID"] = each[1]
-                data["clsTrainer"] = each[2]
-                data["clsStartTime"] = each[3]
-                data["clsEndTime"] = each[4]
-                data["clsLimit"] = each[5]
-                data["regPeriod"] = each[6]
-                data["noAccepted"] = Registration.query.filter_by(regCourseID = each[0], regClassID = each[1], regStatus="accepted").count()
-                # data['assignments']= each.json()
-                # print(data)
-                real.append(data)
-                data = {}
-            # return jsonify({"assignments": data})
-            return jsonify({"code": 200, "classInfo": real}),200
-            # return jsonify({"assignments": [assignment.json() for assignment in test[0]]})
-    except Exception as e:
-        return jsonify({"message": "Assignment had a problem fetching" + str(e)}), 500
+    code, data = Class.prepare_class_details_by_course(courseID)
+    for entry in data:
+        print(entry)
+        code, entry['noAccepted'] = Registration.get_no_accepted(entry['clsCourseID'], entry['classID'])
+        print(code)
+    return jsonify({"code": 200, "classInfo": data}),200
 
 #COMPLETED TDD
 
@@ -161,43 +136,21 @@ def get_course_prereq(prereqCourseID):
 
 #REGISTRATION TDD
 
-#CHECK help lah, this one also so long. tolong do tmr
 # GET student registrations by course
 #used by adminCourseApplication
 @app.route("/registration/<string:courseID>")
 def get_student_registration(courseID):
-    try:
-        registrationn = db.session.query(Registration.regCourseID, Registration.regClassID, Student.studentName, Class.clsLimit, Student.studentID).join(Class, and_(Class.classID == Registration.regClassID, Class.clsCourseID == Registration.regCourseID)).join(Student, Student.studentID == Registration.regStudentID).filter(Registration.regStatus=="enrolled").filter(courseID==Registration.regCourseID).all()
-        if (registrationn):
-            real = []
-            data = {}
-            for each in registrationn:
-                data["regCourseID"] = each[0]
-                data["regClassID"] = each[1]
-                data["studentName"] = each[2]
-                data['clsLimit'] = each[3]
-                data['studentID'] = each[4]
-                data['taken'] = Registration.query.filter_by(regCourseID = each[0], regClassID = each[1], regStatus="accepted").count()
-                real.append(data)
-                data = {}
-            print(real)
-            return jsonify(
-                {
-                    "code": 200,
-                    "data": {
-                        "registrations": real
-                    }
-                }
-            )
-    except Exception as e:
-        return jsonify(
-            {
-                "code": 404,
-                "message": "There are no student registrations." + str(e)
-            }
-        ), 404
+    code, data = Registration.get_student_reg(courseID)
+    for entry in data:
+        entry['studentName'] = Student.get_name_by_id(entry['studentID'])
+    return jsonify(
+        {
+            "code": code,
+            "data": data
+        }
+    )
 
-#how to do update, pls search, idk, oof
+
 # POST registration for courseClass
 #used by adminCourseAssignment, enrollClass
 @app.route("/registerClass", methods=['POST'])
@@ -211,44 +164,20 @@ def register_class():
     return jsonify({"code": code,"data": dataa})
 
 
-#CHECK idk how to do???
 #GET list of course ID & name of those with enrolled students
 #used by adminCourseApplication
 @app.route("/registrationCourses", methods=["GET"])
 def all_reg():
-    try:
-        # test = db.session.query(func.count('*').group_by(Registration.regCourseID, Registration.regClassID), Registration.regCourseID, Registration.regClassID, Student.studentName).join(Class, and_(Class.classID == Registration.regClassID, Class.clsCourseID == Registration.regCourseID)).join(Student, Student.studentID == Registration.regStudentID).all()
-        registration_info = db.session.query(Registration.regCourseID, Registration.regClassID).filter(Registration.regStatus=="enrolled").all()
-        # print(test)
-
-        # ape ini idgi 
-        if registration_info:
-            courseList = []
-            courses = []
-            # print(registration_info)
-            for each in registration_info:
-                # print(each[0])
-                # print(db.session.query(Course.courseName).filter(Course.courseID == each[0]).first()[0])
-
-                courseName = db.session.query(Course.courseName).filter(Course.courseID == each[0]).first()[0]
-
-                if courseName not in courses:
-                    print("lol")
-                    # courseList[each[0]] = data["courseName"]
-                    courseData = {}
-                    courseData["courseName"] = courseName
-                    courseData["regCourseID"] = each[0]
-                    courseList.append(courseData)
-                    courses.append(courseName)
-                    print(courseList)
-                    # data['assignments']= each.json()
-                    # print(data)
-            # return jsonify({"assignments": data})
-            return jsonify({"code": 200, "courseList": courseList}),200
-            # return jsonify({"assignments": [assignment.json() for assignment in test[0]]})
-    except Exception as e:
-        return jsonify({"message": "Assignment had a problem fetching" + str(e)}), 500
-
+    code, data = Registration.get_enrolled_courseID()
+    for entry in data:
+        code, entry['courseName'] = Course.get_name_by_id(entry['regCourseID'])
+    return jsonify(
+        {
+            "code": code,
+            "courseList": data
+        }
+    )
+    
 
 # UPDATE registration to accepted
 #used by adminCourseApplication
@@ -264,50 +193,6 @@ def assign_registration():
     )
 
 
-#CHECK GET all eligible courses by user
-#create four tables. 1)taken  2)all  3)eligible  4)prereqs
-#may be needed for sprint 4 adminCourseAssignment
-#COURSE integration
-@app.route("/eligibleCourses/<string:userID>")
-def get_eligible_courses(userID):
-    taken = []
-    all = []
-    eligible = {}
-    prereqs = {}
-
-    #query for table population
-    courses = db.session.query(Course.courseID, Course.courseName).all()
-    took = db.session.query(Completed.completedCName).filter(userID==Completed.ccStudentID).all()
-    havePrereq = db.session.query(Prerequisite.prereqCourseID, Prerequisite.prereqName).all()
-
-    #populate lists of all, taken, and prerequisite courses
-    for course in courses:
-        all.append(course)
-    for course in took:
-        taken.append(course[0])
-    for each in havePrereq:
-        if each[0] in prereqs:
-            prereqs[each[0]].append(each[1])
-        else:
-            prereqs[each[0]] = []
-            prereqs[each[0]].append(each[1])
-
-    #algo to compute list of eligible courses
-
-    for id, name in all:
-        if name in taken:
-            pass
-        elif id in prereqs:
-            check = True
-            for c in prereqs[id]:
-                # print(c)
-                if c not in taken:
-                    check=False
-            if check:    
-                eligible[id]=name
-        else:
-            eligible[id]=name
-    return eligible
 
 #STUDENT TDD
 # GET all students
