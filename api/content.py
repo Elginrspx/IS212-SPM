@@ -48,6 +48,7 @@ class Content(db.Model):
             return 400, "No content found. " + str(e)
 
     def create_section_content(data):
+        data = data['data']
         data2 = data[0]
         try:
             check = Content.query.filter_by(conCourseID = data2['courseID'], conClassID =data2['classID'], conSectionID = data2['sectionID']).all()
