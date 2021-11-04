@@ -76,7 +76,6 @@
                                 <td v-else-if="sectionMaterial.doctype == 'ppt'" class="text-center"><img src="images/ppt.svg" style="width:15px;height:15px;"></td>
                                 <td v-else class="text-center"><img src="images/link.svg" style="width:15px;height:15px;"></td>
                                 <td>{{ sectionMaterial.name }}</td>
-                                <td @click="downloadMaterial(sectionMaterial.materialID)" class="text-center"><a v-bind:href="sectionMaterial.link"><img src="images/download.svg" style="width:15px;height:15px;"></a></td>
                             </tr>
                         </tbody>
                     </table>
