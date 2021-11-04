@@ -149,6 +149,24 @@
                             </tr>
                         </thead>
                         <tbody>
+                            <div v-if="isUpload" class="form-group row">
+                                <div class="col-10">
+                                    <div class="input-group mb-3">
+                                        <select v-model="newMaterial.docType" class="form-select">
+                                            <option selected>Document Type...</option>
+                                            <option value="link">Link</option>
+                                            <option value="vid">Video</option>
+                                            <option value="doc">Document</option>
+                                            <option value="ppt">Powerpoint</option>
+                                        </select>
+                                        <input v-model="newMaterial.contentName" class="form-control" type="text" placeholder="Material Name">
+                                        <input v-model="newMaterial.link" class="form-control" type="text" placeholder="URL Link">
+                                    </div>
+                                </div>
+                                <div class="col-2">
+                                    <a @click="uploadMaterial()" class="btn btn-default btn-md active" role="button" aria-pressed="true">Upload</a>
+                                </div>
+                            </div>
                             <tr>
                                 <td @click="addMaterial()" class="text-center"><img src="images/plus.svg" style="width:15px;height:15px;"></td>
                                 <td class="color-darkgrey" style="text-decoration: underline;">Upload new file</td>
@@ -352,6 +370,7 @@
                         .then(data => {
                             if (data.data.length == 0) {
                                 trainerClass.noMaterial = true
+                                trainerClass.newMaterial.contentID = "1"
                             } else {
                                 // Get Course Section's Materials
                                 result = data.data;
