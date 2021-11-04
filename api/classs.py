@@ -1,4 +1,7 @@
 from main import db
+from sqlalchemy import *
+from sqlalchemy.orm import relationship
+from sqlalchemy import ForeignKeyConstraint
 
 
 class Class(db.Model):
@@ -35,3 +38,19 @@ class Class(db.Model):
         "clsLimit": self.clsLimit,
         "regPeriod": self.regPeriod
         }
+    
+    def get_course_classes(courseID):
+        try:
+            classList = Class.query.filter_by(clsCourseID=courseID).all()
+            if classList:
+                return 200, [classs.json() for classs in classList]
+        except Exception as e:
+            return 404, "No classes found" + str(e)
+
+    def get_class_details(courseID, classID):
+        try: 
+            classes = Class.query.filter_by(clsCourseID=courseID, classID = classID).first()
+            if classes:
+                return 200, classes.json()
+        except Exception as e:
+            return 404, "No classes found" + str(e)

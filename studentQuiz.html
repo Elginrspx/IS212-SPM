@@ -9,6 +9,7 @@
     <div id="nav-placeholder"></div>
     <div id="header-placeholder"></div>
     <script src="//code.jquery.com/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
     <script>
     $.get("includes/navbar.html", function(data){
         $("#nav-placeholder").replaceWith(data);
@@ -30,11 +31,11 @@
                 <p class="title">Quiz 3 Chapter 3 Printing Software</p>
             </div>
         </div>
-        <div class="row mt-5">
-        <!-- First question -->
-            <div class="col-12" style="margin-bottom: 1cm;">
-                <div class="p-3" style="border: 1px solid #dedede; border-radius: 10px;">
-                    <p style="font-size:1.5em;">What tool should you use to open the battery compartment of the 3D printer?</p>
+        <div class="row mt-5" id="quizQuestions">
+            <div class="col-12" style="margin-bottom: 1cm;" v-for="(quizQuestion, quizIdx) in quiz">
+                <div v-if = 'quizQuestion.isMultiple === false'>
+                <div class="p-3" style="border: 1px solid #dedede; border-radius: 10px; margin-bottom: 1cm;">
+                    <p style="font-size:1.5em;">{{ quizQuestion.question }}</p>
                     <hr>
                     <table class="table table-borderless table-sm">
                         <thead>
@@ -45,87 +46,131 @@
                                 <th style="width:7.5%"></th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <form id="qn1">
-                                <input type="radio" id="html" name="qn1" value="Wrench">
-                                <label for="html">Wrench</label><br><br>
-                                <input type="radio" id="css" name="qn1" value="Screwdriver">
-                                <label for="css">Screwdriver</label><br><br>
-                                <input type="radio" id="javascript" name="qn1" value="Hammer">
-                                <label for="javascript">Hammer</label> <br><br>
-                                <input type="radio" id="javascript" name="qn1" value="Crowbar">
-                                <label for="javascript">Crowbar</label>
-                              </form>
-                        </tbody>
+                            <form>
+                                <div v-for="(option, optionIdx) in quizQuestion.options">
+                                        <input type="radio" v-bind:name = 'quizQuestion.question' v-bind:value="option.text">
+                                        <label>{{option.text}}</label>
+                                </div>
+                            </form>
                     </table>
+                </div> 
+                </div>
+            <!-- <div class="col-12" style="margin-bottom: 1cm;" v-for="(quizQuestion, quizIdx) in quiz" style="margin-bottom: 50cm;"> -->
+                <div v-else> 
+                <div class="col-12" style="margin-bottom: 1cm;"  style="margin-bottom: 50cm;">
+                    <div class="p-3" style="border: 1px solid #dedede; border-radius: 10px; margin-bottom: 1cm;">
+                    <p style="font-size:1.5em;">{{ quizQuestion.question }}</p>
+                    <hr>
+                        <table class="table table-borderless table-sm">
+                            <thead>
+                                <tr>
+                                    <th style="width:7.5%"></th>
+                                    <th style="width:7.5%"></th>
+                                    <th style="width:77.5%"></th>
+                                    <th style="width:7.5%"></th>
+                                </tr>
+                            </thead>
+                                <form>
+                                    <div v-for="(option, optionIdx) in quizQuestion.options">
+                                        <input type="checkbox"  v-bind:name = 'quizQuestion.question' v-bind:value="option.text">
+                                        <label >{{option.text}}</label>
+                                </div>
+                                </form>
+                        </table>
+                    </div>
+                </div>
+                </div>
             </div>
+            <input type="submit" @click="sendAnswers()" style=" background-color: rgb(252, 140, 3); border-radius: 5px; width: 90px; margin-left: 87.5%;" value="Submit" href="studentViewScore.html">
             </div>
         <br>
-        <!-- Second question -->
-        <div class="col-12" style="margin-bottom: 1cm;">
-            <div class="p-3" style="border: 1px solid #dedede; border-radius: 10px;">
-                <p style="font-size:1.5em;">What is the average time required for a standard 3D printing to print a 12cm by 12cm by 12cm cube?</p>
-                <hr>
-                <table class="table table-borderless table-sm">
-                    <thead>
-                        <tr>
-                            <th style="width:7.5%"></th>
-                            <th style="width:7.5%"></th>
-                            <th style="width:77.5%"></th>
-                            <th style="width:7.5%"></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <form id="qn2">
-                            <input type="radio" id="html" name="qn2" value="12">
-                            <label for="html">12 minutes</label><br><br>
-                            <input type="radio" id="css" name="qn2" value="24">
-                            <label for="css">24 minutes</label><br><br>
-                            <input type="radio" id="javascript" name="qn2" value="30">
-                            <label for="javascript">30 minutes</label> <br><br>
-                            <input type="radio" id="javascript" name="qn2" value="18">
-                            <label for="javascript">18 minutes</label>
-                          </form>
-                    </tbody>
-                </table>
-        </div>
-        </div>
-            <!-- Third question -->
-            <div class="col-12">
-                <div class="p-3" style="border: 1px solid #dedede; border-radius: 10px;">
-                    <p style="font-size:1.5em;">The battery compartment is the most fragile part of the 3D printer.</p>
-                    <hr>
-                    <table class="table table-borderless table-sm">
-                        <thead>
-                            <tr>
-                                <th style="width:7.5%"></th>
-                                <th style="width:7.5%"></th>
-                                <th style="width:77.5%"></th>
-                                <th style="width:7.5%"></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <form id="qn3">
-                                <input type="radio" id="html" name="qn3" value="True">
-                                <label for="html">True</label><br><br>
-                                <input type="radio" id="css" name="qn3" value="False">
-                                <label for="css">False</label><br><br>
-                              </form>
-                        </tbody>
-                    </table>
-            </div>
-            <input type="submit" style="margin-top: 1cm; margin-left: 28cm; background-color: rgb(252, 140, 3); border-radius: 5px;" value="Submit">
-            </div>
+    </div>
     <!-- Div below is the end of the column -->
-    </div>
-    </div>
-    </div>
+    <div>
     <div id="footer-placeholder"></div>
     <script>
     $.get("includes/footer.html", function(data){
         $("#footer-placeholder").replaceWith(data);
      });
-     </script>
+    var courseID = 1
+    var classID = 3
+    var sectionID = 2
+    var getQuizURL = "http://localhost:2222/questions/" + courseID + "/" + classID + "/" + sectionID
+    var submitQuizURL = "http://localhost:2222/submitQuiz/" + courseID + "/" + classID + "/" + sectionID
+    var submitData = {}
+    submitData["student"] = courseID
+    var allquestions = []
+    var qnAndans = [] 
+    // Trying to do vue 
+    const example1 = new Vue({
+    el: '#quizQuestions',
+    data: {
+        quiz:[],
+        options : [],
+        isMultiple: []
+    },
+    
+    created:function() {
+        fetch(getQuizURL)
+        .then(response=>response.json())
+        .then(data=>{
+            result = data.data
+            for (record of result) {
+                quizData = {}
+                quizData.question = record.question
+                quizData.isMultiple = record.isMultiple == "true" ? true : false
+                allquestions.push([quizData.question,quizData.isMultiple])
+                quizData.options = []
+                choices = record.choices.split(",")
+                answer = record.answer.split(",")
+                for (choice of choices) {
+                    option = {}
+                    option.text = choice
+                    if (answer.includes(choice)) {
+                        option.isCorrect = true
+                    } else {
+                        option.isCorrect = false
+                    }
+                    quizData.options.push(option)
+                }
+                this.quiz.push(quizData)
+                }
+        })
+    },
+    methods: {
+        sendAnswers:function() {
+            event.preventDefault();
+            for (qn in allquestions){
+                if(allquestions[qn][1] == false){
+                    qnAndans.push({"qn":allquestions[qn][0],"ans":document.querySelector(`input[name="${allquestions[qn][0]}"]:checked`).value})
+                }
+                else{
+                    var temp = ""
+                    $(`input[name="${allquestions[qn][0]}"]:checked`).each(function() {
+                        temp += this.value +","
+                        });
+                    temp = temp.substring(0,temp.length -1)
+                    qnAndans.push({"qn":allquestions[qn][0],"ans":temp})
+                }
+            }
+            submitData["data"] = qnAndans
+            let jsonData = JSON.stringify(submitData);
+                        fetch(submitQuizURL, {
+                                method: "POST",
+                                headers: {
+                                    "Content-type": "application/json"
+                                },
+                                body: jsonData
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                            })
+            window.location.href = 'studentViewScore.html';
+                }
+    }
+
+})
+    </script>
     <script>
         /* FOR YINGHUI
         Need you to get me the data in the following format. You can take a look at Figma and see if you understand what I mean

@@ -1,4 +1,5 @@
 from main import db
+from sqlalchemy import *
 
 class Course(db.Model):
     __tablename__ = 'courses'
@@ -24,4 +25,23 @@ class Course(db.Model):
             "cOutline" : self.cOutline,
             "have": self.have
         }
+
+    def get_course_details(courseID):
+        try: 
+            course = Course.query.filter_by(courseID=courseID).first()
+            if course:
+                return 200, course.json()
+        except Exception as e:
+            return 404, "Course not available"
+    
+    def get_all_courses():
+        try:
+            courseList = Course.query.all()
+            
+            if len(courseList):
+                return 200, [course.json() for course in courseList]
+
+        except Exception as e:
+            return 404, "There are no courses." + str(e)
+
 

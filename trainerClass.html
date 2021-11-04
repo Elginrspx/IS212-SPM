@@ -5,7 +5,8 @@
     <title>Trainer Class | LMS</title>
 </head>
 
-<body><!-- Required meta tags -->
+<body>
+    <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -20,9 +21,14 @@
     <div id="nav-placeholder"></div>
     <div class="container" id="trainerClass">
         <nav class="mt-2" style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
-            <ol class="breadcrumb">
+            <ol v-if="sectionItems.length == 0" class="breadcrumb">
                 <li class="breadcrumb-item"><a href="#">Home</a></li>
                 <li class="breadcrumb-item"><a href="#" class="current">My Classes</a></li>
+            </ol>
+            <ol v-else class="breadcrumb">
+                <li class="breadcrumb-item"><a href="#">Home</a></li>
+                <li class="breadcrumb-item"><a href="#">My Classes</a></li>
+                <li class="breadcrumb-item"><a href="#" class="current">Class Materials</a></li>
             </ol>
         </nav>
         <div class="row">
@@ -93,8 +99,8 @@
                     <hr>
                     <div class="d-flex bd-highlight">
                         <div class="me-auto p-2 bd-highlight" style="font-size: 1.3em;">{{ selectedItemDetails.quizName }}</div>
-                        <div class="p-2 bd-highlight"><a @click="viewResult()" class="btn btn-default btn-md active" role="button" aria-pressed="true">View Results</a></div>
-                        <div class="p-2 bd-highlight"><a @click="editQuiz()" class="btn btn-default btn-md active" role="button" aria-pressed="true">Edit</a></div>
+                        <div class="p-2 bd-highlight"><a @click="viewResult($event, selectedItemDetails.courseID, selectedItemDetails.classID, selectedItemDetails.sectionID)" class="btn btn-default btn-md active" role="button" aria-pressed="true">View Results</a></div>
+                        <div class="p-2 bd-highlight"><a @click="editQuiz($event, selectedItemDetails.courseID, selectedItemDetails.classID, selectedItemDetails.sectionID)" class="btn btn-default btn-md active" role="button" aria-pressed="true">Edit</a></div>
                     </div>
                 </div>
             </div>
@@ -110,30 +116,17 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
     <script>
-        /* FOR YINGHUI
-        Need you to get me the data in the following format. You can take a look at Figma and see if you understand what I mean
-        
-        each -> will be one url call
+        /* FOR Edena Boss
 
         For Select Course dropdown:
         [FUNCTION] Based on Trainer ID
           -> get CourseID, Course Name and Class ID (i.e. Class Number)
 
         [FUNCTION] Based on Selected Course ID
-          -> get Section Name (and Order?)
+          -> get Section Name(s)
         
         [FUNCTION] Based on Selected Section:
           -> get docType ("doc", "video", "link"), materialName?, isCompleted
-
-        [FUNCTION] Add Section for selected Course
-
-        [FUNCTION] Add material for selected Section of selected Course
-
-        [FUNCTION] Delete selected section
-
-        [FUNCTION] Delete selected material
-
-        [FUNCTION] Download selected material (not sure if this is db side or my side, maybe mine) KIV
 
         [FUNCTION] Based on Selected Section
           -> get quiz name
@@ -142,13 +135,12 @@
         // Initialise URLs
         //var getClassesURL = "http://localhost:2222/classes/1/2"
 
-
         // Get Class by Trainer
         var trainerClass = new Vue({
             el: '#trainerClass',
             data: {
                 courseClass: [
-                    {"courseID": 1, "classID": 2, "courseName": "3D Printing Test"},
+                    {"courseID": 1, "classID": 3, "courseName": "3D Printing Test"},
                     {"courseID": 2, "classID": 2, "courseName": "3D Manufacturing Test"},
                     {"courseID": 3, "classID": 3, "courseName": "Introduction to Printing Test"}
                 ],
@@ -187,31 +179,31 @@
                         {"sectionID": 3, "sectionName": "Test Section 3"}
                     )
                 },
-                deleteMaterial: function(materialID) {
-                    console.log("in delete material" + materialID)
-                },
                 downloadMaterial: function(materialID) {
-                    console.log("in download material" + materialID)
+                    console.log("Download Material Function! Not Implemented Yet")
                 },
                 addSection: function() {
-                    console.log("in add section")
+                    console.log("Add Section Function! Not Implemented Yet")
                 },
                 addMaterial: function() {
-                    console.log("in add material")
+                    console.log("Add Material Function! Not Implemented Yet")
                 },
-                viewResult: function() {
-                    console.log("in view result")
-                    // to set course, class, section to storage
-                    // e.preventDefault();
-                    // localStorage.setItem("chosenCourse", courseID);
-                    //window.location.replace("course.php");
+                deleteMaterial: function(materialID) {
+                    console.log("Delete Material Function! Not Implemented Yet")
                 },
-                editQuiz: function() {
-                    console.log("in edit quiz")
-                    // to set course, class, section to storage
-                    // e.preventDefault();
-                    // localStorage.setItem("chosenCourse", courseID);
-                    //window.location.replace("course.php");
+                viewResult: function(e, courseID, classID, sectionID) {
+                    e.preventDefault();
+                    localStorage.setItem("trainerCourse", courseID);
+                    localStorage.setItem("trainerClass", classID);
+                    localStorage.setItem("trainerSection", sectionID);
+                    window.location.replace("quizResults.html");
+                },
+                editQuiz: function(e, courseID, classID, sectionID) {
+                    e.preventDefault();
+                    localStorage.setItem("trainerCourse", courseID);
+                    localStorage.setItem("trainerClass", classID);
+                    localStorage.setItem("trainerSection", sectionID);
+                    window.location.replace("trainerQuiz.html");
                 }
             }
         })
@@ -235,7 +227,6 @@
                     // Insert function to get section materials based on courseID, classID, sectionID
                     // Append to sectionMaterials
                     
-                    // REMINDER: need to add the download thing
                     trainerClass.sectionMaterials.push(
                         {"materialID": 1, "docType": "doc", "materialName": "This is a Document"},
                         {"materialID": 2, "docType": "video", "materialName": "This is a Video"},
@@ -251,8 +242,7 @@
                     if (event.target.tagName != "LI") {
                         return
                     } else {
-                        console.log('delete tis')
-                        // insert function to delete this section
+                        console.log("Delete Section Function! Not Implemented Yet")
                     }
                 }
             }
