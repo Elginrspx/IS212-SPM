@@ -41,7 +41,7 @@ class Registration(db.Model):
         # don't have existing
         except Exception as e:
             try:
-                register = Registration(regCourseID, regClassID, regStudentID, regStatus)
+                register = Registration(regStudentID, regCourseID, regClassID, regStatus)
                 db.session.add(register)
                 db.session.commit()
                 return 201, register.json()
