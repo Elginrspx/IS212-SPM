@@ -48,15 +48,7 @@ class Content(db.Model):
             return 400, "No content found. " + str(e)
 
     def create_section_content(data):
-        data2 = data[0]
-        try:
-            check = Content.query.filter_by(conCourseID = data2['courseID'], conClassID =data2['classID'], conSectionID = data2['sectionID']).all()
-            for entries in check:
-                db.session.delete(entries)
-            db.session.commit()
-        except Exception as e:
-            print("No content found. "+ str(e))
-        # print(data)
+        data = data['data']
         for content in data:
             question = Content(content["courseID"], content["classID"], content["sectionID"], content["contentID"], content["contentName"], content["doctype"], content["link"])
             db.session.add(question)

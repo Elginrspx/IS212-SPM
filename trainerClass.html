@@ -76,7 +76,6 @@
                                 <td v-else-if="sectionMaterial.doctype == 'ppt'" class="text-center"><img src="images/ppt.svg" style="width:15px;height:15px;"></td>
                                 <td v-else class="text-center"><img src="images/link.svg" style="width:15px;height:15px;"></td>
                                 <td>{{ sectionMaterial.name }}</td>
-                                <td @click="downloadMaterial(sectionMaterial.materialID)" class="text-center"><a v-bind:href="sectionMaterial.link"><img src="images/download.svg" style="width:15px;height:15px;"></a></td>
                             </tr>
                         </tbody>
                     </table>
@@ -88,6 +87,24 @@
                             </tr>
                         </thead>
                         <tbody>
+                            <div v-if="isUpload" class="form-group row">
+                                <div class="col-10">
+                                    <div class="input-group mb-3">
+                                        <select v-model="newMaterial.docType" class="form-select">
+                                            <option selected>Document Type...</option>
+                                            <option value="link">Link</option>
+                                            <option value="vid">Video</option>
+                                            <option value="doc">Document</option>
+                                            <option value="ppt">Powerpoint</option>
+                                        </select>
+                                        <input v-model="newMaterial.contentName" class="form-control" type="text" placeholder="Material Name">
+                                        <input v-model="newMaterial.link" class="form-control" type="text" placeholder="URL Link">
+                                    </div>
+                                </div>
+                                <div class="col-2">
+                                    <a @click="uploadMaterial()" class="btn btn-default btn-md active" role="button" aria-pressed="true">Upload</a>
+                                </div>
+                            </div>
                             <tr>
                                 <td @click="addMaterial()" class="text-center"><img src="images/plus.svg" style="width:15px;height:15px;"></td>
                                 <td class="color-darkgrey" style="text-decoration: underline;">Upload new file</td>
@@ -132,6 +149,24 @@
                             </tr>
                         </thead>
                         <tbody>
+                            <div v-if="isUpload" class="form-group row">
+                                <div class="col-10">
+                                    <div class="input-group mb-3">
+                                        <select v-model="newMaterial.docType" class="form-select">
+                                            <option selected>Document Type...</option>
+                                            <option value="link">Link</option>
+                                            <option value="vid">Video</option>
+                                            <option value="doc">Document</option>
+                                            <option value="ppt">Powerpoint</option>
+                                        </select>
+                                        <input v-model="newMaterial.contentName" class="form-control" type="text" placeholder="Material Name">
+                                        <input v-model="newMaterial.link" class="form-control" type="text" placeholder="URL Link">
+                                    </div>
+                                </div>
+                                <div class="col-2">
+                                    <a @click="uploadMaterial()" class="btn btn-default btn-md active" role="button" aria-pressed="true">Upload</a>
+                                </div>
+                            </div>
                             <tr>
                                 <td @click="addMaterial()" class="text-center"><img src="images/plus.svg" style="width:15px;height:15px;"></td>
                                 <td class="color-darkgrey" style="text-decoration: underline;">Upload new file</td>
@@ -167,6 +202,7 @@
         var getTrainerURL = "http://localhost:2222/getClassByTrainer/" + trainerName
         var getCourseSectionsURL = "http://localhost:2222/getSections/"
         var getCourseSectionMaterialsURL = "http://localhost:2222/getContent/"
+        var saveContentURL = "http://localhost:2222/createContent"
 
         // Get Class by Trainer
         var trainerClass = new Vue({
@@ -181,7 +217,9 @@
                     "sectionID": 0,
                     "courseName": ""
                 },
-                noMaterial: false
+                noMaterial: false,
+                isUpload: false,
+                newMaterial: {}
             },
             created: function() {
                 fetch(getTrainerURL)
@@ -230,7 +268,66 @@
                     console.log("Add Section Function! Not Implemented Yet")
                 },
                 addMaterial: function() {
-                    console.log("Add Material Function! Not Implemented Yet")
+                    this.isUpload = true
+                },
+                uploadMaterial: function() {
+                    if (this.newMaterial.contentName == null || this.newMaterial.docType == null || this.newMaterial.link == null || this.newMaterial.contentName.length == 0 || this.newMaterial.docType.length == 0 || this.newMaterial.link.length == 0) {
+                        alert("Please ensure all fields are filled out!")
+                        return
+                    }
+
+                    saveArray = []
+                    saveData = {}
+                    saveData.courseID = this.selectedItemDetails.courseID
+                    saveData.classID = this.selectedItemDetails.classID
+                    saveData.sectionID = this.selectedItemDetails.sectionID
+                    saveData.contentID = this.newMaterial.contentID
+                    saveData.contentName = this.newMaterial.contentName
+                    saveData.doctype = this.newMaterial.docType
+                    saveData.link = this.newMaterial.link
+
+                    saveArray.push(saveData)
+
+                    var submitData = {}
+                    submitData["data"] = saveArray
+                    let jsonData = JSON.stringify(submitData);
+                        fetch(saveContentURL, {
+                                method: "POST",
+                                headers: {
+                                    "Content-type": "application/json"
+                                },
+                                body: jsonData
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                            })
+                    alert("Content saved successfully!")
+                    this.isUpload = false
+
+                    this.newMaterial.contentName = ""
+                    this.newMaterial.docType = ""
+                    this.newMaterial.link = ""
+
+                    // Refetch
+                    this.sectionMaterials = []
+                    fetch(getCourseSectionMaterialsURL + this.selectedItemDetails.courseID + "/" + this.selectedItemDetails.classID + "/" + this.selectedItemDetails.sectionID)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.data.length == 0) {
+                                this.noMaterial = true
+                            } else {
+                                // Get Course Section's Materials
+                                result = data.data;
+
+                                for (record of result) {
+                                    this.sectionMaterials.push(record);
+                                }
+
+                                // Get Last Section Content ID, for uploading of Material
+                                newMaterialID = parseInt(result[result.length - 1].contentID) + 1
+                                this.newMaterial.contentID = newMaterialID.toString()
+                            }
+                        })
                 },
                 deleteMaterial: function(materialID) {
                     console.log("Delete Material Function! Not Implemented Yet")
@@ -273,6 +370,7 @@
                         .then(data => {
                             if (data.data.length == 0) {
                                 trainerClass.noMaterial = true
+                                trainerClass.newMaterial.contentID = "1"
                             } else {
                                 // Get Course Section's Materials
                                 result = data.data;
@@ -280,6 +378,10 @@
                                 for (record of result) {
                                     trainerClass.sectionMaterials.push(record);
                                 }
+
+                                // Get Last Section Content ID, for uploading of Material
+                                newMaterialID = parseInt(result[result.length - 1].contentID) + 1
+                                trainerClass.newMaterial.contentID = newMaterialID.toString()
                             }
                         })
                 },
