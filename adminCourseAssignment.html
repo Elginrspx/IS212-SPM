@@ -194,7 +194,6 @@
                 },
 
                 forceAssign: function() {
-                    alert("clicked")
                     let jsonData = JSON.stringify({
                         "regStudentID": this.selectedStudent,
                         "regCourseID": this.selectedCourse,
@@ -211,8 +210,8 @@
                         .then(response => response.json())
                         .then(data => {
                             result = data;
-                            console.log(result)
                         })
+                        alert("Assignment Successful")
                 }
             }
         })
