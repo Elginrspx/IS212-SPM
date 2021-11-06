@@ -49,11 +49,14 @@ class Content(db.Model):
 
     def create_section_content(data):
         data = data['data']
-        for content in data:
-            question = Content(content["courseID"], content["classID"], content["sectionID"], content["contentID"], content["contentName"], content["doctype"], content["link"])
-            db.session.add(question)
-        db.session.commit()
-        return 201, "Content created"
+        try:
+            for content in data:
+                contents = Content(content["courseID"], content["classID"], content["sectionID"], content["contentID"], content["contentName"], content["doctype"], content["link"])
+                db.session.add(contents)
+            db.session.commit()
+            return 201, "Content created"
+        except Exception as e:
+            return 500, "Couldn't create"
 
 
 

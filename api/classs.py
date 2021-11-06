@@ -77,7 +77,6 @@ class Class(db.Model):
                 real = []
                 data = {}
                 for each in classList:
-                    print(each[0])
                     data["clsCourseID"] = each[0]
                     data["classID"] = each[1]
                     data["clsTrainer"] = each[2]

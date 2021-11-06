@@ -15,8 +15,8 @@ from progress import Progress
 db.drop_all()
 db.create_all()
 
-dummyCourse = Course(1, '3D Printing Software v1.0', 'A course on 3D printing software', '3D Printing Basics, 3D Printer Software Installation', False)
-dummyCourse2 = Course(2, '3D Printing Software v2.0', 'A course on 3D printing software Version 2', '3D Printing Advanced', True)
+dummyCourse = Course(1, '3D Printing Software v1.0', 'A course on 3D printing software', False)
+dummyCourse2 = Course(2, '3D Printing Software v2.0', 'A course on 3D printing software Version 2', True)
 dummyClass = Class(1,2, "Lim", "12-Sept-2021", "14-Sept-2023", 35, "9 Oct, 2021 to 9 Nov, 2021")
 dummyClass2 = Class(1,3, "Tan", "05-Sept-2021", "08-Sept-2023", 45, "1 Oct, 2021 to 5 Nov, 2021")
 dummyClass3 = Class(2,1, "Tan", "17-Sept-2021", "20-Sept-2023", 20, "15 Oct, 2021 to 24 Nov, 2021")
