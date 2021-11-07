@@ -39,7 +39,15 @@ def get_all_courses():
             }
         }
     )
-
+@app.route("/reset")
+def clear_queue():
+    db.session.remove()
+    return jsonify(
+        {
+            "message":"cleared queue"
+        }
+    )
+    
 # GET Course Details By courseID 
 #used by class, course, enrollClass
 @app.route("/courses/<string:courseID>")
