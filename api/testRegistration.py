@@ -49,9 +49,14 @@ class testRegistration(TestApp):
             "regStatus": 'enrolled'
             })
             
+
+class testRegistration(TestApp):
+        
+
     def test_assign_reg(self):
         code, data = Registration.assign_registration(1,3,1)
         self.assertEqual(data['regStatus'], "accepted")
+
 
     def test_get_student_accepted_courses(self):
         code, data = Registration.get_student_accepted_courses(2)
@@ -76,6 +81,7 @@ class testRegistration(TestApp):
         code2, data2 = Registration.register_class(2,1,4,"accepted")
         self.assertEqual(data, {"regStudentID": 4,"regCourseID": '2', "regClassID": 1, "regStatus": 'enrolled'})
         self.assertEqual(data2, {"regStudentID": 4,"regCourseID": '2', "regClassID": 1, "regStatus": 'accepted'})
+
 
 
 
