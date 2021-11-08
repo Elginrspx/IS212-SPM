@@ -7,6 +7,11 @@ from course import Course
 from classs import Class
 from registration import Registration
 
+#TDD code
+#Email: edena.teo.2019@scis.smu.edu.sg
+#Full name: Edena Teo Yi Ning
+#Student ID: 01386040
+
 class TestApp(flask_testing.TestCase):
     app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite://"
     app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {}
