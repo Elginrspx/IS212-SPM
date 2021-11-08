@@ -5,6 +5,8 @@ from sqlalchemy import *
 from sqlalchemy.orm import relationship
 from flask_cors import CORS
 from os import environ
+import os
+import sys
 import json
 
 app = Flask(__name__)
@@ -39,14 +41,10 @@ def get_all_courses():
             }
         }
     )
-@app.route("/reset")
-def clear_queue():
-    db.session.remove()
-    return jsonify(
-        {
-            "message":"cleared queue"
-        }
-    )
+@app.route("/resetFlask")
+def reset_flask():
+    os.execv(sys.executable, ['python'] + sys.argv)
+    
     
 # GET Course Details By courseID 
 #used by class, course, enrollClass
