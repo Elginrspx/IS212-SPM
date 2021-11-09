@@ -24,7 +24,7 @@
     <div class="container" id="trainerClass">
         <div class="row">
             <div class="col">
-                <p class="title">Quiz 3 Chapter 3 Printing Software (Results)</p>
+                <p class="title">Results</p>
             </div>
         </div>
         <div class="row mt-5" id = "displayScore">
@@ -47,7 +47,7 @@
                 </div>
             </div>
             <div>
-            <input type="submit" @click="returnToQuizzes()" style=" background-color: rgb(252, 140, 3); border-radius: 5px; width: 90px;" value="My Quizzes">
+            <input type="submit" @click="returnToHome()" style=" background-color: rgb(252, 140, 3); border-radius: 5px; width: 90px;" value="Home">
             </div>
         </div>
     </div>
@@ -97,8 +97,8 @@
             })
     },
     methods: {
-        returnToQuizzes:function() {
-            window.location.href = 'studentSelectQuiz.html';
+        returnToHome:function() {
+            window.location.href = 'index.html';
                 }
     }
 
