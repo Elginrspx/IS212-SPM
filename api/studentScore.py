@@ -72,7 +72,6 @@ class Score(db.Model):
                         scoreData["status"] = "Fail"
                     scoreData["noAttempts"] = scoreSet[2]
                     scoreList.append(scoreData)
-                    # print(scoreList)
                 return 200, scoreList
         except Exception as e:
             return 404, "Could not get scores. " + str(e)
@@ -84,7 +83,6 @@ class Score(db.Model):
         studentID = data['studentID']
         try:
             studentScore = db.session.query(Score.scorePercentage).filter(Score.scoreCourseID==courseID, Score.scoreClassID==classID, Score.scoreSectionID==sectionID, Score.scoreStudentID == studentID).first()
-            print(studentScore[0])
 
             return 200, studentScore[0]
         except Exception as e:

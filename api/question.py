@@ -84,8 +84,7 @@ class Question(db.Model):
                 db.session.delete(entries)
             db.session.commit()
         except Exception as e:
-            print("Could not delete qns. "+ str(e))
-        # print(data)
+            pass
         try:
             for qn in data:
                 question = Question(qn["qnCourseID"], qn["qnClassID"], qn["qnSectionID"], qn["question"], qn["answer"], qn["choices"], qn["isMultiple"])

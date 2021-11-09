@@ -71,7 +71,6 @@ class Registration(db.Model):
     def get_no_accepted(courseID, classID):
         try:
             count = Registration.query.filter_by(regCourseID = courseID, regClassID = classID, regStatus="accepted").count()
-            print("my count " + str(count))
             return 200, count
         except Exception as e:
             return str(e), 0
