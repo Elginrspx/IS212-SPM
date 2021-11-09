@@ -86,11 +86,14 @@ class Question(db.Model):
         except Exception as e:
             print("Could not delete qns. "+ str(e))
         # print(data)
-        for qn in data:
-            question = Question(qn["qnCourseID"], qn["qnClassID"], qn["qnSectionID"], qn["question"], qn["answer"], qn["choices"], qn["isMultiple"])
-            db.session.add(question)
-        db.session.commit()
-        return 201, len(data)
+        try:
+            for qn in data:
+                question = Question(qn["qnCourseID"], qn["qnClassID"], qn["qnSectionID"], qn["question"], qn["answer"], qn["choices"], qn["isMultiple"])
+                db.session.add(question)
+            db.session.commit()
+            return 201, "Creation Successful"
+        except Exception as e:
+            return 500, "Couldn't create"
 
         
 

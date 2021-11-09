@@ -40,3 +40,10 @@ class Student(db.Model):
                 return 200, [student.json() for student in studentList]
         except Exception as e:
             return 404, "There are no students. " + str(e)
+
+    def get_name_by_id(studentID):
+        try:
+            student = Student.query.filter_by(studentID = studentID).first()
+            return 200, student.studentName
+        except Exception as e:
+            return 400, "student not found. "+ str(e)

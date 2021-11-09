@@ -1,15 +1,16 @@
-from types import ClassMethodDescriptorType
+
 from flask import Flask, request, jsonify, make_response
 from flask_sqlalchemy import SQLAlchemy 
 from sqlalchemy import *
 from sqlalchemy.orm import relationship
 from flask_cors import CORS
 from os import environ
+import os
+import sys
 import json
-import math
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root@localhost:3306/systemdb'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://ilovespm2021:ilovespm2021@spm-database.c8ob3ug8qjhh.ap-southeast-1.rds.amazonaws.com:3306/systemdb'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
@@ -22,7 +23,8 @@ from registration import *
 from student import *
 from question import *
 from studentScore import *
-
+from content import *
+from progress import *
 
 #COURSES TDD
 
@@ -39,7 +41,11 @@ def get_all_courses():
             }
         }
     )
-
+@app.route("/resetFlask")
+def reset_flask():
+    os.execv(sys.executable, ['python'] + sys.argv)
+    
+    
 # GET Course Details By courseID 
 #used by class, course, enrollClass
 @app.route("/courses/<string:courseID>")
@@ -86,41 +92,16 @@ def get_class_details(courseID, classID):
     )
 
 
-#CHECK god give me the strength to do this, cos i can't tonight
 # GET all registrations with class and student table joined
 #used by course
 @app.route("/classInfo/<string:courseID>", methods=["GET"])
 def all_class_info(courseID):
-    try:
-        # test = db.session.query(func.count('*').group_by(Registration.regCourseID, Registration.regClassID), Registration.regCourseID, Registration.regClassID, Student.studentName).join(Class, and_(Class.classID == Registration.regClassID, Class.clsCourseID == Registration.regCourseID)).join(Student, Student.studentID == Registration.regStudentID).all()
-        classList = db.session.query(Class.clsCourseID, Class.classID, Class.clsTrainer, Class.clsStartTime, Class.clsEndTime, Class.clsLimit, Class.regPeriod).filter(Class.clsCourseID==courseID).all()
-        # Class.query.filter_by(clsCourseID=courseID).all()        # print(test)
-
-        # ape ini idgi 
-        if classList:
-            real = []
-            data = {}
-            print(classList)
-            for each in classList:
-                print(each[0])
-                # print(db.session.query(Course.courseName).filter(Course.courseID == each[0]).first()[0])
-                data["clsCourseID"] = each[0]
-                data["classID"] = each[1]
-                data["clsTrainer"] = each[2]
-                data["clsStartTime"] = each[3]
-                data["clsEndTime"] = each[4]
-                data["clsLimit"] = each[5]
-                data["regPeriod"] = each[6]
-                data["noAccepted"] = Registration.query.filter_by(regCourseID = each[0], regClassID = each[1], regStatus="accepted").count()
-                # data['assignments']= each.json()
-                # print(data)
-                real.append(data)
-                data = {}
-            # return jsonify({"assignments": data})
-            return jsonify({"code": 200, "classInfo": real}),200
-            # return jsonify({"assignments": [assignment.json() for assignment in test[0]]})
-    except Exception as e:
-        return jsonify({"message": "Assignment had a problem fetching" + str(e)}), 500
+    code, data = Class.prepare_class_details_by_course(courseID)
+    for entry in data:
+        print(entry)
+        code, entry['noAccepted'] = Registration.get_no_accepted(entry['clsCourseID'], entry['classID'])
+        print(code)
+    return jsonify({"code": 200, "classInfo": data}),200
 
 #COMPLETED TDD
 
@@ -161,95 +142,51 @@ def get_course_prereq(prereqCourseID):
 
 #REGISTRATION TDD
 
-#CHECK help lah, this one also so long. tolong do tmr
 # GET student registrations by course
 #used by adminCourseApplication
 @app.route("/registration/<string:courseID>")
 def get_student_registration(courseID):
-    try:
-        registrationn = db.session.query(Registration.regCourseID, Registration.regClassID, Student.studentName, Class.clsLimit, Student.studentID).join(Class, and_(Class.classID == Registration.regClassID, Class.clsCourseID == Registration.regCourseID)).join(Student, Student.studentID == Registration.regStudentID).filter(Registration.regStatus=="enrolled").filter(courseID==Registration.regCourseID).all()
-        if (registrationn):
-            real = []
-            data = {}
-            for each in registrationn:
-                data["regCourseID"] = each[0]
-                data["regClassID"] = each[1]
-                data["studentName"] = each[2]
-                data['clsLimit'] = each[3]
-                data['studentID'] = each[4]
-                data['taken'] = Registration.query.filter_by(regCourseID = each[0], regClassID = each[1], regStatus="accepted").count()
-                real.append(data)
-                data = {}
-            print(real)
-            return jsonify(
-                {
-                    "code": 200,
-                    "data": {
-                        "registrations": real
-                    }
-                }
-            )
-    except Exception as e:
-        return jsonify(
-            {
-                "code": 404,
-                "message": "There are no student registrations." + str(e)
+    code, data = Registration.get_student_reg(courseID)
+    print(data)
+    for entry in data:
+        code, entry['studentName'] = Student.get_name_by_id(entry['studentID'])
+    return jsonify(
+        {
+            "code": code,
+            "data": {
+                "registrations": data
             }
-        ), 404
 
-#how to do update, pls search, idk, oof
+        }
+    )
+
+
 # POST registration for courseClass
 #used by adminCourseAssignment, enrollClass
 @app.route("/registerClass", methods=['POST'])
 def register_class():
     data = request.get_json()
-    print(data['regCourseID'])
     regCourseID = data['regCourseID']
     regClassID = data['regClassID']
     regStudentID = data['regStudentID']
-    regStatus = data['regStatus']
-    code, dataa = Registration.register_class(regCourseID, regClassID, regStudentID, regStatus)
+    code, dataa = Registration.register_class(regCourseID, regClassID, regStudentID, data['regStatus'])
     return jsonify({"code": code,"data": dataa})
 
 
-#CHECK idk how to do???
 #GET list of course ID & name of those with enrolled students
 #used by adminCourseApplication
 @app.route("/registrationCourses", methods=["GET"])
 def all_reg():
-    try:
-        # test = db.session.query(func.count('*').group_by(Registration.regCourseID, Registration.regClassID), Registration.regCourseID, Registration.regClassID, Student.studentName).join(Class, and_(Class.classID == Registration.regClassID, Class.clsCourseID == Registration.regCourseID)).join(Student, Student.studentID == Registration.regStudentID).all()
-        registration_info = db.session.query(Registration.regCourseID, Registration.regClassID).filter(Registration.regStatus=="enrolled").all()
-        # print(test)
-
-        # ape ini idgi 
-        if registration_info:
-            courseList = []
-            courses = []
-            # print(registration_info)
-            for each in registration_info:
-                # print(each[0])
-                # print(db.session.query(Course.courseName).filter(Course.courseID == each[0]).first()[0])
-
-                courseName = db.session.query(Course.courseName).filter(Course.courseID == each[0]).first()[0]
-
-                if courseName not in courses:
-                    print("lol")
-                    # courseList[each[0]] = data["courseName"]
-                    courseData = {}
-                    courseData["courseName"] = courseName
-                    courseData["regCourseID"] = each[0]
-                    courseList.append(courseData)
-                    courses.append(courseName)
-                    print(courseList)
-                    # data['assignments']= each.json()
-                    # print(data)
-            # return jsonify({"assignments": data})
-            return jsonify({"code": 200, "courseList": courseList}),200
-            # return jsonify({"assignments": [assignment.json() for assignment in test[0]]})
-    except Exception as e:
-        return jsonify({"message": "Assignment had a problem fetching" + str(e)}), 500
-
+    code, data = Registration.get_enrolled_courseID()
+    for entry in data:
+        code, entry['courseName'] = Course.get_name_by_id(entry['regCourseID'])
+    return jsonify(
+        {
+            "code": code,
+            "courseList": data
+        }
+    )
+    
 
 # UPDATE registration to accepted
 #used by adminCourseApplication
@@ -265,50 +202,6 @@ def assign_registration():
     )
 
 
-#CHECK GET all eligible courses by user
-#create four tables. 1)taken  2)all  3)eligible  4)prereqs
-#may be needed for sprint 4 adminCourseAssignment
-#COURSE integration
-@app.route("/eligibleCourses/<string:userID>")
-def get_eligible_courses(userID):
-    taken = []
-    all = []
-    eligible = {}
-    prereqs = {}
-
-    #query for table population
-    courses = db.session.query(Course.courseID, Course.courseName).all()
-    took = db.session.query(Completed.completedCName).filter(userID==Completed.ccStudentID).all()
-    havePrereq = db.session.query(Prerequisite.prereqCourseID, Prerequisite.prereqName).all()
-
-    #populate lists of all, taken, and prerequisite courses
-    for course in courses:
-        all.append(course)
-    for course in took:
-        taken.append(course[0])
-    for each in havePrereq:
-        if each[0] in prereqs:
-            prereqs[each[0]].append(each[1])
-        else:
-            prereqs[each[0]] = []
-            prereqs[each[0]].append(each[1])
-
-    #algo to compute list of eligible courses
-
-    for id, name in all:
-        if name in taken:
-            pass
-        elif id in prereqs:
-            check = True
-            for c in prereqs[id]:
-                # print(c)
-                if c not in taken:
-                    check=False
-            if check:    
-                eligible[id]=name
-        else:
-            eligible[id]=name
-    return eligible
 
 #STUDENT TDD
 # GET all students
@@ -328,6 +221,7 @@ def get_all_students():
 #used by studentQuiz.html
 @app.route("/questions/<string:qnCourseID>/<string:qnClassID>/<string:qnSectionID>")
 def get_questions(qnCourseID, qnClassID, qnSectionID):
+    print("work")
     code, data = Question.get_questions(qnCourseID, qnClassID, qnSectionID)
     return jsonify(
         {
@@ -336,7 +230,20 @@ def get_questions(qnCourseID, qnClassID, qnSectionID):
         }
     )
 
-#GET score for questions for a quiz
+#POST questions to create quiz
+@app.route("/createQuiz", methods=['POST'])
+def create_quiz():
+    data = request.get_json()
+    code, count = Question.create_question(data)
+    code1, output = Section.update_no_of_qns(data, count)
+    return jsonify(
+        {
+            "code": code1,
+            "data": output
+        }
+    )
+
+#POST info to get score for questions for a quiz
 #used by studentQuiz.html
 @app.route("/submitQuiz/<string:qnCourseID>/<string:qnClassID>/<string:qnSectionID>", methods=['POST'])
 def submit_quiz(qnCourseID, qnClassID, qnSectionID):
@@ -358,6 +265,105 @@ def submit_quiz(qnCourseID, qnClassID, qnSectionID):
         }
     )
 
+
+#GET class+course by trainer
+@app.route("/getClassByTrainer/<string:trainer>")
+def get_trainer_classes(trainer):
+    code, data = Class.get_classes_by_trainer(trainer)
+    for classes in data:
+        code, classes["courseName"] = Course.get_name_by_id(classes['courseID'])
+    return jsonify(
+        {
+            "code": code,
+            "data": data
+        }
+    )
+
+#GET class by student
+@app.route("/getClassByStudent/<string:student>")
+def get_student_classes(student):
+    code, data = Registration.get_student_accepted_courses(student)
+    for classes in data:
+        code, classes["courseName"] = Course.get_name_by_id(classes['courseID'])
+    return jsonify(
+        {
+            "code": code,
+            "data": data
+        }
+    )
+
+# GET all sections by course-class
+@app.route("/getSections/<string:courseID>/<string:classID>")
+def get_sections(courseID, classID):
+    code, data = Section.get_all_sections(courseID, classID)
+    return jsonify(
+        {
+            "code": code,
+            "data": data
+        }
+    )
+
+#GET all sections by course-class with status (for student side)
+@app.route("/getStudentSection/<string:studentID>/<string:courseID>/<string:classID>")
+def get_student_section(studentID, courseID, classID):
+    code, data = Section.get_all_sections(courseID, classID)
+    for content in data:
+        code, content["completed"] = Progress.get_student_progress(studentID, courseID, classID, content['sectionID'])
+    return jsonify(
+        {
+            "code": code,
+            "data": data
+        }
+    )
+
+#GET a student's score by section 
+@app.route("/studentScore", methods=['POST'])
+def get_student_score():
+    output = {}
+    data = request.get_json()
+    code, percentage = Score.get_scores_by_student(data)
+    print(percentage)
+    percent = float(percentage)
+    code3, maxScore = Section.get_no_qns(data['courseID'], data['classID'], data['sectionID'])
+    if percent >= .8:
+        output['status'] = "Pass"
+        code, message = Progress.update_progress(data)
+        print(message)
+    else:
+        output['status'] = "Fail"
+    output['totalScore'] = round(percent*int(maxScore))
+    output['maxScore'] = maxScore
+    return jsonify(
+        {
+            "code": code,
+            "data": output
+        }
+    )
+
+#GET all section content
+@app.route("/getContent/<string:courseID>/<string:classID>/<string:sectionID>")
+def get_contents(courseID, classID, sectionID):
+    code, data = Content.get_section_content(courseID, classID, sectionID)
+    return jsonify(
+        {
+            "code": code,
+            "data": data
+        }
+    )
+
+#POST section content
+@app.route("/createContent", methods=["POST"])
+def create_content():
+    data = request.get_json()
+    code, message = Content.create_section_content(data)
+    return jsonify(
+        {
+            "code": code,
+            "data": message
+        }
+    )
+
+
 #Score, Student, Section tdd
 #get scores by section
 #used by quizResults.html
@@ -373,7 +379,7 @@ def get_section_scores(qnCourseID, qnClassID, qnSectionID):
         #get totalScore
         code3, data3 = Section.get_no_qns(qnCourseID, qnClassID, qnSectionID)
         temp["studentName"] = data2["studentName"]
-        temp["score"] = round(student["percentage"]*data3)
+        temp["score"] = round(float(student["percentage"])*data3)
         temp["totalScore"] = data3
         temp["status"] = student["status"]
         temp["noAttempts"] = student["noAttempts"]
@@ -384,43 +390,7 @@ def get_section_scores(qnCourseID, qnClassID, qnSectionID):
             "data": final
         }
     )
-
-@app.route("/createQuiz", methods=['POST'])
-def create_quiz():
-    data = request.get_json()
-    code, count = Question.create_question(data)
-    code1, output = Section.update_no_of_qns(data, count)
-    return jsonify(
-        {
-            "code": code1,
-            "data": output
-        }
-    )
-
-#GET a student's score by section 
-@app.route("/studentScore", methods=['POST'])
-def get_student_score():
-    output = {}
-    data = request.get_json()
-    code, percentage = Score.get_scores_by_student(data)
-    print(percentage)
-    percent = float(percentage)
-    code3, maxScore = Section.get_no_qns(data['courseID'], data['classID'], data['sectionID'])
-    if percent > .8:
-        output['status'] = "Pass"
-    else:
-        output['status'] = "Fail"
-    output['totalScore'] = round(percent*int(maxScore))
-    output['maxScore'] = maxScore
-    return jsonify(
-        {
-            "code": code,
-            "data": output
-        }
-    )
-
-
-
+    
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=2222, debug=True)

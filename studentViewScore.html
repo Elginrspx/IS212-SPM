@@ -7,15 +7,18 @@
 
 <body>
     <div id="nav-placeholder"></div>
-    <div id="header-placeholder"></div>
     <script src="//code.jquery.com/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/stylesheet.css">
+
     <script>
     $.get("includes/navbar.html", function(data){
         $("#nav-placeholder").replaceWith(data);
-     });
-    $.get("includes/header.html", function(data){
-        $("#header-placeholder").replaceWith(data);
      });
      </script>
     <div class="container" id="trainerClass">
@@ -56,16 +59,12 @@
             </div>
         </div>
     </div>
-    <div id="footer-placeholder"></div>
     <script>
-    $.get("includes/footer.html", function(data){
-        $("#footer-placeholder").replaceWith(data);
-     });
-    var courseID = 1
-    var classID = 3
-    var sectionID = 2
-    var studentID = 1
-    var getResultsURL = "http://localhost:2222/studentScore"
+    var courseID = localStorage.getItem("courseID")
+    var classID = localStorage.getItem("classID")
+    var sectionID = localStorage.getItem("sectionID")
+    var studentID = localStorage.getItem("studentID")
+    var getResultsURL = "http://13.212.254.218:2222/studentScore"
     const example1 = new Vue({
     el: '#displayScore',
     data: {
@@ -107,8 +106,7 @@
     },
     methods: {
         returnToQuizzes:function() {
-            // Might need to change cause as of now got no page to choose quiz
-            window.location.href = 'studentQuiz.html';
+            window.location.href = 'studentSelectQuiz.html';
                 }
     }
 

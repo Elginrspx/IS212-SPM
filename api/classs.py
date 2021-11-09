@@ -30,13 +30,20 @@ class Class(db.Model):
 
     def json(self):
         return {
-        "clsCourseID": self.clsCourseID, 
-        "classID": self.classID, 
-        "clsTrainer": self.clsTrainer, 
-        "clsStartTime": self.clsStartTime, 
-        "clsEndTime": self.clsEndTime,
-        "clsLimit": self.clsLimit,
-        "regPeriod": self.regPeriod
+            "clsCourseID": self.clsCourseID, 
+            "classID": self.classID, 
+            "clsTrainer": self.clsTrainer, 
+            "clsStartTime": self.clsStartTime, 
+            "clsEndTime": self.clsEndTime,
+            "clsLimit": self.clsLimit,
+            "regPeriod": self.regPeriod
+        }
+
+    def json_for_trainer(self):
+        return {
+            "courseID": self.clsCourseID, 
+            "classID": self.classID, 
+            "courseName": ""
         }
     
     def get_course_classes(courseID):
@@ -54,3 +61,33 @@ class Class(db.Model):
                 return 200, classes.json()
         except Exception as e:
             return 404, "No classes found" + str(e)
+
+    def get_classes_by_trainer(trainer):
+        try: 
+            classes = Class.query.filter_by(clsTrainer=trainer).all()
+            if classes:
+                return 200, [classs.json_for_trainer() for classs in classes]
+        except Exception as e:
+            return 404, "No classes found" + str(e)
+            
+    def prepare_class_details_by_course(courseID):
+        try:
+            classList = db.session.query(Class.clsCourseID, Class.classID, Class.clsTrainer, Class.clsStartTime, Class.clsEndTime, Class.clsLimit, Class.regPeriod).filter(Class.clsCourseID==courseID).all()
+            if classList:
+                real = []
+                data = {}
+                for each in classList:
+                    data["clsCourseID"] = each[0]
+                    data["classID"] = each[1]
+                    data["clsTrainer"] = each[2]
+                    data["clsStartTime"] = each[3]
+                    data["clsEndTime"] = each[4]
+                    data["clsLimit"] = each[5]
+                    data["regPeriod"] = each[6]
+                    data["noAccepted"] = 0
+                    real.append(data)
+                    data = {}
+                return 200, real
+        except Exception as e:
+            return 400, "Couldn't find classes. " + str(e)
+

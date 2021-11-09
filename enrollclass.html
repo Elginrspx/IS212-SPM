@@ -48,8 +48,7 @@
                     </div>
                     <div v-else class="card-body text-center">
                         <img src="images/check.svg" style="height: 30px;">
-                        <h5 class="card-title color-orange">Your application has been successfully submitted!<br>
-                            A confirmation email will be sent to you shortly.
+                        <h5 class="card-title color-orange">Your application has been successfully submitted!
                         </h5>
                         <a href="home.html" class="btn btn-default btn-md active m-2" role="button" aria-pressed="true">Back to Home Page</a>
                     </div>
@@ -71,9 +70,9 @@
         var studentID = localStorage.getItem("userID");
 
         // Initialise URLs
-        var getCourseDetailsURL = "http://localhost:2222/courses/" + courseID
-        var getClassDetailsURL = "http://localhost:2222/classes/" + courseID + "/" + classID
-        var registrationURL = "http://localhost:2222/registerClass"
+        var getCourseDetailsURL = "http://13.212.254.218:2222/courses/" + courseID
+        var getClassDetailsURL = "http://13.212.254.218:2222/classes/" + courseID + "/" + classID
+        var registrationURL = "http://13.212.254.218:2222/registerClass"
 
         var course = new Vue({
             el: '#course',
