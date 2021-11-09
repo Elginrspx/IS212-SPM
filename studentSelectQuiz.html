@@ -114,7 +114,7 @@
         var courseID = 1
         var classID = 3
         var studentID = 1
-        var getcourseURL = "http://localhost:2222/getClassByStudent/" + studentID
+        var getcourseURL = "http://13.212.254.218:2222/getClassByStudent/" + studentID
         // Get Class by Trainer
         var trainerClass = new Vue({
             el: '#trainerClass',
@@ -162,7 +162,7 @@
                     courseID = this.selectedItemDetails.courseID
                     localStorage.setItem("courseID", courseID)
                     localStorage.setItem("classID", classID)
-                    getSectionURL = "http://localhost:2222/getStudentSection/"
+                    getSectionURL = "http://13.212.254.218:2222/getStudentSection/"
                     getSectionURL = getSectionURL + studentID + "/" +courseID + "/" + classID
                     fetch(getSectionURL)
                     .then(response=>response.json())
@@ -199,7 +199,7 @@
                 selectSection: function(sectionID) {
                     trainerClass.selectedItemDetails.sectionID = sectionID
                     trainerClass.sectionMaterials = []
-                    getContentURL = "http://localhost:2222/getContent/"
+                    getContentURL = "http://13.212.254.218:2222/getContent/"
                     getContentURL = getContentURL + courseID + "/" + classID + "/" + trainerClass.selectedItemDetails.sectionID
                     fetch(getContentURL)
                         .then(response=>response.json())
