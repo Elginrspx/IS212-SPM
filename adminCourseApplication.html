@@ -144,7 +144,6 @@
                         .then(response => response.json())
                         .then(data => {
                             result = data;
-                            console.log(result)
                             this.$emit('reload')
                         })
                 }

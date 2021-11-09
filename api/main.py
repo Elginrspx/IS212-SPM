@@ -98,9 +98,7 @@ def get_class_details(courseID, classID):
 def all_class_info(courseID):
     code, data = Class.prepare_class_details_by_course(courseID)
     for entry in data:
-        print(entry)
         code, entry['noAccepted'] = Registration.get_no_accepted(entry['clsCourseID'], entry['classID'])
-        print(code)
     return jsonify({"code": 200, "classInfo": data}),200
 
 #COMPLETED TDD
@@ -147,7 +145,6 @@ def get_course_prereq(prereqCourseID):
 @app.route("/registration/<string:courseID>")
 def get_student_registration(courseID):
     code, data = Registration.get_student_reg(courseID)
-    print(data)
     for entry in data:
         code, entry['studentName'] = Student.get_name_by_id(entry['studentID'])
     return jsonify(
@@ -221,7 +218,6 @@ def get_all_students():
 #used by studentQuiz.html
 @app.route("/questions/<string:qnCourseID>/<string:qnClassID>/<string:qnSectionID>")
 def get_questions(qnCourseID, qnClassID, qnSectionID):
-    print("work")
     code, data = Question.get_questions(qnCourseID, qnClassID, qnSectionID)
     return jsonify(
         {
@@ -322,13 +318,11 @@ def get_student_score():
     output = {}
     data = request.get_json()
     code, percentage = Score.get_scores_by_student(data)
-    print(percentage)
     percent = float(percentage)
     code3, maxScore = Section.get_no_qns(data['courseID'], data['classID'], data['sectionID'])
     if percent >= .8:
         output['status'] = "Pass"
         code, message = Progress.update_progress(data)
-        print(message)
     else:
         output['status'] = "Fail"
     output['totalScore'] = round(percent*int(maxScore))
