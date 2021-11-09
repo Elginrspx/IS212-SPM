@@ -35,7 +35,6 @@ class Progress(db.Model):
             return 200, data
         except Exception as e:
             return 400, "No content found. " + str(e)
-        return
 
     def update_progress(data):
         try: 
